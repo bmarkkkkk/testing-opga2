@@ -167,30 +167,21 @@ function trendInfo(player, roundName, rows, cMap, rMap){
     if(delta<0) return {arrow:'▼', cls:'trend-down', delta};
     return {arrow:'•', cls:'trend-flat', delta};
   }
-  // round view: show rank movement after full 18 for that round
-  const r = parseInt(roundName.split(' ')[1],10);
-  if(r<=1) return {arrow:'', cls:'trend-flat', delta:null};
-  const pr = player.perRound[`Round ${r}`];
-  if(!(pr && pr.thru==="18")) return {arrow:'', cls:'trend-flat', delta:null};
-  function rankAfterRound(roundN){
-    const vals = rows.map(p=>{
-      let net=0, par=0; let ok=true;
-      for(let i=1;i<=roundN;i++){
-        const prr=p.perRound[`Round ${i}`];
-        if(!(prr && prr.thru==="18" && prr.net!=null && prr.parFor!=null)){ ok=false; break; }
-        net+=prr.net; par+=prr.parFor;
-      }
-      return ok ? {name:p.name, v: net-par} : null;
-    }).filter(Boolean).sort((a,b)=>a.v-b.v);
-    const rank=new Map(); vals.forEach((x,i)=>rank.set(x.name,i+1));
-    return rank;
+  // round view: compare current round vs previous completed round
+  const rounds=[];
+  for(let r=1;r<=4;r++){
+    const pr=player.perRound[`Round ${r}`];
+    if(pr && pr.thru==="18" && pr.net!=null && pr.parFor!=null){
+      rounds.push({r, netToPar: pr.net - pr.parFor});
+    }
   }
-  const rCur = rankAfterRound(r); const rPrev = rankAfterRound(r-1);
-  if(!rCur.has(player.name) || !rPrev.has(player.name)) return {arrow:'', cls:'trend-flat', delta:null};
-  const curRank = rCur.get(player.name), prevRank = rPrev.get(player.name);
-  const delta = prevRank - curRank; // positive = moved up
-  if(delta>0) return {arrow:'▲', cls:'trend-up', delta};
-  if(delta<0) return {arrow:'▼', cls:'trend-down', delta};
+  const r = parseInt(roundName.split(' ')[1],10);
+  const idx = rounds.findIndex(x=>x.r===r);
+  if(idx<=0) return {arrow:'', cls:'trend-flat', delta:null};
+  const cur = rounds[idx], prev = rounds[idx-1];
+  const delta = cur.netToPar - prev.netToPar;
+  if(delta<0) return {arrow:'▲', cls:'trend-up', delta};
+  if(delta>0) return {arrow:'▼', cls:'trend-down', delta};
   return {arrow:'•', cls:'trend-flat', delta};
 }
 
