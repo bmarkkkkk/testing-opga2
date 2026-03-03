@@ -203,9 +203,11 @@
     /* Shared Modal Styles */
     .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.65); z-index:100; justify-content:center; align-items:flex-end; backdrop-filter:blur(4px); }
     .modal-overlay.open { display:flex; }
-    .modal-sheet { background:var(--surface-1); border:1px solid var(--border-bright); border-radius:16px 16px 0 0; width:100%; max-width:480px; max-height:80vh; overflow-y:auto; padding:24px 20px 32px; animation:slideUp 0.3s ease; box-shadow:var(--shadow-lg); }
+    .modal-sheet { background:var(--surface-1); border:1px solid var(--border-bright); border-radius:16px 16px 0 0; width:100%; max-width:480px; max-height:80vh; overflow-y:auto; padding:24px 20px 32px; animation:slideUp 0.3s ease; box-shadow:var(--shadow-lg); touch-action:pan-y; }
+    .modal-sheet.dragging { animation:none; transition:none; overflow-y:hidden; }
+    .modal-sheet.snapping { animation:none; transition:transform 0.25s ease; }
     @keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
-    .modal-handle { width:36px; height:4px; background:var(--text-muted); border-radius:2px; margin:0 auto 16px; opacity:0.5; }
+    .modal-handle { width:36px; height:4px; background:var(--text-muted); border-radius:2px; margin:0 auto 16px; opacity:0.6; cursor:grab; }
 
     /* Player Modal */
     .modal-player-name { font-family:'Cormorant Garamond',serif; font-weight:700; font-size:1.5rem; color:var(--cream); text-align:center; }
@@ -883,6 +885,63 @@ function openTeamModal(teamName){
 /* ═══ MODAL CLOSE HANDLERS ═══ */
 document.getElementById('playerModal').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open')});
 document.getElementById('teamModal').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open')});
+
+/* ═══ SWIPE-DOWN-TO-DISMISS ═══ */
+function enableSwipeDismiss(overlay){
+  const sheet=overlay.querySelector('.modal-sheet');
+  let startY=0,currentY=0,isDragging=false;
+
+  sheet.addEventListener('touchstart',function(e){
+    // Only start drag if scrolled to top
+    if(sheet.scrollTop>0)return;
+    startY=e.touches[0].clientY;
+    currentY=startY;
+    isDragging=true;
+    sheet.classList.add('dragging');
+    sheet.classList.remove('snapping');
+  },{passive:true});
+
+  sheet.addEventListener('touchmove',function(e){
+    if(!isDragging)return;
+    currentY=e.touches[0].clientY;
+    const dy=currentY-startY;
+    if(dy>0){
+      // Dragging down — move sheet
+      sheet.style.transform=`translateY(${dy}px)`;
+      // Prevent scroll while dragging down
+      e.preventDefault();
+    }else{
+      // Dragging up — cancel drag, let scroll happen
+      isDragging=false;
+      sheet.classList.remove('dragging');
+      sheet.style.transform='';
+    }
+  },{passive:false});
+
+  sheet.addEventListener('touchend',function(){
+    if(!isDragging)return;
+    isDragging=false;
+    sheet.classList.remove('dragging');
+    const dy=currentY-startY;
+    if(dy>100){
+      // Past threshold — dismiss
+      sheet.classList.add('snapping');
+      sheet.style.transform=`translateY(100%)`;
+      setTimeout(()=>{
+        overlay.classList.remove('open');
+        sheet.classList.remove('snapping');
+        sheet.style.transform='';
+      },250);
+    }else{
+      // Snap back
+      sheet.classList.add('snapping');
+      sheet.style.transform='';
+      setTimeout(()=>sheet.classList.remove('snapping'),250);
+    }
+  },{passive:true});
+}
+enableSwipeDismiss(document.getElementById('playerModal'));
+enableSwipeDismiss(document.getElementById('teamModal'));
 
 /* ═══ VIEW CONTROLS ═══ */
 document.querySelectorAll('#viewBtns .ctrl-btn').forEach(btn=>{
