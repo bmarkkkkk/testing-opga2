@@ -903,24 +903,18 @@ document.querySelectorAll('#viewBtns .ctrl-btn').forEach(btn=>{
 
 /* ═══ YEAR SCANNING & INIT ═══ */
 async function scanYears(){
-  // Fetch a known non-existent tab to get Google Sheets' fallback response
-  let fallback='';
-  try{
-    const fr=await fetch(csvUrl('Scores 9999'),{cache:'no-store'});
-    if(fr.ok)fallback=await fr.text();
-  }catch{}
-
   const found=[];
   let misses=0;
   for(let y=START_YEAR;y<=MAX_SCAN_YEAR;y++){
     try{
-      const r=await fetch(csvUrl(`Scores ${y}`),{cache:'no-store'});
-      if(!r.ok){misses++;if(misses>=3)break;continue}
+      // Use JSON endpoint — it returns an error object for non-existent tabs
+      const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent('Scores '+y)}`;
+      const r=await fetch(url,{cache:'no-store'});
       const t=await r.text();
-      // If response matches the fallback, this tab doesn't actually exist
-      if(fallback && t===fallback){misses++;if(misses>=3)break;continue}
-      const lines=t.trim().split('\n').filter(l=>l.trim());
-      if(lines.length>=2){found.push(y);misses=0}
+      // Response is JSONP-like: google.visualization.Query.setResponse({...})
+      // Check for error status which means tab doesn't exist
+      if(t.includes('"status":"error"')||t.includes('"status": "error"')){misses++;if(misses>=3)break;continue}
+      if(t.includes('"status":"ok"')||t.includes('"status": "ok"')){found.push(y);misses=0}
       else{misses++;if(misses>=3)break}
     }catch{misses++;if(misses>=3)break}
   }
