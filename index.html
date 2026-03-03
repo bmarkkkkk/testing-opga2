@@ -283,6 +283,10 @@
       <div class="header-sub" id="lastUpdate">Connecting…</div>
     </header>
 
+    <div class="ticker-wrap" id="tickerWrap" style="display:none">
+      <div class="ticker-track" id="tickerTrack"></div>
+    </div>
+
     <div class="controls">
       <div class="ctrl-group" id="viewBtns">
         <button class="ctrl-btn active" data-view="tournament">Tournament</button>
@@ -467,7 +471,18 @@ function parClass(v){return v<0?'under':(v>0?'over':'even')}
 function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
 
 /* ── Render All ── */
-function render(){renderHighlights();renderTeams();renderIndividual();renderChart();renderHistory();renderHandicaps()}
+function render(){renderTicker();renderHighlights();renderTeams();renderIndividual();renderChart();renderHistory();renderHandicaps()}
+
+/* ═══ TICKER ═══ */
+function renderTicker(){
+  const wrap=document.getElementById('tickerWrap'),track=document.getElementById('tickerTrack');
+  const data=players.map(p=>{const v=calcPlayerView(p,currentView);return{name:p.name,...v}}).filter(d=>d.thru>0).sort((a,b)=>a.netToPar-b.netToPar);
+  if(!data.length){wrap.style.display='none';return}
+  wrap.style.display='block';
+  const items=data.map(d=>`<span class="ticker-item"><span style="font-size:0.85rem">⛳</span><span class="ticker-name">${esc(d.name)}</span><span class="ticker-val ${parClass(d.netToPar)}">${fmtPar(d.netToPar)}</span><span style="color:var(--text-muted);font-size:0.65rem">thru ${d.thru}</span></span>`);
+  const html=items.join('<span class="ticker-sep">·</span>');
+  track.innerHTML=html+'<span class="ticker-sep">·</span>'+html;
+}
 
 /* ═══ HIGHLIGHTS ═══ */
 function renderHighlights(){
@@ -594,6 +609,8 @@ function renderIndividual(){
   if(!data.length){body.innerHTML='<div class="empty-state">No scores yet</div>';return}
   body.innerHTML=data.map((d,i)=>{
     const pos=i+1,arrowHtml=arrows[d.player.name]||'';
+    let trendHtml='';
+    if(currentView==='tournament'){const t=calcTrend(d.player);if(t==='hot')trendHtml='<span class="trend-badge hot">HOT</span>';else if(t==='cold')trendHtml='<span class="trend-badge cold">COLD</span>'}
     let dotsHtml='';
     if(currentView==='tournament'){
       dotsHtml='<span class="round-dots">';
@@ -620,7 +637,7 @@ function renderIndividual(){
     }
     return`<div class="lb-row${pos===1?' is-leader':''}" data-player="${esc(d.player.name)}">
       <span class="lb-pos ${pos<=3?'top-3':''}">${pos}</span>
-      <div class="lb-name-cell"><div class="lb-player-name">${esc(d.player.name)}${arrowHtml}</div><div class="lb-team-tag">${esc(d.player.team)} ${dotsHtml}</div></div>
+      <div class="lb-name-cell"><div class="lb-player-name">${esc(d.player.name)}${arrowHtml}${trendHtml}</div><div class="lb-team-tag">${esc(d.player.team)} ${dotsHtml}</div></div>
       <span class="lb-val">${d.net}</span><span class="lb-val net-par ${parClass(d.netToPar)}">${fmtPar(d.netToPar)}</span><span class="lb-val">${d.gross}</span><span class="lb-thru">${d.thru}</span>
     </div>`;
   }).join('');
@@ -628,6 +645,14 @@ function renderIndividual(){
   body.querySelectorAll('.lb-row[data-player]').forEach(row=>{
     row.addEventListener('click',()=>openPlayerModal(row.dataset.player));
   });
+}
+
+/* ═══ TREND ═══ */
+function calcTrend(player){
+  const results=[];for(let rn=1;rn<=4;rn++){const res=calcPlayerRound(player,rn);if(res&&res.thru===18)results.push(res.netToPar)}
+  if(results.length<2)return null;
+  const diff=results[results.length-1]-results[results.length-2];
+  return diff<=-3?'hot':(diff>=3?'cold':null);
 }
 
 /* ═══ ARROWS ═══ */
@@ -706,6 +731,11 @@ function renderChart(){
         y:{reverse:true,ticks:{color:'#6b7a64',font:{family:'Outfit',size:11}},grid:{color:'rgba(245,240,232,0.06)'},title:{display:true,text:'Cumulative Net to Par',color:'#6b7a64',font:{family:'Outfit',size:11}}}
       }
     }
+  });
+  // Dismiss tooltip on mobile tap-away
+  ctx.canvas.addEventListener('click',function(e){
+    const pts=chartInstance.getElementsAtEventForMode(e,'index',{intersect:false},false);
+    if(!pts.length){chartInstance.tooltip.setActiveElements([]);chartInstance.update('none')}
   });
 }
 
