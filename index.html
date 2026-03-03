@@ -544,7 +544,8 @@ function renderHighlights(){
   let marginCard='';
   if(teams.length>=2){const m=Math.abs(teams[0][1]-teams[1][1]);marginCard=`<div class="hl-card hl-margin"><div class="hl-label">Team Lead</div><div class="hl-name">${m===0?'Tied':esc(teams[0][0])}</div><div class="hl-detail">${m===0?'All square!':`by ${m} stroke${m!==1?'s':''}`}</div></div>`}
 
-  el.innerHTML=`<div class="hl-card hl-mvp"><div class="hl-label">⛳ Leader</div><div class="hl-name">${leaderNames}</div><div class="hl-detail">${fmtPar(leaderScore)} · thru ${leaderThru}</div></div>`+bestNineCard+bestRoundCard+marginCard;
+  const leaderCard=isTourn?`<div class="hl-card hl-mvp"><div class="hl-label">⛳ Leader</div><div class="hl-name">${leaderNames}</div><div class="hl-detail">${fmtPar(leaderScore)} · thru ${leaderThru}</div></div>`:'';
+  el.innerHTML=leaderCard+bestRoundCard+bestNineCard+marginCard;
 }
 
 /* ═══ TEAMS ═══ */
