@@ -10,7 +10,18 @@
 *{box-sizing:border-box}body{margin:0;font-family: ui-serif, Georgia, "Times New Roman", serif; background:var(--bg); color:var(--text);} .page{max-width:1100px;margin:24px auto;padding:0 18px 40px;} .topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;} .brand{display:flex;gap:14px;align-items:center;} .crest{width:56px;height:56px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;letter-spacing:1px;object-fit:contain;padding:4px;} .topbar h1{margin:0;font-size:28px;color:var(--green)} .topbar p{margin:4px 0 0;color:var(--muted);font-family: ui-sans-serif, system-ui;} .controls select{padding:10px 14px;border:1px solid var(--line);border-radius:20px;background:#fff;font-family: ui-sans-serif, system-ui;font-size:15px;} .meta{display:flex;gap:20px;margin:16px 0;color:var(--muted);font-family: ui-sans-serif, system-ui;} .grid{display:grid;grid-template-columns:1fr 1.3fr;gap:16px;} .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;box-shadow:0 1px 0 rgba(0,0,0,.03)} .card h2{margin:4px 0 10px;color:var(--green)} .table{width:100%;border-collapse:collapse;font-family: ui-sans-serif, system-ui;table-layout:fixed;} .table th{background:var(--green);color:#fff;text-align:left;padding:8px 10px;font-size:12px;letter-spacing:.6px;white-space:nowrap;} .table td{padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;} .table tbody tr:nth-child(odd){background:#fdfbf7} .history{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;font-family: ui-sans-serif, system-ui;} .player-table col.pos{width:36px;} .player-table col.player{width:auto;} .player-table th,.player-table td{text-align:center;} .player-table th:nth-child(2),.player-table td:nth-child(2){text-align:left;} .player-table td:nth-child(4){padding-left:4px;padding-right:4px;} .team-table th,.team-table td{text-align:center;} .team-table th:first-child,.team-table td:first-child{text-align:left;} .team-card{display:flex;flex-direction:column;} .lead-chart{margin-top:12px;border:1px solid var(--line);border-radius:10px;padding:0;background:#fff;display:flex;flex-direction:column;height:auto;} .lead-chart svg{width:100%;height:clamp(180px, 30vw, 260px);display:block;flex:1;} .lead-chart .legend{display:flex;align-items:center;gap:18px;padding:8px 8px 2px;font-family: ui-sans-serif, system-ui; font-size:12px; color:#444;} .hc-table{table-layout:fixed;} .hc-table col.player{width:20%;} .hc-table col.hi{width:13.3%;} .hc-table col.ch{width:13.3%;} .hc-table th,.hc-table td{text-align:center;} .hc-table th:first-child,.hc-table td:first-child{text-align:left;} .hc-table thead th:not(:first-child){text-align:center;padding-left:0;padding-right:0;}
  .history-card{border:1px solid var(--line);border-radius:10px;padding:10px;background:#fff;} .history-card h3{margin:0 0 6px;color:var(--green)} .footer{margin-top:14px;color:var(--muted);display:flex;gap:10px;align-items:center;font-family: ui-sans-serif, system-ui;} .dot{color:var(--gold)} @media (max-width: 900px){.grid{grid-template-columns:1fr;} .meta{flex-direction:column;gap:6px;}}
 @media (max-width: 600px){body{font-size:12.5px;} .topbar h1{font-size:20px;} .controls select{font-size:12.5px;padding:9px 12px;} .table th,.table td{font-size:11.5px;}}
-  </style>
+:root{--chip-bg:#eef3ee;--chip-text:#35524a;--good:#0b5b3e;--bad:#b73b2f;}
+body[data-theme="dark"]{--bg:#0e1114;--card:#151a1e;--text:#eef2f5;--muted:#9aa6b2;--line:#26303a;--green:#7dd3a7;--gold:#d9b873;--chip-bg:#23313a;--chip-text:#d8e2ea;}
+.controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.controls .toggle{padding:9px 12px;border:1px solid var(--line);border-radius:20px;background:var(--card);color:var(--text);font-family: ui-sans-serif, system-ui;font-size:14px;cursor:pointer;}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:2px 8px;border-radius:999px;background:var(--chip-bg);color:var(--chip-text);font-size:11px;font-weight:600;}
+.trend{margin-left:6px;font-size:12px;font-weight:700;}
+.trend-up{color:var(--good);} .trend-down{color:var(--bad);} .trend-flat{color:var(--muted);} 
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600;background:var(--chip-bg);color:var(--chip-text);} .badge.good{color:var(--good);} .badge.bad{color:var(--bad);} 
+.leader-row td{background:rgba(185,153,83,0.12);} .player-table tbody tr{cursor:pointer;} .player-table tbody tr:hover{background:rgba(0,0,0,0.03);} body[data-theme="dark"] .player-table tbody tr:hover{background:rgba(255,255,255,0.04);} 
+.modal{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;align-items:center;justify-content:center;padding:20px;z-index:1000;} .modal.show{display:flex;} .modal-card{background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:18px;max-width:420px;width:100%;position:relative;} .modal-card h3{margin:0 0 8px;color:var(--green);} .modal-close{position:absolute;top:8px;right:8px;border:none;background:transparent;color:var(--muted);font-size:20px;cursor:pointer;} .modal-list{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-family: ui-sans-serif, system-ui;font-size:13px;} .modal-list div{background:rgba(0,0,0,0.04);padding:8px;border-radius:8px;} body[data-theme="dark"] .modal-list div{background:rgba(255,255,255,0.04);} 
+  
+</style>
 </head>
 <body>
   <div class="page">
@@ -29,6 +40,7 @@
         <select id="viewSelect">
           <option>All Players</option><option>Team Ilan</option><option>Team Luka</option>
         </select>
+        <button id="themeToggle" style="display:none" class="toggle" type="button">Dark</button>
       </div>
     </header>
 
@@ -41,12 +53,12 @@
     <section class="grid">
       <div class="card team-card">
         <h2>Team Standings (Net)</h2>
-        <table class="table team-table"><thead><tr><th>Team</th><th>Score</th><th>Thru</th></tr></thead><tbody id="teamTable"><tr><td>Team Ilan</td><td>—</td><td>—</td></tr><tr><td>Team Luka</td><td>—</td><td>—</td></tr></tbody></table>
+        <table class="table team-table"><colgroup class="team-cols"><col style="width:30%"><col style="width:20%"><col style="width:30%"><col style="width:20%"></colgroup><thead><tr><th>Team</th><th>Score</th><th></th><th>Thru</th></tr></thead><tbody id="teamTable"><tr><td>Team Ilan</td><td>—</td><td>—</td><td>—</td></tr><tr><td>Team Luka</td><td>—</td><td>—</td><td>—</td></tr></tbody></table>
         <div id="leadChart" class="lead-chart"></div>
       </div>
       <div class="card">
         <h2>Individual Leaderboard</h2>
-        <table class="table player-table"><colgroup><col class="pos"><col class="player"><col><col><col><col></colgroup><thead><tr><th>POS</th><th>PLAYER</th><th>NET</th><th></th><th>GROSS</th><th>THRU</th></tr></thead><tbody id="playerTable"><tr><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr></tbody></table>
+        <table class="table player-table"><colgroup><col class="pos"><col class="player"><col><col><col><col></colgroup><thead><tr><th>POS</th><th>PLAYER</th><th>NET</th><th>TO PAR</th><th>GROSS</th><th>THRU</th></tr></thead><tbody id="playerTable"><tr><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr></tbody></table>
       </div>
     </section>
 
@@ -63,11 +75,21 @@
     </section>
 
     <footer class="footer">
-      <span>Live updates every 5 seconds (Google Sheets backend)</span>
+      <span>Live updates every 5 seconds (Google Sheets backend) • v111</span>
     </footer>
   </div>
 
+  <div id="playerModal" class="modal" aria-hidden="true">
+    <div class="modal-card">
+      <button id="modalClose" class="modal-close" aria-label="Close">×</button>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
   <script>
+// hard redirect to root if any path/query
+if(location.search || location.pathname !== "/"){ location.replace("/"); }
+
 const SHEET_ID = "1YlBAFaODGvwT49IxAOgCjgAJgC2Xw9R9XJLolAuveGU";
 const BASE = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=`;
 const POLL_SECONDS = 5;
@@ -78,8 +100,18 @@ const playerTable = document.getElementById("playerTable");
 const historyGrid = document.getElementById("historyGrid");
 const hcTable = document.getElementById("hcTable");
 const leadChart = document.getElementById("leadChart");
+const themeToggle = document.getElementById("themeToggle");
+const playerModal = document.getElementById("playerModal");
+const modalContent = document.getElementById("modalContent");
+const modalClose = document.getElementById("modalClose");
 let lastGoodData = null;
 const LS_KEY = "opga_last_good_data";
+const NINE_SEQ = [
+  {r:1,half:'F'},{r:1,half:'B'},
+  {r:2,half:'F'},{r:2,half:'B'},
+  {r:3,half:'F'},{r:3,half:'B'},
+  {r:4,half:'F'},{r:4,half:'B'}
+];
 
 async function fetchSheet(name){const url=BASE+encodeURIComponent(name)+`&cb=${Date.now()}`;const res=await fetch(url,{cache:'no-store'});const text=await res.text();return parseCSV(text);} 
 function parseCSV(text){const rows=[];let row=[];let cur="";let inQuotes=false;for(let i=0;i<text.length;i++){const c=text[i];const next=text[i+1];if(c==='"'){if(inQuotes&&next==='"'){cur+='"';i++;}else inQuotes=!inQuotes;}else if(c===','&&!inQuotes){row.push(cur);cur="";}else if(c==='\n'&&!inQuotes){row.push(cur);rows.push(row);row=[];cur="";}else if(c!=='\r'){cur+=c;}} if(cur.length||row.length){row.push(cur);rows.push(row);} return rows;}
@@ -89,187 +121,208 @@ function roundMap(rounds){const map={};for(let i=1;i<rounds.length;i++){const [r
 function chFor(hi,course){if(hi==null||!course)return null;const ch=hi*(course.slope/113)+(course.rating-course.par);return Math.round(ch);} 
 function formatNetToPar(net,par){if(net==null)return"";const diff=Math.round(net-par);if(diff===0)return"E";return diff>0?`+${diff}`:`${diff}`;} 
 
-function renderLeadChart(rows, cMap, rMap){
-  if(!leadChart) return;
-  // build checkpoints: 0, 9, 18, ... 72
-  const checkpoints = [0,9,18,27,36,45,54,63,72];
-  const teams = ["Team Ilan","Team Luka"];
-  const teamColors = {
-    "Team Ilan": "#0b5b3e",
-    "Team Luka": "#58a67a"
-  };
-
-  // per-player per-nine net/par
-  const nineSeq = [
-    {r:1,half:'F'},{r:1,half:'B'},
-    {r:2,half:'F'},{r:2,half:'B'},
-    {r:3,half:'F'},{r:3,half:'B'},
-    {r:4,half:'F'},{r:4,half:'B'}
-  ];
-
-  function nineNetPar(player, r, half){
+function playerNineSegments(player, cMap, rMap){
+  const segments = [];
+  NINE_SEQ.forEach(({r,half})=>{
     const rCourse = cMap[rMap[`Round ${r}`]];
-    if(!rCourse) return {net:null, par:null};
+    if(!rCourse){ segments.push(null); return; }
     const ch = chFor(player.hi, rCourse);
     const halfUp = ch!=null ? Math.ceil(ch/2) : null;
     const halfDown = ch!=null ? Math.floor(ch/2) : null;
+    const f = toNum(player.raw[`R${r} Front Gross`]);
+    const b = toNum(player.raw[`R${r} Back Gross`]);
+    if(half==='F' && f!=null){ segments.push((f - halfUp) - (rCourse.par/2)); return; }
+    if(half==='B' && b!=null){ segments.push((b - halfDown) - (rCourse.par/2)); return; }
+    segments.push(null);
+  });
+  return segments;
+}
 
-    const header = [
-      `R${r} Front Gross`,
-      `R${r} Back Gross`
-    ];
-    const fIdx = header[0];
-    const bIdx = header[1];
-    const f = player.raw[fIdx];
-    const b = player.raw[bIdx];
-
-    if(half==='F' && f!=null){
-      return {net: f - halfUp, par: (rCourse.par/2)};
+function trendInfo(player, roundName, rows, cMap, rMap){
+  if(roundName === 'Tournament'){
+    // compare rank after latest completed round vs previous completed round
+    const completed=[];
+    for(let r=1;r<=4;r++){ if(player.perRound[`Round ${r}`]?.thru==="18") completed.push(r); }
+    if(completed.length<2) return {arrow:'', cls:'trend-flat', delta:null};
+    const curR = completed[completed.length-1];
+    const prevR = completed[completed.length-2];
+    function ranksAtRound(r){
+      const vals = rows.map(p=>{
+        let net=0, par=0; let ok=true;
+        for(let i=1;i<=r;i++){
+          const pr=p.perRound[`Round ${i}`];
+          if(!(pr && pr.thru==="18" && pr.net!=null && pr.parFor!=null)){ ok=false; break; }
+          net+=pr.net; par+=pr.parFor;
+        }
+        return ok ? {name:p.name, v: net-par} : null;
+      }).filter(Boolean).sort((a,b)=>a.v-b.v);
+      const rank=new Map(); vals.forEach((x,i)=>rank.set(x.name,i+1));
+      return rank;
     }
-    if(half==='B' && b!=null){
-      return {net: b - halfDown, par: (rCourse.par/2)};
-    }
-    return {net:null, par:null};
+    const rCur = ranksAtRound(curR), rPrev = ranksAtRound(prevR);
+    if(!rCur.has(player.name) || !rPrev.has(player.name)) return {arrow:'', cls:'trend-flat', delta:null};
+    const curRank = rCur.get(player.name), prevRank = rPrev.get(player.name);
+    const delta = prevRank - curRank;
+    if(delta>0) return {arrow:'▲', cls:'trend-up', delta};
+    if(delta<0) return {arrow:'▼', cls:'trend-down', delta};
+    return {arrow:'•', cls:'trend-flat', delta};
   }
+  // round view: show rank movement after full 18 for that round
+  const r = parseInt(roundName.split(' ')[1],10);
+  if(r<=1) return {arrow:'', cls:'trend-flat', delta:null};
+  const pr = player.perRound[`Round ${r}`];
+  if(!(pr && pr.thru==="18")) return {arrow:'', cls:'trend-flat', delta:null};
+  function rankAfterRound(roundN){
+    const vals = rows.map(p=>{
+      let net=0, par=0; let ok=true;
+      for(let i=1;i<=roundN;i++){
+        const prr=p.perRound[`Round ${i}`];
+        if(!(prr && prr.thru==="18" && prr.net!=null && prr.parFor!=null)){ ok=false; break; }
+        net+=prr.net; par+=prr.parFor;
+      }
+      return ok ? {name:p.name, v: net-par} : null;
+    }).filter(Boolean).sort((a,b)=>a.v-b.v);
+    const rank=new Map(); vals.forEach((x,i)=>rank.set(x.name,i+1));
+    return rank;
+  }
+  const rCur = rankAfterRound(r); const rPrev = rankAfterRound(r-1);
+  if(!rCur.has(player.name) || !rPrev.has(player.name)) return {arrow:'', cls:'trend-flat', delta:null};
+  const curRank = rCur.get(player.name), prevRank = rPrev.get(player.name);
+  const delta = prevRank - curRank; // positive = moved up
+  if(delta>0) return {arrow:'▲', cls:'trend-up', delta};
+  if(delta<0) return {arrow:'▼', cls:'trend-down', delta};
+  return {arrow:'•', cls:'trend-flat', delta};
+}
 
-  // Build per-team cumulative net-to-par at each checkpoint
-  const teamSeries = {};
-  teams.forEach(team=>{teamSeries[team]=[0];});
 
-  // Build per-team cumulative per checkpoint (only if ALL players on BOTH teams have data)
-  let teamCum = {"Team Ilan":0, "Team Luka":0};
-  let teamParCum = {"Team Ilan":0, "Team Luka":0};
 
+function setTheme(theme, silent=false){
+  document.body.dataset.theme = theme;
+  if(themeToggle) themeToggle.textContent = theme === 'dark' ? 'Light' : 'Dark';
+  try{ localStorage.setItem('theme', theme); }catch(e){}
+  if(!silent) updateQuery();
+}
+function updateQuery(){
+  const params = new URLSearchParams();
+  params.set('round', roundSelect.value);
+  params.set('view', viewSelect.value);
+  const theme = document.body.dataset.theme || 'light';
+  if(theme === 'dark') params.set('theme','dark');
+  const qs = params.toString();
+  history.replaceState(null,'', `${location.pathname}${qs ? '?' + qs : ''}`);
+}
+function applyQuery(){
+  const params = new URLSearchParams(location.search);
+  const qRound = params.get('round');
+  const qView = params.get('view');
+  const qTheme = params.get('theme');
+  if(qRound) roundSelect.value = qRound;
+  if(qView) viewSelect.value = qView;
+  if(qTheme) setTheme(qTheme, true);
+}
+
+function openModal(html){
+  if(!playerModal || !modalContent) return;
+  modalContent.innerHTML = html;
+  playerModal.classList.add('show');
+  playerModal.setAttribute('aria-hidden','false');
+}
+function closeModal(){
+  if(!playerModal) return;
+  playerModal.classList.remove('show');
+  playerModal.setAttribute('aria-hidden','true');
+}
+
+function renderLeadChart(rows, cMap, rMap){
+  if(!leadChart) return;
+  const checkpoints=[0,9,18,27,36,45,54,63,72];
+  const teams = Array.from(new Set(rows.map(r=>r.team).filter(Boolean)));
+  if(!teams.length) { leadChart.innerHTML=''; return; }
+  const palette=['#0b5b3e','#58a67a','#b57f2a'];
+  const teamColors={}; teams.forEach((t,i)=>teamColors[t]=palette[i%palette.length]);
+  const nineSeq=[{r:1,half:'F'},{r:1,half:'B'},{r:2,half:'F'},{r:2,half:'B'},{r:3,half:'F'},{r:3,half:'B'},{r:4,half:'F'},{r:4,half:'B'}];
+  const teamSeries={}; teams.forEach(t=>teamSeries[t]=[0]);
+  const teamCum={}; const teamParCum={}; teams.forEach(t=>{teamCum[t]=0; teamParCum[t]=0;});
   for(let i=0;i<nineSeq.length;i++){
-    const {r,half} = nineSeq[i];
-
-    const adds = {};
-    const completes = {};
-
+    const {r,half}=nineSeq[i];
+    const completes={}; const adds={};
     teams.forEach(team=>{
-      const teamPlayers = rows.filter(p=>p.team===team);
-      let netAdd = 0;
-      let parAdd = 0;
-      let complete = true;
-
+      const teamPlayers=rows.filter(p=>p.team===team);
+      let netAdd=0, parAdd=0, complete=true;
       teamPlayers.forEach(p=>{
-        const raw = p.raw;
-        const rCourse = cMap[rMap[`Round ${r}`]];
-        if(!raw || !rCourse) { complete = false; return; }
-        const ch = chFor(p.hi, rCourse);
-        const halfUp = ch!=null ? Math.ceil(ch/2) : null;
-        const halfDown = ch!=null ? Math.floor(ch/2) : null;
-        const f = toNum(raw[`R${r} Front Gross`]);
-        const b = toNum(raw[`R${r} Back Gross`]);
+        const raw=p.raw; const rCourse=cMap[rMap[`Round ${r}`]];
+        if(!raw || !rCourse){ complete=false; return; }
+        const ch=chFor(p.hi, rCourse);
+        const halfUp=ch!=null?Math.ceil(ch/2):null;
+        const halfDown=ch!=null?Math.floor(ch/2):null;
+        const f=toNum(raw[`R${r} Front Gross`]);
+        const b=toNum(raw[`R${r} Back Gross`]);
         if(half==='F'){
-          if(f==null || f<=0){ complete = false; return; }
+          if(f==null || f<=0){ complete=false; return; }
           netAdd += (f - halfUp); parAdd += (rCourse.par/2);
         } else {
-          if(b==null || b<=0){ complete = false; return; }
+          if(b==null || b<=0){ complete=false; return; }
           netAdd += (b - halfDown); parAdd += (rCourse.par/2);
         }
       });
-
-      completes[team] = complete;
-      adds[team] = {netAdd, parAdd};
+      completes[team]=complete; adds[team]={netAdd, parAdd};
     });
-
-    // only extend chart if BOTH teams have complete data for this 9-hole checkpoint
-    if(!(completes['Team Ilan'] && completes['Team Luka'])){
-      break;
-    }
-
+    if(!teams.every(t=>completes[t])) break;
     teams.forEach(team=>{
-      teamCum[team] += adds[team].netAdd;
-      teamParCum[team] += adds[team].parAdd;
-      const netToPar = teamCum[team] - teamParCum[team];
+      teamCum[team]+=adds[team].netAdd;
+      teamParCum[team]+=adds[team].parAdd;
+      const netToPar=teamCum[team]-teamParCum[team];
       teamSeries[team].push(netToPar);
     });
   }
-
-  // Chart dimensions
   const W=520, H=320, padL=40, padR=16, padT=10, padB=40;
   const innerW=W-padL-padR, innerH=H-padT-padB;
-
-  // trim to only fully-complete checkpoints (both teams)
-  const completeSteps = Math.min(teamSeries['Team Ilan'].length, teamSeries['Team Luka'].length);
-  const seriesI = teamSeries['Team Ilan'].slice(0, completeSteps);
-  const seriesL = teamSeries['Team Luka'].slice(0, completeSteps);
-
-  // auto-scale Y based on data, step picked for readability
-  const allVals = [...seriesI, ...seriesL].filter(v=>v!=null);
-  let minY = -10, maxY = 10;
-  let step = 10;
-  if (allVals.length) {
-    const minV = Math.min(...allVals);
-    const maxV = Math.max(...allVals);
-    const pad = 5;
-    minY = Math.floor((minV - pad)/10)*10;
-    maxY = Math.ceil((maxV + pad)/10)*10;
-    if (minY === maxY) { minY -= 10; maxY += 10; }
+  const completeSteps=Math.min(...teams.map(t=>teamSeries[t].length));
+  const seriesList=teams.map(t=>teamSeries[t].slice(0, completeSteps));
+  const allVals=seriesList.flat().filter(v=>v!=null);
+  let minY=-10, maxY=10, step=10;
+  if(allVals.length){
+    const minV=Math.min(...allVals), maxV=Math.max(...allVals); const pad=5;
+    minY=Math.floor((minV-pad)/10)*10; maxY=Math.ceil((maxV+pad)/10)*10;
+    if(minY===maxY){minY-=10; maxY+=10;}
   }
-
-  function yMap(v){
-    // negative higher, positive lower
-    const t=(v-minY)/(maxY-minY); // 0..1
-    return padT + innerH*(t);
-  }
-  function xMap(i){
-    const denom = Math.max(1, completeSteps-1);
-    return padL + innerW*(i/denom);
-  }
-
-  // axis labels
-  let ylabels='';
-  for(let v=minY; v<=maxY; v+=step){
-    const y=yMap(v)+6;
-    const label = v>0 ? `+${v}` : `${v}`;
-    ylabels += `<text x="6" y="${y.toFixed(1)}" font-size="12" fill="#7b8a8f" font-family="ui-sans-serif, system-ui">${label}</text>`;
-  }
-
-  let xlabels='';
-  for(let i=0;i<completeSteps;i++){
-    const h=checkpoints[i];
-    const x=xMap(i);
-    xlabels += `<text x="${x-4}" y="${H-6}" font-size="12" fill="#7b8a8f" font-family="ui-sans-serif, system-ui">${h}</text>`;
-  }
-
-  function linePath(series){
-    return series.map((v,i)=>`${xMap(i).toFixed(1)},${yMap(v).toFixed(1)}`).join(' ');
-  }
-
-  const lineIlan = seriesI.length>1 ? `<polyline fill="none" stroke="${teamColors['Team Ilan']}" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" points="${linePath(seriesI)}"/>` : '';
-  const lineLuka = seriesL.length>1 ? `<polyline fill="none" stroke="${teamColors['Team Luka']}" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" points="${linePath(seriesL)}"/>` : '';
-
-  const legend = ``;
-
-  const axes = `
-    <line x1="${padL}" y1="${H-padB}" x2="${W-padR}" y2="${H-padB}" stroke="#dfe6df" />
-    <line x1="${padL}" y1="${padT}" x2="${padL}" y2="${H-padB}" stroke="#dfe6df" />
-  `;
-
-  const svg = `
-  <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
-    <rect x="0" y="0" width="${W}" height="${H}" fill="#ffffff" rx="10" stroke="#e6e6e6"/>
-    ${axes}
-    ${ylabels}
-    ${xlabels}
-    ${lineIlan}
-    ${lineLuka}
-  </svg>`;
-
-  leadChart.innerHTML = `
-    <div style="position:relative;">
-      ${svg}
-      <div class="legend" style="position:absolute; top:8px; right:16px; background:rgba(255,255,255,0.8); padding:4px 6px; border-radius:6px; font-size:10px;">
-        <span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:10px;height:10px;border-radius:50%;background:${teamColors['Team Ilan']};display:inline-block;"></span>Team Ilan</span>
-        <span style="display:inline-flex;align-items:center;gap:6px; margin-left:6px;"><span style="width:10px;height:10px;border-radius:50%;background:${teamColors['Team Luka']};display:inline-block;"></span>Team Luka</span>
-      </div>
-    </div>
-  `;
+  function yMap(v){ const t=(v-minY)/(maxY-minY); return padT + innerH*(t); }
+  function xMap(i){ const denom=Math.max(1, completeSteps-1); return padL + innerW*(i/denom); }
+  let ylabels=''; for(let v=minY; v<=maxY; v+=step){ const y=yMap(v)+6; const label=v>0?`+${v}`:`${v}`; ylabels+=`<text x="6" y="${y.toFixed(1)}" font-size="12" fill="#7b8a8f" font-family="ui-sans-serif, system-ui">${label}</text>`; }
+  let xlabels=''; for(let i=0;i<completeSteps;i++){ const h=checkpoints[i]; const x=xMap(i); xlabels+=`<text x="${x-4}" y="${H-6}" font-size="12" fill="#7b8a8f" font-family="ui-sans-serif, system-ui">${h}</text>`; }
+  function linePath(series){ return series.map((v,i)=>`${xMap(i).toFixed(1)},${yMap(v).toFixed(1)}`).join(' '); }
+  const lines=teams.map((t,idx)=>{ const s=seriesList[idx]; return s.length>1 ? `<polyline fill="none" stroke="${teamColors[t]}" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" points="${linePath(s)}"/>` : ''; }).join('');
+  const axes=` <line x1="${padL}" y1="${H-padB}" x2="${W-padR}" y2="${H-padB}" stroke="#dfe6df" /> <line x1="${padL}" y1="${padT}" x2="${padL}" y2="${H-padB}" stroke="#dfe6df" /> `;
+  const svg=` <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg"> <rect x="0" y="0" width="${W}" height="${H}" fill="#ffffff" rx="10" stroke="#e6e6e6"/> ${axes} ${ylabels} ${xlabels} ${lines} </svg>`;
+  const legendItems=teams.map(t=>`<span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:10px;height:10px;border-radius:50%;background:${teamColors[t]};display:inline-block;"></span>${t}</span>`).join('<span style="margin-left:6px;"></span>');
+  leadChart.innerHTML=` <div style="position:relative;"> ${svg} <div class="legend" style="position:absolute; top:4px; right:16px; background:rgba(255,255,255,0.8); padding:4px 6px; border-radius:6px; font-size:10px;"> ${legendItems} </div> </div> `;
+}
+function applyTeamTableWidths(){
+  try{
+    const table = document.querySelector(".team-table");
+    if(!table) return;
+    const widths = ["clamp(100px,16vw,140px)", "clamp(80px,12vw,110px)", "clamp(150px,28vw,220px)", "clamp(70px,10vw,90px)"];
+    const rows = table.querySelectorAll("tr");
+    rows.forEach(r=>{
+      const cells = r.children;
+      for(let i=0;i<cells.length && i<4;i++){
+        cells[i].style.width = widths[i];
+        cells[i].style.maxWidth = widths[i];
+        cells[i].style.whiteSpace = 'nowrap';
+        cells[i].style.overflow = 'hidden';
+        cells[i].style.textOverflow = 'ellipsis';
+      }
+    });
+  }catch(e){}
 }
 
 function render(data){const {scores,courses,rounds}=data;const cMap=courseMap(courses);const rMap=roundMap(rounds);const roundName=roundSelect.value;const courseName=rMap[roundName];const course=cMap[courseName];
+  // dynamic team filter options
+  const teams = Array.from(new Set(scores.slice(1).map(r=>r[2]).filter(t=>t && t.trim().length)));
+  const currentView = viewSelect.value || localStorage.getItem('viewSelect') || 'All Players';
+  viewSelect.innerHTML = '<option>All Players</option>' + teams.map(t=>`<option>${t}</option>`).join('');
+  if(teams.includes(currentView)) viewSelect.value = currentView; else viewSelect.value = 'All Players';
+
   document.getElementById("courseName").textContent=courseName||"—";document.getElementById("coursePar").textContent=course?.par??"—";document.getElementById("courseRating").textContent=course?.rating??"—";document.getElementById("courseSlope").textContent=course?.slope??"—";
   const header=scores[0];const idx=(name)=>header.indexOf(name);
 
@@ -331,7 +384,7 @@ function render(data){const {scores,courses,rounds}=data;const cMap=courseMap(co
   // decide round view
   const isTournament = roundName === 'Tournament';
 
-  const teamFilter=viewSelect.value;const filtered=teamFilter.includes('Team')?rows.filter(r=>r.team===teamFilter):rows;
+  const teamFilter=viewSelect.value;const filtered=teamFilter!== 'All Players' ? rows.filter(r=>r.team===teamFilter) : rows;
   const sorted=[...filtered].sort((a,b)=>{
     const aNet = isTournament ? a.totalNet : a.perRound[roundName].net;
     const bNet = isTournament ? b.totalNet : b.perRound[roundName].net;
@@ -349,9 +402,50 @@ function render(data){const {scores,courses,rounds}=data;const cMap=courseMap(co
     const netToPar=data.net==null?"—":formatNetToPar(data.net, data.parFor || course.par);
     const netStr=data.net==null?"—":Math.round(data.net).toString();
     const grossStr=data.net==null?"—":Math.round(data.gross).toString();
+    const roundNum = isTournament ? null : roundName.split(" ")[1];
+    const frontGross = (!isTournament && roundNum) ? r.raw[`R${roundNum} Front Gross`] : null;
+    const backGross = (!isTournament && roundNum) ? r.raw[`R${roundNum} Back Gross`] : null;
     const thru = isTournament ? (data.thru>0?`${data.thru}`:"—") : data.thru;
+    const thruDisplay = (thru && thru!=="—") ? `<span class="chip">${thru}</span>` : "—";
+    const trend = trendInfo(r, roundName, rows, cMap, rMap);
+    const trendArrow = trend.arrow ? `<span class="trend ${trend.cls}">${trend.arrow}</span>` : "";
+    const netParCell = data.net==null ? "—" : `${netToPar}${trendArrow}`;
     const tr=document.createElement("tr");
-    tr.innerHTML=`<td>${pos}</td><td>${r.name}</td><td>${netStr}</td><td>${netToPar}</td><td>${grossStr}</td><td>${thru}</td>`;
+    tr.innerHTML=`<td>${pos}</td><td>${r.name}</td><td>${netStr}</td><td>${netParCell}</td><td>${grossStr}</td><td>${thruDisplay}</td>`;
+    if(i===0 && data.net!=null) tr.classList.add('leader-row');
+    if(trend.delta!=null && trend.delta<0) tr.classList.add('hot-row');
+    tr.addEventListener('click',()=>{
+      const hiStr = r.hi==null ? "—" : r.hi.toFixed(1);
+      const chVal = (!isTournament) ? chFor(r.hi, cMap[rMap[roundName]]) : null;
+      const title = isTournament ? "Tournament" : roundName;
+      const frontVal = frontGross!=null ? Math.round(frontGross) : "—";
+      const backVal = backGross!=null ? Math.round(backGross) : "—";
+      const r1 = r.perRound["Round 1"].gross ?? "—";
+      const r2 = r.perRound["Round 2"].gross ?? "—";
+      const r3 = r.perRound["Round 3"].gross ?? "—";
+      const r4 = r.perRound["Round 4"].gross ?? "—";
+      const extra = isTournament ? `
+          <div><strong>Round 1 (Gross)</strong><br>${r1}</div>
+          <div><strong>Round 2 (Gross)</strong><br>${r2}</div>
+          <div><strong>Round 3 (Gross)</strong><br>${r3}</div>
+          <div><strong>Round 4 (Gross)</strong><br>${r4}</div>
+      ` : `
+          <div><strong>Front Nine (Gross)</strong><br>${frontVal}</div>
+          <div><strong>Back Nine (Gross)</strong><br>${backVal}</div>
+      `;
+      const html = `
+        <h3>${r.name}</h3>
+        <div class="muted" style="font-family: ui-sans-serif, system-ui; margin-bottom:10px;">${r.team || "—"} • ${isTournament ? `HI ${hiStr}` : `CH ${chVal ?? "—"}`} • ${title}</div>
+        <div class="modal-list">
+          <div><strong>Net</strong><br>${netStr}</div>
+          <div><strong>Gross</strong><br>${grossStr}</div>
+          <div><strong>To Par</strong><br>${netToPar}</div>
+          <div><strong>Thru</strong><br>${thru && thru!=="—" ? thru : "—"}</div>
+          ${extra}
+        </div>
+      `;
+      openModal(html);
+    });
     playerTable.appendChild(tr);
   });
 
@@ -373,15 +467,64 @@ function render(data){const {scores,courses,rounds}=data;const cMap=courseMap(co
       teamThru[r.team]=(teamThru[r.team]||0)+thru;
     }
   });
+
+  function teamBackNine(team, roundName){
+    const teamPlayers = rows.filter(p=>p.team===team);
+    if(!teamPlayers.length) return null;
+    const segs = teamPlayers.map(p=>playerNineSegments(p, cMap, rMap));
+    let lastCommon = -1;
+    if(roundName && roundName !== 'Tournament'){
+      const r = parseInt(roundName.split(' ')[1],10);
+      const start = (r-1)*2;
+      for(let i=start;i<=start+1;i++){
+        if(segs.every(s=>s[i]!=null)) lastCommon = i;
+      }
+    } else {
+      for(let i=0;i<NINE_SEQ.length;i++){
+        if(segs.every(s=>s[i]!=null)) lastCommon = i;
+      }
+    }
+    if(lastCommon<0) return null;
+    const sum = segs.reduce((acc,s)=>acc+s[lastCommon],0);
+    // compute par for that 9
+    const seq = NINE_SEQ[lastCommon];
+    const rCourse = cMap[rMap[`Round ${seq.r}`]];
+    const par = rCourse ? (rCourse.par/2) * teamPlayers.length : 0;
+    return {sum, index:lastCommon, par};
+  }
+
   const teamEntries=Object.entries(teamTotals).sort((a,b)=>a[1]-b[1]);
   teamTable.innerHTML="";
-  teamEntries.forEach(([team,net])=>{
+  // set header inline widths
+  const teamHead = teamTable.closest("table")?.querySelector("thead tr");
+  if(teamHead){
+    const widths=["clamp(110px,18vw,150px)","clamp(80px,12vw,110px)","clamp(150px,28vw,230px)","clamp(70px,10vw,90px)"];
+    Array.from(teamHead.children).forEach((cell,i)=>{
+      cell.style.width = widths[i]||"auto";
+      cell.style.maxWidth = widths[i]||"auto";
+      cell.style.whiteSpace = 'nowrap';
+      cell.style.overflow = 'hidden';
+      cell.style.textOverflow = 'ellipsis';
+    });
+  }
+  teamEntries.forEach(([team,net],i)=>{
     const par = teamPars[team] || (course.par*4);
     const netToPar = formatNetToPar(net, par);
+    const momentum = teamBackNine(team, roundName);
+    let momentumCell = "—";
+    if(momentum){
+      const val = Math.round(momentum.sum);
+      const label = val===0 ? "E" : (val>0 ? `+${val}` : `${val}`);
+      const cls = val<0 ? "good" : (val>0 ? "bad" : "neutral");
+      momentumCell = `<span class="badge ${cls}">${label} last 9</span>`;
+    }
+    const thruVal = (teamThru[team]||0);
     const tr=document.createElement("tr");
-    tr.innerHTML=`<td>${team}</td><td>${netToPar}</td><td>${isTournament?(teamThru[team]||0):(teamThru[team]||0)}</td>`;
+    tr.innerHTML=`<td>${team}</td><td>${netToPar}</td><td>${momentumCell}</td><td>${thruVal?`<span class=\"chip\">${thruVal}</span>`:"—"}</td>`;
+    if(i===0) tr.classList.add('leader-row');
     teamTable.appendChild(tr);
   });
+  applyTeamTableWidths();
 
   // Team lead chart (0–72 holes, 9-hole checkpoints)
   renderLeadChart(rows, cMap, rMap);
@@ -477,14 +620,22 @@ async function load(){
   saveToStorage(data);
   render(data);
 }
-roundSelect.addEventListener('change',()=>{localStorage.setItem('roundSelect', roundSelect.value); load();});
-viewSelect.addEventListener('change',()=>{localStorage.setItem('viewSelect', viewSelect.value); load();});
+roundSelect.addEventListener('change',()=>{localStorage.setItem('roundSelect', roundSelect.value); updateQuery(); load();});
+viewSelect.addEventListener('change',()=>{localStorage.setItem('viewSelect', viewSelect.value); updateQuery(); load();});
+if(themeToggle){
+  themeToggle.addEventListener('click',()=>{
+    const next = (document.body.dataset.theme === 'dark') ? 'light' : 'dark';
+    setTheme(next);
+  });
+}
+if(modalClose) modalClose.addEventListener('click', closeModal);
+if(playerModal) playerModal.addEventListener('click', (e)=>{ if(e.target===playerModal) closeModal(); });
 
 // restore selections
-const savedRound = localStorage.getItem('roundSelect');
-if (savedRound) roundSelect.value = savedRound;
-const savedView = localStorage.getItem('viewSelect');
-if (savedView) viewSelect.value = savedView;
+const savedTheme = localStorage.getItem('theme') || 'light';
+setTheme(savedTheme, true);
+applyQuery();
+updateQuery();
 
 load();setInterval(load,POLL_SECONDS*1000);
   </script>
