@@ -132,7 +132,9 @@
     .last-nine-badge.over { background:var(--red-dim); color:var(--red); }
     .last-nine-badge.even { background:rgba(245,240,232,0.08); color:var(--text-secondary); }
     .diff-bar-wrap { padding:10px 16px 14px; border-top:1px solid var(--border); }
-    .diff-bar-label { font-size:0.6rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:0; text-align:center; }
+    .diff-bar-label { font-size:0.78rem; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:var(--text-secondary); margin-bottom:6px; text-align:center; }
+    .diff-bar { height:6px; border-radius:3px; background:var(--surface-2); overflow:hidden; }
+    .diff-bar-fill { height:100%; border-radius:3px; transition:width 0.6s ease; }
 
     /* Individual Leaderboard */
     .lb-header { display:grid; grid-template-columns:32px 1fr 54px 62px 54px 40px; gap:4px; padding:10px 14px; font-size:0.62rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-muted); background:var(--surface-2); border-bottom:1px solid var(--border); }
@@ -332,6 +334,7 @@
       <div class="section-head">
         <span class="section-title">Tournament History</span>
         <span class="section-line"></span>
+        <span class="section-badge">Gross / Net to Par</span>
       </div>
       <div class="history-grid" id="historyGrid"></div>
     </div>
@@ -513,25 +516,25 @@ function renderHighlights(){
     }
   }
 
-  // Low Gross — filter by round if in round view, handle ties
-  let lowGrossList=[];
+  // Best Round — best 18-hole net-to-par, filter by view, handle ties
+  let bestRoundList=[];
   for(const d of data){
     for(const rn of roundsToCheck){
       const res=calcPlayerRound(d.player,rn);
-      if(res&&res.thru===18)lowGrossList.push({name:d.player.name,gross:res.gross,round:rn});
+      if(res&&res.thru===18)bestRoundList.push({name:d.player.name,ntp:res.netToPar,gross:res.gross,round:rn});
     }
   }
-  let lowGrossCard='';
-  if(lowGrossList.length){
-    lowGrossList.sort((a,b)=>a.gross-b.gross);
-    const bestGross=lowGrossList[0].gross;
-    const tied=lowGrossList.filter(l=>l.gross===bestGross);
+  let bestRoundCard='';
+  if(bestRoundList.length){
+    bestRoundList.sort((a,b)=>a.ntp-b.ntp);
+    const bestNtp=bestRoundList[0].ntp;
+    const tied=bestRoundList.filter(l=>l.ntp===bestNtp);
     if(tied.length===1){
       const g=tied[0];
-      lowGrossCard=`<div class="hl-card hl-low"><div class="hl-label">🏌️ Low Gross</div><div class="hl-name">${esc(g.name)}</div><div class="hl-detail">${g.gross} in Round ${g.round}</div></div>`;
+      bestRoundCard=`<div class="hl-card hl-low"><div class="hl-label">🏆 Best Round</div><div class="hl-name">${esc(g.name)}</div><div class="hl-detail">${fmtPar(g.ntp)} net · R${g.round}</div></div>`;
     }else{
       const names=tied.map(g=>esc(g.name)).join(' & ');
-      lowGrossCard=`<div class="hl-card hl-low"><div class="hl-label">🏌️ Low Gross</div><div class="hl-name">${names}</div><div class="hl-detail">${bestGross} gross</div></div>`;
+      bestRoundCard=`<div class="hl-card hl-low"><div class="hl-label">🏆 Best Round</div><div class="hl-name">${names}</div><div class="hl-detail">${fmtPar(bestNtp)} net</div></div>`;
     }
   }
 
@@ -541,7 +544,7 @@ function renderHighlights(){
   let marginCard='';
   if(teams.length>=2){const m=Math.abs(teams[0][1]-teams[1][1]);marginCard=`<div class="hl-card hl-margin"><div class="hl-label">Team Lead</div><div class="hl-name">${m===0?'Tied':esc(teams[0][0])}</div><div class="hl-detail">${m===0?'All square!':`by ${m} stroke${m!==1?'s':''}`}</div></div>`}
 
-  el.innerHTML=`<div class="hl-card hl-mvp"><div class="hl-label">⛳ Leader</div><div class="hl-name">${leaderNames}</div><div class="hl-detail">${fmtPar(leaderScore)} · thru ${leaderThru}</div></div>`+bestNineCard+lowGrossCard+marginCard;
+  el.innerHTML=`<div class="hl-card hl-mvp"><div class="hl-label">⛳ Leader</div><div class="hl-name">${leaderNames}</div><div class="hl-detail">${fmtPar(leaderScore)} · thru ${leaderThru}</div></div>`+bestNineCard+bestRoundCard+marginCard;
 }
 
 /* ═══ TEAMS ═══ */
@@ -560,7 +563,8 @@ function renderTeams(){
   }).join('');
   if(teamData.length>=2){
     const spread=Math.abs(teamData[0].netToPar-teamData[1].netToPar);
-    html+=`<div class="diff-bar-wrap"><div class="diff-bar-label">${spread===0?'Teams are tied':esc(teamData[0].name)+' leads by '+spread+' stroke'+(spread!==1?'s':'')}</div></div>`;
+    const pct=spread===0?50:Math.min(85,50+spread*3);
+    html+=`<div class="diff-bar-wrap"><div class="diff-bar-label">${spread===0?'Teams are tied':esc(teamData[0].name)+' leads by '+spread+' stroke'+(spread!==1?'s':'')}</div><div class="diff-bar"><div class="diff-bar-fill" style="width:${pct}%;background:${spread===0?'var(--text-muted)':'var(--green-300)'}"></div></div></div>`;
   }
   container.innerHTML=html;
   // Attach click handlers to team rows
@@ -703,9 +707,14 @@ function renderChart(){
       },
       scales:{
         x:{ticks:{color:'#6b7a64',font:{family:'Outfit',size:11}},grid:{color:'rgba(245,240,232,0.05)'}},
-        y:{reverse:true,ticks:{color:'#6b7a64',font:{family:'Outfit',size:11}},grid:{color:'rgba(245,240,232,0.06)'},title:{display:true,text:'Cumulative Net to Par',color:'#6b7a64',font:{family:'Outfit',size:11}}}
+        y:{reverse:true,ticks:{color:'#6b7a64',font:{family:'Outfit',size:11},callback:function(v){return v>0?'+'+v:v}},grid:{color:'rgba(245,240,232,0.06)'},title:{display:true,text:'Cumulative Net to Par',color:'#6b7a64',font:{family:'Outfit',size:11}}}
       }
     }
+  });
+  // Dismiss tooltip on mobile tap-away
+  ctx.canvas.addEventListener('click',function(e){
+    const pts=chartInstance.getElementsAtEventForMode(e,'index',{intersect:false},false);
+    if(!pts.length){chartInstance.tooltip.setActiveElements([]);chartInstance.update('none')}
   });
 }
 
@@ -730,7 +739,7 @@ function renderHistory(){
 
 /* ═══ HANDICAPS ═══ */
 function renderHandicaps(){
-  document.getElementById('hcBody').innerHTML=players.map(p=>{
+  document.getElementById('hcBody').innerHTML=[...players].sort((a,b)=>a.hi-b.hi).map(p=>{
     const chs=[1,2,3,4].map(rn=>`<td class="hc-val">${getCH(p.hi,rn)||'—'}</td>`).join('');
     return`<tr><td class="hc-name">${esc(p.name)}</td><td class="hc-val">${p.hi}</td>${chs}</tr>`;
   }).join('');
