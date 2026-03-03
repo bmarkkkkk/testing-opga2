@@ -154,8 +154,6 @@ function trendInfo(player, roundName, rows, cMap, rMap){
           if(!(pr && pr.thru==="18" && pr.net!=null && pr.parFor!=null)){ ok=false; break; }
           net+=pr.net; par+=pr.parFor;
         }
-    let prevCommon = -1;
-    for(let i=lastCommon-1;i>=0;i--){ if(segs.every(s=>s[i]!=null)) { prevCommon=i; break; } }
         return ok ? {name:p.name, v: net-par} : null;
       }).filter(Boolean).sort((a,b)=>a.v-b.v);
       const rank=new Map(); vals.forEach((x,i)=>rank.set(x.name,i+1));
@@ -492,14 +490,7 @@ function render(data){const {scores,courses,rounds}=data;const cMap=courseMap(co
     const seq = NINE_SEQ[lastCommon];
     const rCourse = cMap[rMap[`Round ${seq.r}`]];
     const par = rCourse ? (rCourse.par/2) * teamPlayers.length : 0;
-    let prevSum=null, prevPar=null;
-    if(prevCommon>=0){
-      prevSum = segs.reduce((acc,s)=>acc+s[prevCommon],0);
-      const seqPrev = NINE_SEQ[prevCommon];
-      const rCoursePrev = cMap[rMap[`Round ${seqPrev.r}`]];
-      prevPar = rCoursePrev ? (rCoursePrev.par/2) * teamPlayers.length : 0;
-    }
-    return {sum, index:lastCommon, par, prevSum, prevPar};
+    return {sum, index:lastCommon, par};
   }
 
   const teamEntries=Object.entries(teamTotals).sort((a,b)=>a[1]-b[1]);
