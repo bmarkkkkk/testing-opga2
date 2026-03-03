@@ -177,9 +177,12 @@
     .trend-badge.cold { background:var(--red-dim); color:var(--red); }
     .round-dots { display:inline-flex; gap:3px; margin-left:6px; vertical-align:middle; }
     .round-dot { width:8px; height:8px; border-radius:2px; display:inline-block; }
-    .round-dot.good { background:var(--green-300); opacity:0.7; }
-    .round-dot.bad { background:var(--red); opacity:0.6; }
-    .round-dot.ok { background:var(--text-muted); opacity:0.35; }
+    .round-dot.big-up { background:#2e9e6a; }
+    .round-dot.sm-up { background:#5ec49a; opacity:0.8; }
+    .round-dot.flat { background:var(--text-muted); opacity:0.35; }
+    .round-dot.sm-down { background:#d88; opacity:0.8; }
+    .round-dot.big-down { background:#c43; }
+    .round-dot.baseline { background:var(--text-muted); opacity:0.4; }
     .round-dot.empty { background:var(--text-muted); opacity:0.12; }
 
     /* Chart */
@@ -630,7 +633,25 @@ function renderIndividual(){
     let dotsHtml='';
     if(currentView==='tournament'){
       dotsHtml='<span class="round-dots">';
-      for(let rn=1;rn<=4;rn++){const res=calcPlayerRound(d.player,rn);if(!res||res.thru===0){dotsHtml+='<span class="round-dot empty" title="R'+rn+': —"></span>'}else{const cls=res.netToPar<0?'good':(res.netToPar>2?'bad':'ok');dotsHtml+=`<span class="round-dot ${cls}" title="R${rn}: ${fmtPar(res.netToPar)}"></span>`}}
+      let prevNTP=null;
+      for(let rn=1;rn<=4;rn++){
+        const res=calcPlayerRound(d.player,rn);
+        if(!res||res.thru===0){dotsHtml+='<span class="round-dot empty" title="R'+rn+': —"></span>';continue}
+        const ntp=res.netToPar;
+        if(prevNTP===null){
+          dotsHtml+=`<span class="round-dot baseline" title="R${rn}: ${fmtPar(ntp)}"></span>`;
+        }else{
+          const diff=prevNTP-ntp;// positive = improved
+          let cls,label;
+          if(diff>=3){cls='big-up';label='▲▲'}
+          else if(diff>=1){cls='sm-up';label='▲'}
+          else if(diff===0){cls='flat';label='—'}
+          else if(diff>=-2){cls='sm-down';label='▼'}
+          else{cls='big-down';label='▼▼'}
+          dotsHtml+=`<span class="round-dot ${cls}" title="R${rn}: ${fmtPar(ntp)} (${label}${Math.abs(diff)} vs R${rn-1})"></span>`;
+        }
+        prevNTP=ntp;
+      }
       dotsHtml+='</span>';
     }
     return`<div class="lb-row${pos===1?' is-leader':''}" data-player="${esc(d.player.name)}">
