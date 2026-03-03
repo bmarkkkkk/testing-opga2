@@ -385,7 +385,6 @@
 const SHEET_ID = '1YlBAFaODGvwT49IxAOgCjgAJgC2Xw9R9XJLolAuveGU';
 const POLL_SECONDS = 5;
 const START_YEAR = 2026;
-const MAX_SCAN_YEAR = 2040;
 let availableYears = [];
 let currentYear = START_YEAR;
 function tabsForYear(y){return{scores:`Scores ${y}`,courses:`Courses ${y}`,rounds:`Rounds ${y}`}}
@@ -903,22 +902,16 @@ document.querySelectorAll('#viewBtns .ctrl-btn').forEach(btn=>{
 
 /* ═══ YEAR SCANNING & INIT ═══ */
 async function scanYears(){
-  const found=[];
-  let misses=0;
-  for(let y=START_YEAR;y<=MAX_SCAN_YEAR;y++){
-    try{
-      // Use JSON endpoint — it returns an error object for non-existent tabs
-      const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent('Scores '+y)}`;
-      const r=await fetch(url,{cache:'no-store'});
-      const t=await r.text();
-      // Response is JSONP-like: google.visualization.Query.setResponse({...})
-      // Check for error status which means tab doesn't exist
-      if(t.includes('"status":"error"')||t.includes('"status": "error"')){misses++;if(misses>=3)break;continue}
-      if(t.includes('"status":"ok"')||t.includes('"status": "ok"')){found.push(y);misses=0}
-      else{misses++;if(misses>=3)break}
-    }catch{misses++;if(misses>=3)break}
-  }
-  return found.length?found:[START_YEAR];
+  try{
+    const rows=await fetchTab('Config');
+    const found=[];
+    for(let i=1;i<rows.length;i++){
+      const y=parseInt(rows[i][0]);
+      if(y>=2000 && y<=2100)found.push(y);
+    }
+    found.sort((a,b)=>a-b);
+    return found.length?found:[START_YEAR];
+  }catch{return[START_YEAR]}
 }
 
 function renderYearSelector(){
