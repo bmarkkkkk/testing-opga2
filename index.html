@@ -903,18 +903,26 @@ document.querySelectorAll('#viewBtns .ctrl-btn').forEach(btn=>{
 
 /* ═══ YEAR SCANNING & INIT ═══ */
 async function scanYears(){
+  // Fetch a known non-existent tab to get Google Sheets' fallback response
+  let fallback='';
+  try{
+    const fr=await fetch(csvUrl('Scores 9999'),{cache:'no-store'});
+    if(fr.ok)fallback=await fr.text();
+  }catch{}
+
   const found=[];
+  let misses=0;
   for(let y=START_YEAR;y<=MAX_SCAN_YEAR;y++){
     try{
       const r=await fetch(csvUrl(`Scores ${y}`),{cache:'no-store'});
-      if(!r.ok)break;
+      if(!r.ok){misses++;if(misses>=3)break;continue}
       const t=await r.text();
-      // Google Sheets returns HTML error pages for missing tabs — verify it's real CSV
-      if(t.trim().startsWith('<'))break;
+      // If response matches the fallback, this tab doesn't actually exist
+      if(fallback && t===fallback){misses++;if(misses>=3)break;continue}
       const lines=t.trim().split('\n').filter(l=>l.trim());
-      if(lines.length>=2 && lines[0].includes(','))found.push(y);
-      else break;
-    }catch{break}
+      if(lines.length>=2){found.push(y);misses=0}
+      else{misses++;if(misses>=3)break}
+    }catch{misses++;if(misses>=3)break}
   }
   return found.length?found:[START_YEAR];
 }
