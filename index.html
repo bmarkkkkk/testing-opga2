@@ -8,7 +8,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
   <style>
-    /* ── CSS Variables ── */
     :root {
       --green-900: #0a1f14;
       --green-800: #0f2e1d;
@@ -25,6 +24,7 @@
       --red-dim: rgba(221,68,68,0.15);
       --blue: #4a90d9;
       --blue-dim: rgba(74,144,217,0.15);
+      --orange: #e8943a;
       --text-primary: #f5f0e8;
       --text-secondary: #a8b5a0;
       --text-muted: #6b7a64;
@@ -40,517 +40,269 @@
       --shadow-lg: 0 8px 32px rgba(0,0,0,0.4);
       --transition: 0.2s ease;
     }
-
-    /* ── Reset & Base ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { font-size: 15px; scroll-behavior: smooth; }
     body {
-      font-family: 'Outfit', sans-serif;
-      font-weight: 400;
-      background: var(--surface-0);
-      color: var(--text-primary);
-      min-height: 100vh;
-      -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
+      font-family: 'Outfit', sans-serif; font-weight: 400;
+      background: var(--surface-0); color: var(--text-primary);
+      min-height: 100vh; -webkit-font-smoothing: antialiased; overflow-x: hidden;
     }
-
-    /* ── Background texture ── */
     body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background:
-        radial-gradient(ellipse at 20% 0%, rgba(0,103,71,0.25) 0%, transparent 60%),
+      content: ''; position: fixed; inset: 0;
+      background: radial-gradient(ellipse at 20% 0%, rgba(0,103,71,0.25) 0%, transparent 60%),
         radial-gradient(ellipse at 80% 100%, rgba(30,138,94,0.12) 0%, transparent 50%);
-      pointer-events: none;
-      z-index: 0;
+      pointer-events: none; z-index: 0;
     }
-
-    /* ── Grain overlay ── */
     body::after {
-      content: '';
-      position: fixed;
-      inset: 0;
-      opacity: 0.03;
+      content: ''; position: fixed; inset: 0; opacity: 0.03;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 0;
+      pointer-events: none; z-index: 0;
     }
-
     .app { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; padding: 0 16px 100px; }
 
-    /* ── Header ── */
-    .header {
-      text-align: center;
-      padding: 36px 0 20px;
-      position: relative;
-    }
+    /* Header */
+    .header { text-align: center; padding: 36px 0 20px; }
     .header-badge {
-      display: inline-block;
-      font-size: 0.65rem;
-      font-weight: 600;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--gold);
-      background: rgba(201,168,76,0.1);
-      border: 1px solid rgba(201,168,76,0.2);
-      padding: 4px 14px;
-      border-radius: 20px;
-      margin-bottom: 12px;
+      display: inline-block; font-size: 0.65rem; font-weight: 600;
+      letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold);
+      background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.2);
+      padding: 4px 14px; border-radius: 20px; margin-bottom: 12px;
     }
-    .header h1 {
-      font-family: 'Cormorant Garamond', serif;
-      font-weight: 700;
-      font-size: 2.4rem;
-      letter-spacing: -0.02em;
-      color: var(--cream);
-      line-height: 1.1;
-    }
-    .header-sub {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      margin-top: 6px;
-      font-weight: 300;
-    }
-
-    /* ── Live Pulse ── */
+    .header h1 { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 2.4rem; letter-spacing: -0.02em; color: var(--cream); line-height: 1.1; }
+    .header-sub { font-size: 0.78rem; color: var(--text-muted); margin-top: 6px; font-weight: 300; }
     .live-dot {
-      display: inline-block;
-      width: 7px; height: 7px;
-      background: var(--green-300);
-      border-radius: 50%;
-      margin-right: 6px;
-      animation: pulse 2s ease-in-out infinite;
-      vertical-align: middle;
+      display: inline-block; width: 7px; height: 7px; background: var(--green-300);
+      border-radius: 50%; margin-right: 6px; animation: pulse 2s ease-in-out infinite; vertical-align: middle;
     }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(62,185,127,0.5); }
-      50% { opacity: 0.6; box-shadow: 0 0 0 6px rgba(62,185,127,0); }
-    }
+    @keyframes pulse { 0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(62,185,127,0.5)} 50%{opacity:.6;box-shadow:0 0 0 6px rgba(62,185,127,0)} }
 
-    /* ── Controls ── */
-    .controls {
-      display: flex;
-      gap: 8px;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin: 16px 0 24px;
-    }
-    .ctrl-group {
-      display: flex;
-      background: var(--surface-1);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
-    }
+    /* Controls */
+    .controls { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin: 16px 0 24px; }
+    .ctrl-group { display: flex; background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
     .ctrl-btn {
-      background: none;
-      border: none;
-      color: var(--text-secondary);
-      font-family: 'Outfit', sans-serif;
-      font-size: 0.78rem;
-      font-weight: 500;
-      padding: 8px 14px;
-      cursor: pointer;
-      transition: all var(--transition);
-      white-space: nowrap;
-      position: relative;
+      background: none; border: none; color: var(--text-secondary);
+      font-family: 'Outfit', sans-serif; font-size: 0.78rem; font-weight: 500;
+      padding: 8px 14px; cursor: pointer; transition: all var(--transition); white-space: nowrap;
     }
     .ctrl-btn:hover { color: var(--text-primary); background: var(--surface-2); }
-    .ctrl-btn.active {
-      color: var(--cream);
-      background: var(--green-500);
-    }
+    .ctrl-btn.active { color: var(--cream); background: var(--green-500); }
     .ctrl-btn + .ctrl-btn { border-left: 1px solid var(--border); }
 
-    /* ── Section ── */
-    .section {
-      margin-bottom: 28px;
-      animation: fadeUp 0.4s ease both;
-    }
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(12px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .section-head {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 12px;
-      padding: 0 2px;
-    }
-    .section-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-weight: 600;
-      font-size: 1.15rem;
-      color: var(--cream);
-      letter-spacing: 0.01em;
-    }
-    .section-line {
-      flex: 1;
-      height: 1px;
-      background: var(--border-bright);
-    }
-    .section-badge {
-      font-size: 0.65rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-    }
+    /* Sections */
+    .section { margin-bottom: 28px; animation: fadeUp 0.4s ease both; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+    .section-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; padding: 0 2px; }
+    .section-title { font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 1.15rem; color: var(--cream); }
+    .section-line { flex: 1; height: 1px; background: var(--border-bright); }
+    .section-badge { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); }
+    .card { background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
 
-    /* ── Cards ── */
-    .card {
-      background: var(--surface-1);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
-      box-shadow: var(--shadow);
-    }
+    /* Ticker */
+    .ticker-wrap { background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 0; margin-bottom: 24px; overflow: hidden; position: relative; }
+    .ticker-wrap::before,.ticker-wrap::after { content:''; position:absolute; top:0; bottom:0; width:40px; z-index:2; pointer-events:none; }
+    .ticker-wrap::before { left:0; background:linear-gradient(to right,var(--surface-1),transparent); }
+    .ticker-wrap::after { right:0; background:linear-gradient(to left,var(--surface-1),transparent); }
+    .ticker-track { display:flex; gap:32px; animation:tickerScroll 25s linear infinite; white-space:nowrap; width:max-content; }
+    @keyframes tickerScroll { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+    .ticker-item { font-size:0.75rem; color:var(--text-secondary); display:flex; align-items:center; gap:6px; }
+    .ticker-item .ticker-name { font-weight:600; color:var(--text-primary); }
+    .ticker-item .ticker-val { font-weight:600; }
+    .ticker-item .ticker-val.under { color:var(--green-300); }
+    .ticker-item .ticker-val.over { color:var(--red); }
+    .ticker-item .ticker-val.even { color:var(--text-primary); }
+    .ticker-sep { color:var(--text-muted); opacity:0.3; }
 
-    /* ── Team Standings ── */
-    .team-row {
-      display: grid;
-      grid-template-columns: 36px 1fr auto auto;
-      align-items: center;
-      gap: 12px;
-      padding: 14px 16px;
-      transition: background var(--transition);
-    }
-    .team-row:not(:last-child) { border-bottom: 1px solid var(--border); }
-    .team-rank {
-      font-family: 'Cormorant Garamond', serif;
-      font-weight: 700;
-      font-size: 1.3rem;
-      color: var(--gold);
-      text-align: center;
-    }
-    .team-rank.rank-1 { color: var(--gold); }
-    .team-rank.rank-2 { color: var(--text-secondary); }
-    .team-name {
-      font-weight: 600;
-      font-size: 0.95rem;
-      color: var(--text-primary);
-    }
-    .team-thru {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-    .team-score {
-      font-family: 'Outfit', sans-serif;
-      font-weight: 700;
-      font-size: 1.3rem;
-      text-align: right;
-      min-width: 48px;
-    }
-    .team-score.under { color: var(--green-300); }
-    .team-score.over { color: var(--red); }
-    .team-score.even { color: var(--text-primary); }
+    /* Highlights */
+    .highlight-strip { display:flex; gap:10px; margin-bottom:24px; overflow-x:auto; scrollbar-width:none; padding-bottom:4px; }
+    .highlight-strip::-webkit-scrollbar { display:none; }
+    .hl-card { flex-shrink:0; background:var(--surface-1); border:1px solid var(--border); border-radius:var(--radius); padding:12px 16px; min-width:155px; position:relative; overflow:hidden; }
+    .hl-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
+    .hl-card.hl-mvp::before { background:var(--gold); }
+    .hl-card.hl-hot::before { background:var(--green-300); }
+    .hl-card.hl-low::before { background:var(--blue); }
+    .hl-card.hl-margin::before { background:var(--orange); }
+    .hl-label { font-size:0.58rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; margin-bottom:6px; }
+    .hl-card.hl-mvp .hl-label { color:var(--gold); }
+    .hl-card.hl-hot .hl-label { color:var(--green-300); }
+    .hl-card.hl-low .hl-label { color:var(--blue); }
+    .hl-card.hl-margin .hl-label { color:var(--orange); }
+    .hl-name { font-weight:700; font-size:0.95rem; color:var(--text-primary); line-height:1.2; }
+    .hl-detail { font-size:0.72rem; color:var(--text-muted); margin-top:2px; }
 
-    .last-nine-badge {
-      display: inline-block;
-      font-size: 0.62rem;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      padding: 2px 8px;
-      border-radius: 10px;
-      white-space: nowrap;
-    }
-    .last-nine-badge.under { background: rgba(62,185,127,0.15); color: var(--green-300); }
-    .last-nine-badge.over { background: var(--red-dim); color: var(--red); }
-    .last-nine-badge.even { background: rgba(245,240,232,0.08); color: var(--text-secondary); }
+    /* Team Standings */
+    .team-row { display:grid; grid-template-columns:36px 1fr auto auto; align-items:center; gap:12px; padding:14px 16px; transition:background var(--transition); cursor:pointer; }
+    .team-row:hover { background:var(--surface-2); }
+    .team-row:not(:last-child) { border-bottom:1px solid var(--border); }
+    .team-rank { font-family:'Cormorant Garamond',serif; font-weight:700; font-size:1.3rem; text-align:center; }
+    .team-rank.rank-1 { color:var(--gold); }
+    .team-rank.rank-2 { color:var(--text-secondary); }
+    .team-name { font-weight:600; font-size:0.95rem; color:var(--text-primary); }
+    .team-thru { font-size:0.72rem; color:var(--text-muted); margin-top:2px; }
+    .team-score { font-weight:700; font-size:1.3rem; text-align:right; min-width:48px; }
+    .team-score.under { color:var(--green-300); }
+    .team-score.over { color:var(--red); }
+    .team-score.even { color:var(--text-primary); }
+    .last-nine-badge { display:inline-block; font-size:0.62rem; font-weight:600; letter-spacing:0.05em; padding:2px 8px; border-radius:10px; white-space:nowrap; }
+    .last-nine-badge.under { background:rgba(62,185,127,0.15); color:var(--green-300); }
+    .last-nine-badge.over { background:var(--red-dim); color:var(--red); }
+    .last-nine-badge.even { background:rgba(245,240,232,0.08); color:var(--text-secondary); }
+    .diff-bar-wrap { padding:10px 16px 14px; border-top:1px solid var(--border); }
+    .diff-bar-label { font-size:0.6rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:6px; text-align:center; }
+    .diff-bar { height:6px; border-radius:3px; background:var(--surface-2); overflow:hidden; }
+    .diff-bar-fill { height:100%; border-radius:3px; transition:width 0.6s ease; }
 
-    /* ── Individual Leaderboard ── */
-    .lb-header {
-      display: grid;
-      grid-template-columns: 32px 1fr 54px 62px 54px 40px;
-      gap: 4px;
-      padding: 10px 14px;
-      font-size: 0.62rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      background: var(--surface-2);
-      border-bottom: 1px solid var(--border);
-    }
-    .lb-row {
-      display: grid;
-      grid-template-columns: 32px 1fr 54px 62px 54px 40px;
-      gap: 4px;
-      padding: 12px 14px;
-      align-items: center;
-      cursor: pointer;
-      transition: background var(--transition);
-    }
-    .lb-row:hover { background: var(--surface-2); }
-    .lb-row:not(:last-child) { border-bottom: 1px solid var(--border); }
-    .lb-pos {
-      font-weight: 700;
-      font-size: 0.85rem;
-      color: var(--text-secondary);
-    }
-    .lb-pos.top-3 { color: var(--gold); }
-    .lb-name-cell {}
-    .lb-player-name {
-      font-weight: 600;
-      font-size: 0.88rem;
-      color: var(--text-primary);
-    }
-    .lb-team-tag {
-      font-size: 0.62rem;
-      font-weight: 500;
-      color: var(--text-muted);
-      margin-top: 1px;
-    }
-    .lb-val {
-      text-align: right;
-      font-size: 0.85rem;
-      font-weight: 500;
-      font-variant-numeric: tabular-nums;
-    }
-    .lb-val.net-par { font-weight: 700; }
-    .lb-val.net-par.under { color: var(--green-300); }
-    .lb-val.net-par.over { color: var(--red); }
-    .lb-val.net-par.even { color: var(--text-primary); }
-    .lb-thru {
-      text-align: right;
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      font-weight: 400;
-    }
-    .arrow {
-      display: inline-block;
-      font-size: 0.7rem;
-      margin-left: 4px;
-      vertical-align: middle;
-    }
-    .arrow.up { color: var(--green-300); }
-    .arrow.down { color: var(--red); }
+    /* Individual Leaderboard */
+    .lb-header { display:grid; grid-template-columns:32px 1fr 54px 62px 54px 40px; gap:4px; padding:10px 14px; font-size:0.62rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-muted); background:var(--surface-2); border-bottom:1px solid var(--border); }
+    .lb-header span { text-align:center; }
+    .lb-header span:nth-child(2) { text-align:left; }
+    .lb-row { display:grid; grid-template-columns:32px 1fr 54px 62px 54px 40px; gap:4px; padding:12px 14px; align-items:center; cursor:pointer; transition:background var(--transition); }
+    .lb-row:hover { background:var(--surface-2); }
+    .lb-row:not(:last-child) { border-bottom:1px solid var(--border); }
+    .lb-row.is-leader { background:rgba(201,168,76,0.04); }
+    .lb-pos { font-weight:700; font-size:0.85rem; color:var(--text-secondary); text-align:center; }
+    .lb-pos.top-3 { color:var(--gold); }
+    .lb-player-name { font-weight:600; font-size:0.88rem; color:var(--text-primary); }
+    .lb-team-tag { font-size:0.62rem; font-weight:500; color:var(--text-muted); margin-top:1px; }
+    .lb-val { text-align:center; font-size:0.85rem; font-weight:500; font-variant-numeric:tabular-nums; }
+    .lb-val.net-par { font-weight:700; }
+    .lb-val.net-par.under { color:var(--green-300); }
+    .lb-val.net-par.over { color:var(--red); }
+    .lb-val.net-par.even { color:var(--text-primary); }
+    .lb-thru { text-align:center; font-size:0.78rem; color:var(--text-muted); }
+    .arrow { display:inline-block; font-size:0.7rem; margin-left:4px; vertical-align:middle; }
+    .arrow.up { color:var(--green-300); }
+    .arrow.down { color:var(--red); }
+    .trend-badge { display:inline-block; font-size:0.55rem; font-weight:700; letter-spacing:0.06em; padding:1px 5px; border-radius:4px; margin-left:6px; vertical-align:middle; }
+    .trend-badge.hot { background:rgba(62,185,127,0.18); color:var(--green-300); }
+    .trend-badge.cold { background:var(--red-dim); color:var(--red); }
+    .round-dots { display:inline-flex; gap:3px; margin-left:6px; vertical-align:middle; }
+    .round-dot { width:8px; height:8px; border-radius:2px; display:inline-block; }
+    .round-dot.good { background:var(--green-300); opacity:0.7; }
+    .round-dot.bad { background:var(--red); opacity:0.6; }
+    .round-dot.ok { background:var(--text-muted); opacity:0.35; }
+    .round-dot.empty { background:var(--text-muted); opacity:0.12; }
 
-    /* ── Chart ── */
-    .chart-wrap {
-      padding: 16px;
-      background: var(--surface-1);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-    }
-    .chart-wrap canvas { width: 100% !important; }
+    /* Chart */
+    .chart-wrap { padding:16px; background:var(--surface-1); border:1px solid var(--border); border-radius:var(--radius); }
+    .chart-wrap canvas { width:100%!important; }
+    .chart-hint { text-align:center; font-size:0.62rem; color:var(--text-muted); margin-top:8px; font-style:italic; }
 
-    /* ── Tournament History ── */
-    .history-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-    @media (max-width: 480px) { .history-grid { grid-template-columns: 1fr; } }
-    .history-card {
-      background: var(--surface-1);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 14px;
-    }
-    .history-card-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-weight: 600;
-      font-size: 0.95rem;
-      color: var(--cream);
-      margin-bottom: 8px;
-    }
-    .history-upcoming {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      font-style: italic;
-    }
-    .history-place {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 5px 0;
-      font-size: 0.8rem;
-    }
-    .history-place:not(:last-child) { border-bottom: 1px solid var(--border); }
-    .history-medal { font-weight: 600; margin-right: 6px; }
-    .history-medal.gold { color: var(--gold); }
-    .history-medal.silver { color: var(--text-secondary); }
-    .history-place-score {
-      font-weight: 600;
-      font-variant-numeric: tabular-nums;
-    }
+    /* History */
+    .history-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    @media(max-width:480px){.history-grid{grid-template-columns:1fr}}
+    .history-card { background:var(--surface-1); border:1px solid var(--border); border-radius:var(--radius); padding:14px; }
+    .history-card-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+    .history-card-title { font-family:'Cormorant Garamond',serif; font-weight:600; font-size:0.95rem; color:var(--cream); }
+    .history-course { font-size:0.6rem; color:var(--text-muted); font-weight:500; }
+    .history-upcoming { font-size:0.78rem; color:var(--text-muted); font-style:italic; }
+    .history-place { display:flex; justify-content:space-between; align-items:center; padding:5px 0; font-size:0.8rem; }
+    .history-place:not(:last-child) { border-bottom:1px solid var(--border); }
+    .history-medal { font-weight:600; margin-right:6px; }
+    .history-medal.gold { color:var(--gold); }
+    .history-medal.silver { color:var(--text-secondary); }
+    .history-place-score { font-weight:600; font-variant-numeric:tabular-nums; }
 
-    /* ── Handicap Table ── */
-    .hc-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.8rem;
-    }
-    .hc-table th {
-      text-align: left;
-      font-size: 0.62rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      padding: 8px 10px;
-      background: var(--surface-2);
-      border-bottom: 1px solid var(--border);
-    }
-    .hc-table td {
-      padding: 8px 10px;
-      border-bottom: 1px solid var(--border);
-      font-variant-numeric: tabular-nums;
-    }
-    .hc-table tr:last-child td { border-bottom: none; }
-    .hc-name { font-weight: 600; color: var(--text-primary); }
-    .hc-val { color: var(--text-secondary); text-align: center; }
+    /* Handicap Table */
+    .hc-table { width:100%; border-collapse:collapse; font-size:0.8rem; }
+    .hc-table th { font-size:0.62rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-muted); padding:8px 10px; background:var(--surface-2); border-bottom:1px solid var(--border); text-align:center; }
+    .hc-table th:first-child { text-align:left; }
+    .hc-table td { padding:8px 10px; border-bottom:1px solid var(--border); font-variant-numeric:tabular-nums; text-align:center; }
+    .hc-table td:first-child { text-align:left; }
+    .hc-table tr:last-child td { border-bottom:none; }
+    .hc-name { font-weight:600; color:var(--text-primary); }
+    .hc-val { color:var(--text-secondary); }
 
-    /* ── Player Modal ── */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.65);
-      z-index: 100;
-      justify-content: center;
-      align-items: flex-end;
-      backdrop-filter: blur(4px);
-    }
-    .modal-overlay.open { display: flex; }
-    .modal-sheet {
-      background: var(--surface-1);
-      border: 1px solid var(--border-bright);
-      border-radius: 16px 16px 0 0;
-      width: 100%;
-      max-width: 480px;
-      max-height: 80vh;
-      overflow-y: auto;
-      padding: 24px 20px 32px;
-      animation: slideUp 0.3s ease;
-      box-shadow: var(--shadow-lg);
-    }
-    @keyframes slideUp {
-      from { transform: translateY(100%); }
-      to { transform: translateY(0); }
-    }
-    .modal-handle {
-      width: 36px; height: 4px;
-      background: var(--text-muted);
-      border-radius: 2px;
-      margin: 0 auto 16px;
-      opacity: 0.5;
-    }
-    .modal-player-name {
-      font-family: 'Cormorant Garamond', serif;
-      font-weight: 700;
-      font-size: 1.5rem;
-      color: var(--cream);
-      text-align: center;
-    }
-    .modal-team-name {
-      text-align: center;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-top: 2px;
-      margin-bottom: 16px;
-    }
-    .modal-stats {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-    .modal-stat {
-      background: var(--surface-2);
-      border-radius: var(--radius-sm);
-      padding: 10px 8px;
-      text-align: center;
-    }
-    .modal-stat-label {
-      font-size: 0.6rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 4px;
-    }
-    .modal-stat-val {
-      font-weight: 700;
-      font-size: 1.05rem;
-      color: var(--text-primary);
-    }
-    .modal-rounds-title {
-      font-size: 0.68rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 8px;
-    }
-    .modal-round-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 8px 0;
-      font-size: 0.85rem;
-      border-bottom: 1px solid var(--border);
-    }
-    .modal-round-row:last-child { border-bottom: none; }
-    .modal-round-label { color: var(--text-secondary); font-weight: 500; }
-    .modal-round-val { font-weight: 600; font-variant-numeric: tabular-nums; }
-    .modal-summary {
-      margin-top: 12px;
-      text-align: center;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
+    /* Shared Modal Styles */
+    .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.65); z-index:100; justify-content:center; align-items:flex-end; backdrop-filter:blur(4px); }
+    .modal-overlay.open { display:flex; }
+    .modal-sheet { background:var(--surface-1); border:1px solid var(--border-bright); border-radius:16px 16px 0 0; width:100%; max-width:480px; max-height:80vh; overflow-y:auto; padding:24px 20px 32px; animation:slideUp 0.3s ease; box-shadow:var(--shadow-lg); }
+    @keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
+    .modal-handle { width:36px; height:4px; background:var(--text-muted); border-radius:2px; margin:0 auto 16px; opacity:0.5; }
 
-    /* ── Footer ── */
-    .footer {
-      text-align: center;
-      padding: 32px 0 20px;
-      font-size: 0.7rem;
-      color: var(--text-muted);
-    }
+    /* Player Modal */
+    .modal-player-name { font-family:'Cormorant Garamond',serif; font-weight:700; font-size:1.5rem; color:var(--cream); text-align:center; }
+    .modal-team-name { text-align:center; font-size:0.75rem; color:var(--text-muted); margin-top:2px; margin-bottom:16px; }
+    .modal-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:16px; }
+    .modal-stat { background:var(--surface-2); border-radius:var(--radius-sm); padding:10px 8px; text-align:center; }
+    .modal-stat-label { font-size:0.6rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:4px; }
+    .modal-stat-val { font-weight:700; font-size:1.05rem; color:var(--text-primary); }
+    .modal-stat-val.under { color:var(--green-300); }
+    .modal-stat-val.over { color:var(--red); }
+    .modal-perf-title { font-size:0.68rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:10px; }
+    .modal-perf-row { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+    .modal-perf-label { font-size:0.78rem; font-weight:500; color:var(--text-secondary); width:52px; flex-shrink:0; }
+    .modal-perf-bar-wrap { flex:1; height:18px; background:var(--surface-2); border-radius:4px; overflow:hidden; }
+    .modal-perf-bar { height:100%; border-radius:4px; transition:width 0.5s ease; min-width:2px; }
+    .modal-perf-bar.good { background:var(--green-300); opacity:0.7; }
+    .modal-perf-bar.bad { background:var(--red); opacity:0.6; }
+    .modal-perf-bar.ok { background:var(--text-secondary); opacity:0.5; }
+    .modal-perf-val { font-size:0.75rem; font-weight:600; width:52px; text-align:right; font-variant-numeric:tabular-nums; flex-shrink:0; }
+    .modal-perf-val.under { color:var(--green-300); }
+    .modal-perf-val.over { color:var(--red); }
+    .modal-perf-val.even { color:var(--text-primary); }
+    .modal-divider { height:1px; background:var(--border); margin:14px 0; }
+    .modal-rounds-title { font-size:0.68rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:8px; }
+    .modal-round-row { display:flex; justify-content:space-between; padding:8px 0; font-size:0.85rem; border-bottom:1px solid var(--border); }
+    .modal-round-row:last-child { border-bottom:none; }
+    .modal-round-label { color:var(--text-secondary); font-weight:500; }
+    .modal-round-val { font-weight:600; font-variant-numeric:tabular-nums; }
+    .modal-summary { margin-top:12px; text-align:center; font-size:0.75rem; color:var(--text-muted); }
 
-    /* ── Loading ── */
-    .loading-msg {
-      text-align: center;
-      padding: 40px 0;
-      color: var(--text-muted);
-      font-size: 0.85rem;
-    }
+    /* Team Modal */
+    .tm-title { font-family:'Cormorant Garamond',serif; font-weight:700; font-size:1.5rem; color:var(--cream); text-align:center; }
+    .tm-subtitle { text-align:center; font-size:0.75rem; color:var(--text-muted); margin-top:2px; margin-bottom:16px; }
+    .tm-summary { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:18px; }
+    .tm-member { background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius); padding:14px; margin-bottom:10px; cursor:pointer; transition:background var(--transition); }
+    .tm-member:hover { background:var(--surface-3); }
+    .tm-member:last-child { margin-bottom:0; }
+    .tm-member-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+    .tm-member-name { font-weight:600; font-size:0.92rem; color:var(--text-primary); }
+    .tm-member-hi { font-size:0.65rem; color:var(--text-muted); font-weight:500; }
+    .tm-member-score { font-weight:700; font-size:1rem; }
+    .tm-member-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; }
+    .tm-ms { text-align:center; }
+    .tm-ms-label { font-size:0.55rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--text-muted); margin-bottom:2px; }
+    .tm-ms-val { font-size:0.82rem; font-weight:600; font-variant-numeric:tabular-nums; color:var(--text-primary); }
+    .tm-ms-val.under { color:var(--green-300); }
+    .tm-ms-val.over { color:var(--red); }
+    .tm-rounds-grid { display:grid; grid-template-columns:auto repeat(4,1fr); gap:0; margin-top:6px; font-size:0.72rem; }
+    .tm-rg-cell { padding:4px 6px; text-align:center; font-variant-numeric:tabular-nums; border-bottom:1px solid var(--border); }
+    .tm-rg-cell:first-child { text-align:left; }
+    .tm-rg-head { color:var(--text-muted); font-weight:600; font-size:0.6rem; letter-spacing:0.08em; text-transform:uppercase; background:rgba(0,0,0,0.15); }
+    .tm-rg-name { color:var(--text-secondary); font-weight:500; }
+    .tm-best { margin-top:16px; text-align:center; }
+    .tm-best-label { font-size:0.6rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); margin-bottom:4px; }
+    .tm-best-val { font-size:0.85rem; color:var(--text-primary); font-weight:500; }
+    .tm-tap-hint { text-align:center; font-size:0.65rem; color:var(--text-muted); margin-top:14px; font-style:italic; }
 
-    /* ── Responsive ── */
-    @media (max-width: 480px) {
-      html { font-size: 14px; }
-      .header h1 { font-size: 2rem; }
-      .ctrl-btn { padding: 7px 10px; font-size: 0.72rem; }
-      .lb-header, .lb-row {
-        grid-template-columns: 28px 1fr 46px 54px 46px 36px;
-        gap: 2px;
-        padding: 10px 10px;
-      }
-    }
+    /* Footer / Misc */
+    .footer { text-align:center; padding:32px 0 20px; font-size:0.7rem; color:var(--text-muted); }
+    .loading-msg { text-align:center; padding:40px 0; color:var(--text-muted); font-size:0.85rem; }
+    .empty-state { text-align:center; padding:30px 20px; color:var(--text-muted); font-size:0.85rem; }
 
-    /* ── No data state ── */
-    .empty-state {
-      text-align: center;
-      padding: 30px 20px;
-      color: var(--text-muted);
-      font-size: 0.85rem;
+    @media(max-width:480px){
+      html{font-size:14px}
+      .header h1{font-size:2rem}
+      .ctrl-btn{padding:7px 10px;font-size:0.72rem}
+      .lb-header,.lb-row{grid-template-columns:28px 1fr 46px 54px 46px 36px;gap:2px;padding:10px 10px}
+      .highlight-strip{gap:8px}
+      .hl-card{min-width:140px;padding:10px 12px}
+      .tm-summary{grid-template-columns:repeat(3,1fr);gap:6px}
     }
   </style>
 </head>
 <body>
   <div class="app">
-    <!-- Header -->
     <header class="header">
       <div class="header-badge"><span class="live-dot"></span>Live Scoring</div>
       <h1>OPGA Invitational</h1>
       <div class="header-sub" id="lastUpdate">Connecting…</div>
     </header>
 
-    <!-- View Controls -->
+    <div class="ticker-wrap" id="tickerWrap" style="display:none">
+      <div class="ticker-track" id="tickerTrack"></div>
+    </div>
+
     <div class="controls">
       <div class="ctrl-group" id="viewBtns">
         <button class="ctrl-btn active" data-view="tournament">Tournament</button>
@@ -561,30 +313,28 @@
       </div>
     </div>
 
-    <!-- Team Standings -->
+    <div class="highlight-strip" id="highlights" style="display:none"></div>
+
     <div class="section" id="teamSection">
       <div class="section-head">
         <span class="section-title">Team Standings</span>
         <span class="section-line"></span>
         <span class="section-badge">Net</span>
       </div>
-      <div class="card" id="teamCard">
-        <div class="loading-msg">Loading teams…</div>
-      </div>
+      <div class="card" id="teamCard"><div class="loading-msg">Loading teams…</div></div>
     </div>
 
-    <!-- Team Lead Chart -->
     <div class="section" id="chartSection">
       <div class="section-head">
         <span class="section-title">Team Lead Chart</span>
         <span class="section-line"></span>
       </div>
       <div class="chart-wrap">
-        <canvas id="leadChart" height="200"></canvas>
+        <canvas id="leadChart" height="220"></canvas>
+        <div class="chart-hint">↑ Higher on chart = better (lower net-to-par)</div>
       </div>
     </div>
 
-    <!-- Individual Leaderboard -->
     <div class="section" id="individualSection">
       <div class="section-head">
         <span class="section-title">Individual Leaderboard</span>
@@ -592,13 +342,12 @@
       </div>
       <div class="card" id="individualCard">
         <div class="lb-header">
-          <span>#</span><span>Player</span><span style="text-align:right">Net</span><span style="text-align:right">To Par</span><span style="text-align:right">Gross</span><span style="text-align:right">Thru</span>
+          <span>#</span><span>Player</span><span>Net</span><span>To Par</span><span>Gross</span><span>Thru</span>
         </div>
         <div id="lbBody"><div class="loading-msg">Loading players…</div></div>
       </div>
     </div>
 
-    <!-- Tournament History -->
     <div class="section" id="historySection">
       <div class="section-head">
         <span class="section-title">Tournament History</span>
@@ -607,14 +356,13 @@
       <div class="history-grid" id="historyGrid"></div>
     </div>
 
-    <!-- Handicaps by Round -->
     <div class="section" id="hcSection">
       <div class="section-head">
         <span class="section-title">Handicaps by Round</span>
         <span class="section-line"></span>
       </div>
       <div class="card" style="overflow-x:auto">
-        <table class="hc-table" id="hcTable">
+        <table class="hc-table">
           <thead><tr><th>Player</th><th>HI</th><th>CH R1</th><th>CH R2</th><th>CH R3</th><th>CH R4</th></tr></thead>
           <tbody id="hcBody"></tbody>
         </table>
@@ -625,643 +373,485 @@
   </div>
 
   <!-- Player Modal -->
-  <div class="modal-overlay" id="modal">
-    <div class="modal-sheet" id="modalSheet">
+  <div class="modal-overlay" id="playerModal">
+    <div class="modal-sheet">
       <div class="modal-handle"></div>
-      <div class="modal-player-name" id="modalName"></div>
-      <div class="modal-team-name" id="modalTeam"></div>
-      <div class="modal-stats" id="modalStats"></div>
-      <div class="modal-rounds-title" id="modalRoundsTitle"></div>
-      <div id="modalRounds"></div>
-      <div class="modal-summary" id="modalSummary"></div>
+      <div class="modal-player-name" id="pmName"></div>
+      <div class="modal-team-name" id="pmTeam"></div>
+      <div class="modal-stats" id="pmStats"></div>
+      <div id="pmPerfSection"></div>
+      <div class="modal-divider"></div>
+      <div class="modal-rounds-title" id="pmRoundsTitle"></div>
+      <div id="pmRounds"></div>
+      <div class="modal-summary" id="pmSummary"></div>
+    </div>
+  </div>
+
+  <!-- Team Modal -->
+  <div class="modal-overlay" id="teamModal">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div id="tmContent"></div>
     </div>
   </div>
 
   <script>
-/* ═══════════════════════════════════════════════════
-   OPGA Invitational — Live Leaderboard
-   ═══════════════════════════════════════════════════ */
-
-// ── CONFIG ──
 const SHEET_ID = '1YlBAFaODGvwT49IxAOgCjgAJgC2Xw9R9XJLolAuveGU';
 const POLL_SECONDS = 5;
-const TABS = { scores: 'Scores', courses: 'Courses', rounds: 'Rounds' };
+const TABS = { scores:'Scores', courses:'Courses', rounds:'Rounds' };
+function csvUrl(tab){return `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tab)}`;}
 
-function csvUrl(tab) {
-  return `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tab)}`;
-}
-
-// ── STATE ──
-let currentView = 'tournament';  // 'tournament' | '1' | '2' | '3' | '4'
+let currentView = 'tournament';
 let players = [];
-let courses = {};    // { courseName: { par, rating, slope } }
-let roundMap = {};   // { '1': courseName, '2': courseName, … }
-let prevRanks = {};  // for arrow logic
+let courses = {};
+let roundMap = {};
+let prevRanks = {};
 let chartInstance = null;
 let lastCSV = '';
 
-// ── CSV PARSER ──
-function parseCSV(text) {
-  const rows = [];
-  const lines = text.split('\n');
-  for (const line of lines) {
-    if (!line.trim()) continue;
-    const row = [];
-    let inQuote = false, cell = '';
-    for (let i = 0; i < line.length; i++) {
-      const c = line[i];
-      if (inQuote) {
-        if (c === '"' && line[i+1] === '"') { cell += '"'; i++; }
-        else if (c === '"') inQuote = false;
-        else cell += c;
-      } else {
-        if (c === '"') inQuote = true;
-        else if (c === ',') { row.push(cell.trim()); cell = ''; }
-        else cell += c;
-      }
+/* ── CSV Parser ── */
+function parseCSV(text){
+  const rows=[],lines=text.split('\n');
+  for(const line of lines){
+    if(!line.trim())continue;
+    const row=[];let inQ=false,cell='';
+    for(let i=0;i<line.length;i++){
+      const c=line[i];
+      if(inQ){if(c==='"'&&line[i+1]==='"'){cell+='"';i++}else if(c==='"')inQ=false;else cell+=c}
+      else{if(c==='"')inQ=true;else if(c===','){row.push(cell.trim());cell=''}else cell+=c}
     }
-    row.push(cell.trim());
-    rows.push(row);
+    row.push(cell.trim());rows.push(row);
   }
   return rows;
 }
 
-// ── FETCH DATA ──
-async function fetchTab(tab) {
-  try {
-    const r = await fetch(csvUrl(tab), { cache: 'no-store' });
-    if (!r.ok) return [];
-    const text = await r.text();
-    return parseCSV(text);
-  } catch { return []; }
+/* ── Fetch ── */
+async function fetchTab(tab){
+  try{const r=await fetch(csvUrl(tab),{cache:'no-store'});if(!r.ok)return[];return parseCSV(await r.text())}
+  catch(e){return[]}
 }
 
-async function load() {
-  const [scoresRaw, coursesRaw, roundsRaw] = await Promise.all([
-    fetchTab(TABS.scores), fetchTab(TABS.courses), fetchTab(TABS.rounds)
-  ]);
+async function load(){
+  const[scoresRaw,coursesRaw,roundsRaw]=await Promise.all([fetchTab(TABS.scores),fetchTab(TABS.courses),fetchTab(TABS.rounds)]);
+  const csv=JSON.stringify(scoresRaw);
+  if(csv===lastCSV)return;
+  lastCSV=csv;
 
-  // Check if data actually changed
-  const csv = JSON.stringify(scoresRaw);
-  if (csv === lastCSV) return;
-  lastCSV = csv;
-
-  // Parse Courses
-  if (coursesRaw.length > 1) {
-    courses = {};
-    for (let i = 1; i < coursesRaw.length; i++) {
-      const r = coursesRaw[i];
-      if (r[0]) courses[r[0].trim()] = { par: num(r[1]), rating: num(r[2]), slope: num(r[3]) };
-    }
-  }
-
-  // Parse Rounds
-  if (roundsRaw.length > 1) {
-    roundMap = {};
-    for (let i = 1; i < roundsRaw.length; i++) {
-      const r = roundsRaw[i];
-      if (r[0] && r[1]) {
-        const rNum = r[0].replace(/[^0-9]/g, '');
-        roundMap[rNum] = r[1].trim();
-      }
-    }
-  }
-
-  // Parse Scores
-  if (scoresRaw.length > 1) {
-    players = [];
-    for (let i = 1; i < scoresRaw.length; i++) {
-      const r = scoresRaw[i];
-      if (!r[0] || !r[0].trim()) continue;
-      players.push({
-        name: r[0].trim(),
-        hi: num(r[1]),
-        team: (r[2] || '').trim(),
-        rounds: {
-          '1': { front: num(r[3]), back: num(r[4]) },
-          '2': { front: num(r[5]), back: num(r[6]) },
-          '3': { front: num(r[7]), back: num(r[8]) },
-          '4': { front: num(r[9]), back: num(r[10]) }
-        }
+  if(coursesRaw.length>1){courses={};for(let i=1;i<coursesRaw.length;i++){const r=coursesRaw[i];if(r[0])courses[r[0].trim()]={par:num(r[1]),rating:num(r[2]),slope:num(r[3])}}}
+  if(roundsRaw.length>1){roundMap={};for(let i=1;i<roundsRaw.length;i++){const r=roundsRaw[i];if(r[0]&&r[1])roundMap[r[0].replace(/[^0-9]/g,'')]=r[1].trim()}}
+  if(scoresRaw.length>1){
+    players=[];
+    for(let i=1;i<scoresRaw.length;i++){
+      const r=scoresRaw[i];if(!r[0]||!r[0].trim())continue;
+      players.push({name:r[0].trim(),hi:num(r[1]),team:(r[2]||'').trim(),
+        rounds:{'1':{front:num(r[3]),back:num(r[4])},'2':{front:num(r[5]),back:num(r[6])},'3':{front:num(r[7]),back:num(r[8])},'4':{front:num(r[9]),back:num(r[10])}}
       });
     }
   }
-
   render();
-  document.getElementById('lastUpdate').textContent =
-    'Updated ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  document.getElementById('lastUpdate').textContent='Updated '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'});
 }
 
-function num(v) {
-  const n = parseFloat(v);
-  return isNaN(n) ? 0 : n;
+function num(v){const n=parseFloat(v);return isNaN(n)?0:n}
+function getCH(hi,rn){const c=courses[roundMap[String(rn)]];if(!c)return 0;return Math.round(hi*(c.slope/113)+(c.rating-c.par))}
+function getCoursePar(rn){const c=courses[roundMap[String(rn)]];return c?c.par:72}
+function getCourseName(rn){return roundMap[String(rn)]||''}
+
+/* ── Scoring ── */
+function calcPlayerRound(player,rn){
+  const r=player.rounds[String(rn)];if(!r)return null;
+  const fg=r.front,bg=r.back,hasFront=fg>0,hasBack=bg>0;
+  if(!hasFront&&!hasBack)return null;
+  const ch=getCH(player.hi,rn),par=getCoursePar(rn);
+  const fHc=Math.ceil(ch/2),bHc=Math.floor(ch/2);
+  const frontNet=hasFront?fg-fHc:0,backNet=hasBack?bg-bHc:0;
+  const thru=(hasFront?9:0)+(hasBack?9:0);
+  const net=frontNet+backNet,gross=(hasFront?fg:0)+(hasBack?bg:0);
+  const parForHoles=(hasFront&&hasBack)?par:par/2;
+  return{net,gross,thru,netToPar:net-parForHoles,frontGross:fg,backGross:bg,frontNet,backNet,ch,hasFront,hasBack};
 }
 
-// ── COURSE HANDICAP ──
-function getCH(hi, roundNum) {
-  const courseName = roundMap[String(roundNum)];
-  if (!courseName || !courses[courseName]) return 0;
-  const c = courses[courseName];
-  return Math.round(hi * (c.slope / 113) + (c.rating - c.par));
-}
-
-function getCoursePar(roundNum) {
-  const courseName = roundMap[String(roundNum)];
-  if (!courseName || !courses[courseName]) return 72;
-  return courses[courseName].par;
-}
-
-// ── NET SCORING ──
-function calcPlayerRound(player, roundNum) {
-  const r = player.rounds[String(roundNum)];
-  if (!r) return null;
-  const fg = r.front, bg = r.back;
-  const hasFront = fg > 0, hasBack = bg > 0;
-  if (!hasFront && !hasBack) return null;
-
-  const ch = getCH(player.hi, roundNum);
-  const par = getCoursePar(roundNum);
-  const frontHcStrokes = Math.ceil(ch / 2);
-  const backHcStrokes = Math.floor(ch / 2);
-
-  const frontNet = hasFront ? fg - frontHcStrokes : 0;
-  const backNet = hasBack ? bg - backHcStrokes : 0;
-  const frontGross = hasFront ? fg : 0;
-  const backGross = hasBack ? bg : 0;
-
-  const thru = (hasFront ? 9 : 0) + (hasBack ? 9 : 0);
-  const net = frontNet + backNet;
-  const gross = frontGross + backGross;
-  const parForHoles = (hasFront && hasBack) ? par : par / 2;
-  const netToPar = net - parForHoles;
-
-  return { net, gross, thru, netToPar, frontGross, backGross, frontNet, backNet, ch, hasFront, hasBack };
-}
-
-function calcPlayerView(player, view) {
-  if (view === 'tournament') {
-    let totalNet = 0, totalGross = 0, totalThru = 0, totalNetToPar = 0;
-    const roundResults = {};
-    for (let rn = 1; rn <= 4; rn++) {
-      const res = calcPlayerRound(player, rn);
-      roundResults[rn] = res;
-      if (res) {
-        totalNet += res.net;
-        totalGross += res.gross;
-        totalThru += res.thru;
-        totalNetToPar += res.netToPar;
-      }
-    }
-    return { net: totalNet, gross: totalGross, thru: totalThru, netToPar: totalNetToPar, roundResults };
-  } else {
-    const res = calcPlayerRound(player, parseInt(view));
-    if (!res) return { net: 0, gross: 0, thru: 0, netToPar: 0, roundResults: {} };
-    return { ...res, roundResults: { [parseInt(view)]: res } };
+function calcPlayerView(player,view){
+  if(view==='tournament'){
+    let tNet=0,tGross=0,tThru=0,tNTP=0;const rr={};
+    for(let rn=1;rn<=4;rn++){const res=calcPlayerRound(player,rn);rr[rn]=res;if(res){tNet+=res.net;tGross+=res.gross;tThru+=res.thru;tNTP+=res.netToPar}}
+    return{net:tNet,gross:tGross,thru:tThru,netToPar:tNTP,roundResults:rr};
   }
+  const res=calcPlayerRound(player,parseInt(view));
+  if(!res)return{net:0,gross:0,thru:0,netToPar:0,roundResults:{}};
+  return{...res,roundResults:{[parseInt(view)]:res}};
 }
 
-// ── FORMAT ──
-function fmtPar(val) {
-  if (val === 0) return 'E';
-  return val > 0 ? `+${val}` : `${val}`;
-}
-function parClass(val) {
-  if (val < 0) return 'under';
-  if (val > 0) return 'over';
-  return 'even';
+function fmtPar(v){return v===0?'E':(v>0?'+'+v:''+v)}
+function parClass(v){return v<0?'under':(v>0?'over':'even')}
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+
+/* ── Render All ── */
+function render(){renderTicker();renderHighlights();renderTeams();renderIndividual();renderChart();renderHistory();renderHandicaps()}
+
+/* ═══ TICKER ═══ */
+function renderTicker(){
+  const wrap=document.getElementById('tickerWrap'),track=document.getElementById('tickerTrack');
+  const data=players.map(p=>{const v=calcPlayerView(p,currentView);return{name:p.name,...v}}).filter(d=>d.thru>0).sort((a,b)=>a.netToPar-b.netToPar);
+  if(!data.length){wrap.style.display='none';return}
+  wrap.style.display='block';
+  const items=data.map(d=>`<span class="ticker-item"><span style="font-size:0.85rem">⛳</span><span class="ticker-name">${esc(d.name)}</span><span class="ticker-val ${parClass(d.netToPar)}">${fmtPar(d.netToPar)}</span><span style="color:var(--text-muted);font-size:0.65rem">thru ${d.thru}</span></span>`);
+  const html=items.join('<span class="ticker-sep">·</span>');
+  track.innerHTML=html+'<span class="ticker-sep">·</span>'+html;
 }
 
-// ── RENDER ──
-function render() {
-  renderTeams();
-  renderIndividual();
-  renderChart();
-  renderHistory();
-  renderHandicaps();
+/* ═══ HIGHLIGHTS ═══ */
+function renderHighlights(){
+  const el=document.getElementById('highlights');
+  const data=players.map(p=>{const v=calcPlayerView(p,currentView);return{player:p,...v}}).filter(d=>d.thru>0);
+  if(!data.length){el.style.display='none';return}
+  el.style.display='flex';
+  data.sort((a,b)=>a.netToPar-b.netToPar);
+  const leader=data[0];
+  let bestNine=null;
+  for(const p of players){for(let rn=1;rn<=4;rn++){const res=calcPlayerRound(p,rn);if(!res)continue;const hp=getCoursePar(rn)/2;if(res.hasFront){const s=res.frontNet-hp;if(!bestNine||s<bestNine.score)bestNine={name:p.name,score:s,label:`R${rn} Front`,gross:p.rounds[String(rn)].front}}if(res.hasBack){const s=res.backNet-hp;if(!bestNine||s<bestNine.score)bestNine={name:p.name,score:s,label:`R${rn} Back`,gross:p.rounds[String(rn)].back}}}}
+  let lowGross=null;
+  for(const d of data){for(let rn=1;rn<=4;rn++){const res=calcPlayerRound(d.player,rn);if(res&&res.thru===18&&(!lowGross||res.gross<lowGross.gross))lowGross={name:d.player.name,gross:res.gross,round:rn}}}
+  const tMap={};for(const p of players){if(!p.team)continue;if(!tMap[p.team])tMap[p.team]=0;tMap[p.team]+=calcPlayerView(p,currentView).netToPar}
+  const teams=Object.entries(tMap).sort((a,b)=>a[1]-b[1]);
+  let marginCard='';
+  if(teams.length>=2){const m=Math.abs(teams[0][1]-teams[1][1]);marginCard=`<div class="hl-card hl-margin"><div class="hl-label">Team Lead</div><div class="hl-name">${esc(teams[0][0])}</div><div class="hl-detail">${m===0?'Tied!':`by ${m} stroke${m!==1?'s':''}`}</div></div>`}
+  el.innerHTML=`<div class="hl-card hl-mvp"><div class="hl-label">⛳ Leader</div><div class="hl-name">${esc(leader.player.name)}</div><div class="hl-detail">${fmtPar(leader.netToPar)} · thru ${leader.thru}</div></div>`+(bestNine?`<div class="hl-card hl-hot"><div class="hl-label">🔥 Best Nine</div><div class="hl-name">${esc(bestNine.name)}</div><div class="hl-detail">${bestNine.gross} gross (${fmtPar(bestNine.score)}) · ${bestNine.label}</div></div>`:'')+(lowGross?`<div class="hl-card hl-low"><div class="hl-label">🏌️ Low Gross</div><div class="hl-name">${esc(lowGross.name)}</div><div class="hl-detail">${lowGross.gross} in Round ${lowGross.round}</div></div>`:'')+marginCard;
 }
 
-// ── TEAM STANDINGS ──
-function renderTeams() {
-  const teamMap = {};
-  for (const p of players) {
-    if (!p.team) continue;
-    if (!teamMap[p.team]) teamMap[p.team] = [];
-    teamMap[p.team].push(p);
+/* ═══ TEAMS ═══ */
+function renderTeams(){
+  const teamMap={};
+  for(const p of players){if(!p.team)continue;if(!teamMap[p.team])teamMap[p.team]=[];teamMap[p.team].push(p)}
+  const teamData=Object.entries(teamMap).map(([name,members])=>{
+    let ntp=0,thru=0;for(const m of members){const v=calcPlayerView(m,currentView);ntp+=v.netToPar;thru+=v.thru}
+    return{name,netToPar:ntp,thru,lastNine:calcLastNine(members)}
+  }).sort((a,b)=>a.netToPar-b.netToPar);
+  const container=document.getElementById('teamCard');
+  if(!teamData.length){container.innerHTML='<div class="empty-state">No team data available</div>';return}
+  let html=teamData.map((t,i)=>{
+    const ln=t.lastNine!==null?` <span class="last-nine-badge ${parClass(t.lastNine)}">Last 9: ${fmtPar(t.lastNine)}</span>`:'';
+    return`<div class="team-row" data-team="${esc(t.name)}"><div class="team-rank rank-${i+1}">${i+1}</div><div><div class="team-name">${esc(t.name)}</div><div class="team-thru">Thru ${t.thru}${ln}</div></div><div></div><div class="team-score ${parClass(t.netToPar)}">${fmtPar(t.netToPar)}</div></div>`;
+  }).join('');
+  if(teamData.length>=2){
+    const spread=Math.abs(teamData[0].netToPar-teamData[1].netToPar);
+    const pct=spread===0?50:Math.min(85,50+spread*3);
+    html+=`<div class="diff-bar-wrap"><div class="diff-bar-label">${spread===0?'Teams are tied':esc(teamData[0].name)+' leads by '+spread+' stroke'+(spread!==1?'s':'')}</div><div class="diff-bar"><div class="diff-bar-fill" style="width:${pct}%;background:${spread===0?'var(--text-muted)':'var(--green-300)'}"></div></div></div>`;
   }
-
-  const teamData = Object.entries(teamMap).map(([name, members]) => {
-    let netToPar = 0, thru = 0;
-    for (const m of members) {
-      const v = calcPlayerView(m, currentView);
-      netToPar += v.netToPar;
-      thru += v.thru;
-    }
-
-    // Last Nine logic
-    const lastNine = calcLastNine(members);
-
-    return { name, netToPar, thru, lastNine, memberCount: members.length };
+  container.innerHTML=html;
+  // Attach click handlers to team rows
+  container.querySelectorAll('.team-row[data-team]').forEach(row=>{
+    row.addEventListener('click',()=>openTeamModal(row.dataset.team));
   });
+}
 
-  teamData.sort((a, b) => a.netToPar - b.netToPar);
-
-  const container = document.getElementById('teamCard');
-  if (teamData.length === 0) {
-    container.innerHTML = '<div class="empty-state">No team data available</div>';
-    return;
+function calcLastNine(members){
+  const cps=[];for(let rn=1;rn<=4;rn++){cps.push({rn,half:'front'});cps.push({rn,half:'back'})}
+  let last=null;
+  for(const cp of cps){
+    let ok=true,total=0;
+    for(const m of members){
+      const r=m.rounds[String(cp.rn)];if(!r){ok=false;break}
+      const val=cp.half==='front'?r.front:r.back;if(!val||val<=0){ok=false;break}
+      const ch=getCH(m.hi,cp.rn),par=getCoursePar(cp.rn)/2;
+      const hc=cp.half==='front'?Math.ceil(ch/2):Math.floor(ch/2);
+      total+=(val-hc-par);
+    }
+    if(ok)last=total;
   }
+  return last;
+}
 
-  container.innerHTML = teamData.map((t, i) => {
-    const lnHtml = t.lastNine !== null
-      ? `<span class="last-nine-badge ${parClass(t.lastNine)}">Last 9: ${fmtPar(t.lastNine)}</span>`
-      : '';
-    return `
-      <div class="team-row">
-        <div class="team-rank rank-${i+1}">${i+1}</div>
-        <div>
-          <div class="team-name">${esc(t.name)}</div>
-          <div class="team-thru">Thru ${t.thru} ${lnHtml}</div>
-        </div>
-        <div></div>
-        <div class="team-score ${parClass(t.netToPar)}">${fmtPar(t.netToPar)}</div>
-      </div>`;
+/* ═══ INDIVIDUAL ═══ */
+function renderIndividual(){
+  const data=players.map(p=>{const v=calcPlayerView(p,currentView);return{player:p,...v}}).filter(d=>d.thru>0).sort((a,b)=>a.netToPar-b.netToPar||a.net-b.net);
+  const arrows=computeArrows(data);
+  const body=document.getElementById('lbBody');
+  if(!data.length){body.innerHTML='<div class="empty-state">No scores yet</div>';return}
+  body.innerHTML=data.map((d,i)=>{
+    const pos=i+1,arrowHtml=arrows[d.player.name]||'';
+    let trendHtml='';
+    if(currentView==='tournament'){const t=calcTrend(d.player);if(t==='hot')trendHtml='<span class="trend-badge hot">HOT</span>';else if(t==='cold')trendHtml='<span class="trend-badge cold">COLD</span>'}
+    let dotsHtml='';
+    if(currentView==='tournament'){
+      dotsHtml='<span class="round-dots">';
+      for(let rn=1;rn<=4;rn++){const res=calcPlayerRound(d.player,rn);if(!res||res.thru===0){dotsHtml+='<span class="round-dot empty" title="R'+rn+': —"></span>'}else{const cls=res.netToPar<0?'good':(res.netToPar>2?'bad':'ok');dotsHtml+=`<span class="round-dot ${cls}" title="R${rn}: ${fmtPar(res.netToPar)}"></span>`}}
+      dotsHtml+='</span>';
+    }
+    return`<div class="lb-row${pos===1?' is-leader':''}" data-player="${esc(d.player.name)}">
+      <span class="lb-pos ${pos<=3?'top-3':''}">${pos}</span>
+      <div class="lb-name-cell"><div class="lb-player-name">${esc(d.player.name)}${arrowHtml}${trendHtml}</div><div class="lb-team-tag">${esc(d.player.team)} ${dotsHtml}</div></div>
+      <span class="lb-val">${d.net}</span><span class="lb-val net-par ${parClass(d.netToPar)}">${fmtPar(d.netToPar)}</span><span class="lb-val">${d.gross}</span><span class="lb-thru">${d.thru}</span>
+    </div>`;
   }).join('');
+  // Attach click handlers
+  body.querySelectorAll('.lb-row[data-player]').forEach(row=>{
+    row.addEventListener('click',()=>openPlayerModal(row.dataset.player));
+  });
 }
 
-// ── LAST NINE ──
-function calcLastNine(members) {
-  // Find the most recent completed 9-hole block where ALL team members have scores
-  const checkpoints = []; // ordered list of {roundNum, half} checkpoints
-
-  for (let rn = 1; rn <= 4; rn++) {
-    checkpoints.push({ rn, half: 'front' });
-    checkpoints.push({ rn, half: 'back' });
-  }
-
-  let lastComplete = null;
-  for (const cp of checkpoints) {
-    let allHave = true;
-    let totalNetToPar = 0;
-    for (const m of members) {
-      const r = m.rounds[String(cp.rn)];
-      if (!r) { allHave = false; break; }
-      const val = cp.half === 'front' ? r.front : r.back;
-      if (!val || val <= 0) { allHave = false; break; }
-
-      const ch = getCH(m.hi, cp.rn);
-      const par = getCoursePar(cp.rn) / 2;
-      const hcStrokes = cp.half === 'front' ? Math.ceil(ch / 2) : Math.floor(ch / 2);
-      const net = val - hcStrokes;
-      totalNetToPar += (net - par);
-    }
-    if (allHave) lastComplete = totalNetToPar;
-  }
-
-  return lastComplete;
+function calcTrend(player){
+  const results=[];for(let rn=1;rn<=4;rn++){const res=calcPlayerRound(player,rn);if(res&&res.thru===18)results.push(res.netToPar)}
+  if(results.length<2)return null;
+  const diff=results[results.length-1]-results[results.length-2];
+  return diff<=-3?'hot':(diff>=3?'cold':null);
 }
 
-// ── INDIVIDUAL LEADERBOARD ──
-function renderIndividual() {
-  const data = players.map(p => {
-    const v = calcPlayerView(p, currentView);
-    return { player: p, ...v };
-  }).filter(d => d.thru > 0);
-
-  data.sort((a, b) => a.netToPar - b.netToPar || a.net - b.net);
-
-  // Compute arrows
-  const arrows = computeArrows(data);
-
-  const body = document.getElementById('lbBody');
-  if (data.length === 0) {
-    body.innerHTML = '<div class="empty-state">No scores yet</div>';
-    return;
-  }
-
-  body.innerHTML = data.map((d, i) => {
-    const pos = i + 1;
-    const arrowHtml = arrows[d.player.name] || '';
-    return `
-      <div class="lb-row" onclick="openModal('${esc(d.player.name)}')">
-        <span class="lb-pos ${pos <= 3 ? 'top-3' : ''}">${pos}</span>
-        <div class="lb-name-cell">
-          <div class="lb-player-name">${esc(d.player.name)}${arrowHtml}</div>
-          <div class="lb-team-tag">${esc(d.player.team)}</div>
-        </div>
-        <span class="lb-val">${d.net}</span>
-        <span class="lb-val net-par ${parClass(d.netToPar)}">${fmtPar(d.netToPar)}</span>
-        <span class="lb-val">${d.gross}</span>
-        <span class="lb-thru">${d.thru}</span>
-      </div>`;
-  }).join('');
-}
-
-// ── ARROW LOGIC ──
-function computeArrows(sortedData) {
-  const result = {};
-
-  if (currentView === 'tournament') {
-    // Arrows update only after a full 18 is completed.
-    // Show rank change vs the previous completed round.
-    const currentRanks = {};
-    sortedData.forEach((d, i) => { currentRanks[d.player.name] = i + 1; });
-
-    // Find what round was most recently completed for each player
-    // Compare to ranks at end of previous round
-    for (const d of sortedData) {
-      const name = d.player.name;
-      // Check if player has completed at least one full 18
-      let completedRounds = 0;
-      for (let rn = 1; rn <= 4; rn++) {
-        const rr = calcPlayerRound(d.player, rn);
-        if (rr && rr.thru === 18) completedRounds++;
-      }
-      if (completedRounds < 2) continue; // Need at least 2 rounds for comparison
-
-      if (prevRanks[name] !== undefined) {
-        const diff = prevRanks[name] - currentRanks[name];
-        if (diff > 0) result[name] = `<span class="arrow up">▲${diff}</span>`;
-        else if (diff < 0) result[name] = `<span class="arrow down">▼${Math.abs(diff)}</span>`;
+/* ═══ ARROWS ═══ */
+function computeArrows(sortedData){
+  const result={};
+  if(currentView==='tournament'){
+    const cur={};sortedData.forEach((d,i)=>{cur[d.player.name]=i+1});
+    for(const d of sortedData){
+      let comp=0;for(let rn=1;rn<=4;rn++){const rr=calcPlayerRound(d.player,rn);if(rr&&rr.thru===18)comp++}
+      if(comp<2)continue;
+      if(prevRanks[d.player.name]!==undefined){
+        const diff=prevRanks[d.player.name]-cur[d.player.name];
+        if(diff>0)result[d.player.name]=`<span class="arrow up">▲${diff}</span>`;
+        else if(diff<0)result[d.player.name]=`<span class="arrow down">▼${Math.abs(diff)}</span>`;
       }
     }
-
-    // Store current ranks for next update cycle comparison
-    // Only update prevRanks when a round boundary is crossed (simplified: store each time)
-    // A more precise implementation would track per-round completion
-    Object.assign(prevRanks, currentRanks);
-  } else {
-    // Round view: show rank movement for overall tournament after that round's full 18 is complete
-    const roundNum = parseInt(currentView);
-    if (roundNum <= 1) return result; // No arrows for R1
-
-    for (const d of sortedData) {
-      const rr = calcPlayerRound(d.player, roundNum);
-      if (!rr || rr.thru < 18) continue;
-
-      // Get rank at end of previous rounds vs including this round
-      const prevView = calcTournamentThruRound(d.player, roundNum - 1);
-      const currView = calcTournamentThruRound(d.player, roundNum);
-
-      // We need all players' ranks at both points
-      // Simplified: just track position changes
-    }
-    // Detailed arrow implementation for round view
-    const prevRoundRanks = computeRanksThruRound(roundNum - 1);
-    const currRoundRanks = computeRanksThruRound(roundNum);
-
-    for (const name of Object.keys(currRoundRanks)) {
-      // Only show arrow if this player completed full 18 in current round
-      const player = players.find(p => p.name === name);
-      if (!player) continue;
-      const rr = calcPlayerRound(player, roundNum);
-      if (!rr || rr.thru < 18) continue;
-
-      const prev = prevRoundRanks[name];
-      const curr = currRoundRanks[name];
-      if (prev !== undefined && curr !== undefined) {
-        const diff = prev - curr;
-        if (diff > 0) result[name] = `<span class="arrow up">▲${diff}</span>`;
-        else if (diff < 0) result[name] = `<span class="arrow down">▼${Math.abs(diff)}</span>`;
+    Object.assign(prevRanks,cur);
+  }else{
+    const rn=parseInt(currentView);if(rn<=1)return result;
+    const prev=ranksThruRound(rn-1),curr=ranksThruRound(rn);
+    for(const name of Object.keys(curr)){
+      const p=players.find(x=>x.name===name);if(!p)continue;
+      const rr=calcPlayerRound(p,rn);if(!rr||rr.thru<18)continue;
+      if(prev[name]!==undefined&&curr[name]!==undefined){
+        const diff=prev[name]-curr[name];
+        if(diff>0)result[name]=`<span class="arrow up">▲${diff}</span>`;
+        else if(diff<0)result[name]=`<span class="arrow down">▼${Math.abs(diff)}</span>`;
       }
     }
   }
-
   return result;
 }
-
-function calcTournamentThruRound(player, thruRound) {
-  let net = 0, netToPar = 0, thru = 0;
-  for (let rn = 1; rn <= thruRound; rn++) {
-    const res = calcPlayerRound(player, rn);
-    if (res) { net += res.net; netToPar += res.netToPar; thru += res.thru; }
-  }
-  return { net, netToPar, thru };
+function ranksThruRound(thru){
+  const data=players.map(p=>{let net=0,ntp=0,th=0;for(let rn=1;rn<=thru;rn++){const res=calcPlayerRound(p,rn);if(res){net+=res.net;ntp+=res.netToPar;th+=res.thru}}return{name:p.name,net,netToPar:ntp,thru:th}}).filter(d=>d.thru>0).sort((a,b)=>a.netToPar-b.netToPar||a.net-b.net);
+  const ranks={};data.forEach((d,i)=>{ranks[d.name]=i+1});return ranks;
 }
 
-function computeRanksThruRound(thruRound) {
-  const data = players.map(p => {
-    const v = calcTournamentThruRound(p, thruRound);
-    return { name: p.name, ...v };
-  }).filter(d => d.thru > 0);
-  data.sort((a, b) => a.netToPar - b.netToPar || a.net - b.net);
-  const ranks = {};
-  data.forEach((d, i) => { ranks[d.name] = i + 1; });
-  return ranks;
-}
-
-// ── CHART ──
-function renderChart() {
-  const teamMap = {};
-  for (const p of players) {
-    if (!p.team) continue;
-    if (!teamMap[p.team]) teamMap[p.team] = [];
-    teamMap[p.team].push(p);
-  }
-
-  const teamNames = Object.keys(teamMap);
-  if (teamNames.length < 2) return;
-
-  // Build checkpoints: each 9-hole block where ALL players across BOTH teams have scores
-  const checkpoints = [];
-  for (let rn = 1; rn <= 4; rn++) {
-    checkpoints.push({ rn, half: 'front', label: `R${rn} F9` });
-    checkpoints.push({ rn, half: 'back', label: `R${rn} B9` });
-  }
-
-  const labels = [];
-  const datasets = {};
-  teamNames.forEach(t => { datasets[t] = []; });
-
-  for (const cp of checkpoints) {
-    let allHave = true;
-    const teamScores = {};
-
-    for (const tName of teamNames) {
-      let teamPar = 0;
-      for (const m of teamMap[tName]) {
-        const r = m.rounds[String(cp.rn)];
-        if (!r) { allHave = false; break; }
-        const val = cp.half === 'front' ? r.front : r.back;
-        if (!val || val <= 0) { allHave = false; break; }
-        const ch = getCH(m.hi, cp.rn);
-        const par = getCoursePar(cp.rn) / 2;
-        const hcStrokes = cp.half === 'front' ? Math.ceil(ch / 2) : Math.floor(ch / 2);
-        teamPar += (val - hcStrokes - par);
+/* ═══ CHART (Y-AXIS REVERSED) ═══ */
+function renderChart(){
+  const teamMap={};for(const p of players){if(!p.team)continue;if(!teamMap[p.team])teamMap[p.team]=[];teamMap[p.team].push(p)}
+  const teamNames=Object.keys(teamMap);if(teamNames.length<2)return;
+  const cps=[];for(let rn=1;rn<=4;rn++){cps.push({rn,half:'front',label:`R${rn} F9`});cps.push({rn,half:'back',label:`R${rn} B9`})}
+  const labels=[],datasets={};teamNames.forEach(t=>{datasets[t]=[]});
+  for(const cp of cps){
+    let ok=true;const scores={};
+    for(const tName of teamNames){
+      let tp=0;
+      for(const m of teamMap[tName]){
+        const r=m.rounds[String(cp.rn)];if(!r){ok=false;break}
+        const val=cp.half==='front'?r.front:r.back;if(!val||val<=0){ok=false;break}
+        const ch=getCH(m.hi,cp.rn),par=getCoursePar(cp.rn)/2;
+        const hc=cp.half==='front'?Math.ceil(ch/2):Math.floor(ch/2);
+        tp+=(val-hc-par);
       }
-      if (!allHave) break;
-      teamScores[tName] = teamPar;
+      if(!ok)break;scores[tName]=tp;
     }
-
-    if (!allHave) break; // Stop at first incomplete checkpoint
-
+    if(!ok)break;
     labels.push(cp.label);
-    for (const tName of teamNames) {
-      const prev = datasets[tName].length > 0 ? datasets[tName][datasets[tName].length - 1] : 0;
-      datasets[tName].push(prev + teamScores[tName]);
-    }
+    for(const t of teamNames){const prev=datasets[t].length?datasets[t][datasets[t].length-1]:0;datasets[t].push(prev+scores[t])}
   }
-
-  const colors = ['#3eb97f', '#c9a84c', '#4a90d9', '#d44'];
-  const chartData = {
-    labels,
-    datasets: teamNames.map((t, i) => ({
-      label: t,
-      data: datasets[t],
-      borderColor: colors[i % colors.length],
-      backgroundColor: colors[i % colors.length] + '22',
-      borderWidth: 2,
-      pointRadius: 4,
-      pointBackgroundColor: colors[i % colors.length],
-      tension: 0.3,
-      fill: false
-    }))
-  };
-
-  const ctx = document.getElementById('leadChart').getContext('2d');
-  if (chartInstance) chartInstance.destroy();
-
-  chartInstance = new Chart(ctx, {
-    type: 'line',
-    data: chartData,
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          labels: { color: '#a8b5a0', font: { family: 'Outfit', size: 12 } }
-        }
+  const colors=['#3eb97f','#c9a84c','#4a90d9','#d44'];
+  const ctx=document.getElementById('leadChart').getContext('2d');
+  if(chartInstance)chartInstance.destroy();
+  chartInstance=new Chart(ctx,{
+    type:'line',
+    data:{labels,datasets:teamNames.map((t,i)=>({label:t,data:datasets[t],borderColor:colors[i%colors.length],backgroundColor:colors[i%colors.length]+'22',borderWidth:2.5,pointRadius:5,pointHoverRadius:7,pointBackgroundColor:colors[i%colors.length],tension:0.3,fill:false}))},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      plugins:{
+        legend:{labels:{color:'#a8b5a0',font:{family:'Outfit',size:12},usePointStyle:true,pointStyle:'circle'}},
+        tooltip:{backgroundColor:'rgba(15,46,29,0.95)',borderColor:'rgba(245,240,232,0.15)',borderWidth:1,titleFont:{family:'Outfit',size:13},bodyFont:{family:'Outfit',size:12},titleColor:'#f5f0e8',bodyColor:'#a8b5a0',padding:10,cornerRadius:8,callbacks:{label:function(ctx){const v=ctx.parsed.y;return` ${ctx.dataset.label}: ${v===0?'E':(v>0?'+'+v:v)}`}}}
       },
-      scales: {
-        x: {
-          ticks: { color: '#6b7a64', font: { family: 'Outfit', size: 11 } },
-          grid: { color: 'rgba(245,240,232,0.05)' }
-        },
-        y: {
-          ticks: { color: '#6b7a64', font: { family: 'Outfit', size: 11 } },
-          grid: { color: 'rgba(245,240,232,0.06)' },
-          title: { display: true, text: 'Net to Par', color: '#6b7a64', font: { family: 'Outfit' } }
-        }
+      scales:{
+        x:{ticks:{color:'#6b7a64',font:{family:'Outfit',size:11}},grid:{color:'rgba(245,240,232,0.05)'}},
+        y:{reverse:true,ticks:{color:'#6b7a64',font:{family:'Outfit',size:11},callback:v=>v===0?'E':(v>0?'+'+v:v)},grid:{color:'rgba(245,240,232,0.06)'},title:{display:true,text:'Net to Par (lower is better)',color:'#6b7a64',font:{family:'Outfit',size:11}}}
       }
     }
   });
 }
 
-// ── TOURNAMENT HISTORY ──
-function renderHistory() {
-  const grid = document.getElementById('historyGrid');
-  let html = '';
-
-  for (let rn = 1; rn <= 4; rn++) {
-    const roundPlayers = players.map(p => {
-      const res = calcPlayerRound(p, rn);
-      return res && res.thru > 0 ? { name: p.name, ...res } : null;
-    }).filter(Boolean);
-
-    html += `<div class="history-card"><div class="history-card-title">Round ${rn}</div>`;
-
-    if (roundPlayers.length === 0) {
-      html += `<div class="history-upcoming">Upcoming</div>`;
-    } else {
-      // Sort by gross for gross winner, net-to-par for net winner
-      const byGross = [...roundPlayers].filter(p => p.thru === 18).sort((a, b) => a.gross - b.gross);
-      const byNet = [...roundPlayers].filter(p => p.thru === 18).sort((a, b) => a.netToPar - b.netToPar);
-
-      if (byNet.length > 0) {
-        html += `<div class="history-place"><span><span class="history-medal gold">1st</span>${esc(byNet[0].name)}</span><span class="history-place-score">${byNet[0].gross} / ${fmtPar(byNet[0].netToPar)}</span></div>`;
-      }
-      if (byNet.length > 1) {
-        html += `<div class="history-place"><span><span class="history-medal silver">2nd</span>${esc(byNet[1].name)}</span><span class="history-place-score">${byNet[1].gross} / ${fmtPar(byNet[1].netToPar)}</span></div>`;
-      }
-      if (byNet.length === 0 && roundPlayers.length > 0) {
-        html += `<div class="history-upcoming">In progress…</div>`;
-      }
+/* ═══ HISTORY ═══ */
+function renderHistory(){
+  const grid=document.getElementById('historyGrid');let html='';
+  for(let rn=1;rn<=4;rn++){
+    const rp=players.map(p=>{const res=calcPlayerRound(p,rn);return res&&res.thru>0?{name:p.name,...res}:null}).filter(Boolean);
+    const cn=getCourseName(rn);
+    html+=`<div class="history-card"><div class="history-card-head"><div class="history-card-title">Round ${rn}</div>${cn?`<div class="history-course">${esc(cn)}</div>`:''}</div>`;
+    if(!rp.length){html+='<div class="history-upcoming">Upcoming</div>'}
+    else{
+      const byNet=rp.filter(p=>p.thru===18).sort((a,b)=>a.netToPar-b.netToPar);
+      if(byNet.length>0)html+=`<div class="history-place"><span><span class="history-medal gold">1st</span>${esc(byNet[0].name)}</span><span class="history-place-score">${byNet[0].gross} / ${fmtPar(byNet[0].netToPar)}</span></div>`;
+      if(byNet.length>1)html+=`<div class="history-place"><span><span class="history-medal silver">2nd</span>${esc(byNet[1].name)}</span><span class="history-place-score">${byNet[1].gross} / ${fmtPar(byNet[1].netToPar)}</span></div>`;
+      if(!byNet.length&&rp.length)html+='<div class="history-upcoming">In progress…</div>';
     }
-    html += `</div>`;
+    html+='</div>';
   }
-
-  grid.innerHTML = html;
+  grid.innerHTML=html;
 }
 
-// ── HANDICAPS TABLE ──
-function renderHandicaps() {
-  const body = document.getElementById('hcBody');
-  body.innerHTML = players.map(p => {
-    const chs = [1,2,3,4].map(rn => {
-      const ch = getCH(p.hi, rn);
-      return `<td class="hc-val">${ch || '—'}</td>`;
-    }).join('');
-    return `<tr><td class="hc-name">${esc(p.name)}</td><td class="hc-val">${p.hi}</td>${chs}</tr>`;
+/* ═══ HANDICAPS ═══ */
+function renderHandicaps(){
+  document.getElementById('hcBody').innerHTML=players.map(p=>{
+    const chs=[1,2,3,4].map(rn=>`<td class="hc-val">${getCH(p.hi,rn)||'—'}</td>`).join('');
+    return`<tr><td class="hc-name">${esc(p.name)}</td><td class="hc-val">${p.hi}</td>${chs}</tr>`;
   }).join('');
 }
 
-// ── PLAYER MODAL ──
-function openModal(name) {
-  const player = players.find(p => p.name === name);
-  if (!player) return;
+/* ═══ PLAYER MODAL ═══ */
+function openPlayerModal(name){
+  const player=players.find(p=>p.name===name);if(!player)return;
+  document.getElementById('pmName').textContent=player.name;
+  document.getElementById('pmTeam').textContent=player.team;
+  const v=calcPlayerView(player,currentView);
+  document.getElementById('pmStats').innerHTML=`
+    <div class="modal-stat"><div class="modal-stat-label">Net</div><div class="modal-stat-val">${v.net||'—'}</div></div>
+    <div class="modal-stat"><div class="modal-stat-label">Gross</div><div class="modal-stat-val">${v.gross||'—'}</div></div>
+    <div class="modal-stat"><div class="modal-stat-label">To Par</div><div class="modal-stat-val ${parClass(v.netToPar)}">${v.thru>0?fmtPar(v.netToPar):'—'}</div></div>
+    <div class="modal-stat"><div class="modal-stat-label">Thru</div><div class="modal-stat-val">${v.thru||'—'}</div></div>`;
 
-  const modal = document.getElementById('modal');
-  document.getElementById('modalName').textContent = player.name;
-  document.getElementById('modalTeam').textContent = player.team;
-
-  const v = calcPlayerView(player, currentView);
-  document.getElementById('modalStats').innerHTML = `
-    <div class="modal-stat"><div class="modal-stat-label">Net</div><div class="modal-stat-val">${v.net || '—'}</div></div>
-    <div class="modal-stat"><div class="modal-stat-label">Gross</div><div class="modal-stat-val">${v.gross || '—'}</div></div>
-    <div class="modal-stat"><div class="modal-stat-label">To Par</div><div class="modal-stat-val ${parClass(v.netToPar)}">${v.thru > 0 ? fmtPar(v.netToPar) : '—'}</div></div>
-    <div class="modal-stat"><div class="modal-stat-label">Thru</div><div class="modal-stat-val">${v.thru || '—'}</div></div>`;
-
-  let roundsHtml = '';
-  if (currentView === 'tournament') {
-    document.getElementById('modalRoundsTitle').textContent = 'Round Breakdown (Gross)';
-    for (let rn = 1; rn <= 4; rn++) {
-      const res = calcPlayerRound(player, rn);
-      roundsHtml += `<div class="modal-round-row">
-        <span class="modal-round-label">Round ${rn}</span>
-        <span class="modal-round-val">${res && res.thru > 0 ? res.gross : '—'}</span>
-      </div>`;
+  // Performance bars (tournament view)
+  let perfHtml='';
+  if(currentView==='tournament'){
+    const bars=[];let minP=0,maxP=0;
+    for(let rn=1;rn<=4;rn++){const res=calcPlayerRound(player,rn);if(res&&res.thru>0){bars.push({rn,ntp:res.netToPar});minP=Math.min(minP,res.netToPar);maxP=Math.max(maxP,res.netToPar)}else bars.push({rn,ntp:null})}
+    if(bars.some(b=>b.ntp!==null)){
+      const range=Math.max(Math.abs(minP),Math.abs(maxP),1);
+      perfHtml='<div class="modal-perf-title">Round Performance (Net to Par)</div>';
+      for(const b of bars){
+        if(b.ntp===null){perfHtml+=`<div class="modal-perf-row"><span class="modal-perf-label">R${b.rn}</span><div class="modal-perf-bar-wrap"></div><span class="modal-perf-val" style="color:var(--text-muted)">—</span></div>`}
+        else{const pct=Math.min(100,Math.max(8,(Math.abs(b.ntp)/range)*80+10));const cls=b.ntp<0?'good':(b.ntp>0?'bad':'ok');perfHtml+=`<div class="modal-perf-row"><span class="modal-perf-label">R${b.rn}</span><div class="modal-perf-bar-wrap"><div class="modal-perf-bar ${cls}" style="width:${pct}%"></div></div><span class="modal-perf-val ${parClass(b.ntp)}">${fmtPar(b.ntp)}</span></div>`}
+      }
     }
-    document.getElementById('modalSummary').textContent = `Handicap Index: ${player.hi}`;
-  } else {
-    const rn = parseInt(currentView);
-    document.getElementById('modalRoundsTitle').textContent = `Round ${rn} Detail (Gross)`;
-    const res = calcPlayerRound(player, rn);
-    if (res) {
-      roundsHtml += `<div class="modal-round-row"><span class="modal-round-label">Front Nine</span><span class="modal-round-val">${res.hasFront ? res.frontGross : '—'}</span></div>`;
-      roundsHtml += `<div class="modal-round-row"><span class="modal-round-label">Back Nine</span><span class="modal-round-val">${res.hasBack ? res.backGross : '—'}</span></div>`;
-    }
-    const ch = getCH(player.hi, rn);
-    document.getElementById('modalSummary').textContent = `Course Handicap: ${ch}`;
   }
+  document.getElementById('pmPerfSection').innerHTML=perfHtml;
 
-  document.getElementById('modalRounds').innerHTML = roundsHtml;
-  modal.classList.add('open');
+  let roundsHtml='';
+  if(currentView==='tournament'){
+    document.getElementById('pmRoundsTitle').textContent='Round Breakdown (Gross)';
+    for(let rn=1;rn<=4;rn++){const res=calcPlayerRound(player,rn);roundsHtml+=`<div class="modal-round-row"><span class="modal-round-label">Round ${rn}</span><span class="modal-round-val">${res&&res.thru>0?res.gross:'—'}</span></div>`}
+    document.getElementById('pmSummary').textContent=`Handicap Index: ${player.hi}`;
+  }else{
+    const rn=parseInt(currentView);
+    document.getElementById('pmRoundsTitle').textContent=`Round ${rn} Detail (Gross)`;
+    const res=calcPlayerRound(player,rn);
+    if(res){roundsHtml+=`<div class="modal-round-row"><span class="modal-round-label">Front Nine</span><span class="modal-round-val">${res.hasFront?res.frontGross:'—'}</span></div><div class="modal-round-row"><span class="modal-round-label">Back Nine</span><span class="modal-round-val">${res.hasBack?res.backGross:'—'}</span></div>`}
+    document.getElementById('pmSummary').textContent=`Course Handicap: ${getCH(player.hi,rn)}`;
+  }
+  document.getElementById('pmRounds').innerHTML=roundsHtml;
+  document.getElementById('playerModal').classList.add('open');
 }
 
-document.getElementById('modal').addEventListener('click', function(e) {
-  if (e.target === this) this.classList.remove('open');
-});
+/* ═══ TEAM MODAL ═══ */
+function openTeamModal(teamName){
+  const members=players.filter(p=>p.team===teamName);
+  if(!members.length)return;
 
-// ── VIEW CONTROLS ──
-document.querySelectorAll('#viewBtns .ctrl-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('#viewBtns .ctrl-btn').forEach(b => b.classList.remove('active'));
+  // Team totals
+  let teamNTP=0,teamGross=0,teamNet=0,teamThru=0;
+  const memberData=members.map(m=>{
+    const v=calcPlayerView(m,currentView);
+    teamNTP+=v.netToPar;teamGross+=v.gross;teamNet+=v.net;teamThru+=v.thru;
+    return{player:m,...v};
+  }).sort((a,b)=>a.netToPar-b.netToPar);
+
+  // Find MVP (lowest net-to-par on team)
+  const mvp=memberData[0];
+
+  // Find best single round on team
+  let bestRound=null;
+  for(const m of members){
+    for(let rn=1;rn<=4;rn++){
+      const res=calcPlayerRound(m,rn);
+      if(res&&res.thru===18&&(!bestRound||res.netToPar<bestRound.ntp)){
+        bestRound={name:m.name,rn,ntp:res.netToPar,gross:res.gross};
+      }
+    }
+  }
+
+  let html=`<div class="tm-title">${esc(teamName)}</div>`;
+  html+=`<div class="tm-subtitle">${currentView==='tournament'?'Tournament Overview':'Round '+currentView+' Overview'}</div>`;
+
+  // Summary stats
+  html+=`<div class="tm-summary">
+    <div class="modal-stat"><div class="modal-stat-label">Net to Par</div><div class="modal-stat-val ${parClass(teamNTP)}">${teamThru>0?fmtPar(teamNTP):'—'}</div></div>
+    <div class="modal-stat"><div class="modal-stat-label">Team Gross</div><div class="modal-stat-val">${teamGross||'—'}</div></div>
+    <div class="modal-stat"><div class="modal-stat-label">Thru</div><div class="modal-stat-val">${teamThru||'—'}</div></div>
+  </div>`;
+
+  // Round-by-round gross grid (tournament view)
+  if(currentView==='tournament'){
+    html+=`<div class="modal-perf-title">Gross Scores by Round</div>`;
+    html+=`<div class="tm-rounds-grid">`;
+    html+=`<div class="tm-rg-cell tm-rg-head"></div><div class="tm-rg-cell tm-rg-head">R1</div><div class="tm-rg-cell tm-rg-head">R2</div><div class="tm-rg-cell tm-rg-head">R3</div><div class="tm-rg-cell tm-rg-head">R4</div>`;
+    for(const md of memberData){
+      html+=`<div class="tm-rg-cell tm-rg-name">${esc(md.player.name)}</div>`;
+      for(let rn=1;rn<=4;rn++){
+        const res=calcPlayerRound(md.player,rn);
+        html+=`<div class="tm-rg-cell">${res&&res.thru>0?res.gross:'—'}</div>`;
+      }
+    }
+    html+=`</div>`;
+  }
+
+  html+=`<div class="modal-divider"></div>`;
+  html+=`<div class="modal-perf-title">Roster</div>`;
+
+  // Member cards
+  for(const md of memberData){
+    html+=`<div class="tm-member" data-player="${esc(md.player.name)}">`;
+    html+=`<div class="tm-member-head"><div class="tm-member-name">${esc(md.player.name)}</div><div class="tm-member-hi">HI ${md.player.hi}</div></div>`;
+    html+=`<div class="tm-member-stats">
+      <div class="tm-ms"><div class="tm-ms-label">Net</div><div class="tm-ms-val">${md.net||'—'}</div></div>
+      <div class="tm-ms"><div class="tm-ms-label">To Par</div><div class="tm-ms-val ${parClass(md.netToPar)}">${md.thru>0?fmtPar(md.netToPar):'—'}</div></div>
+      <div class="tm-ms"><div class="tm-ms-label">Gross</div><div class="tm-ms-val">${md.gross||'—'}</div></div>
+      <div class="tm-ms"><div class="tm-ms-label">Thru</div><div class="tm-ms-val">${md.thru||'—'}</div></div>
+    </div>`;
+    html+=`</div>`;
+  }
+
+  // Best round callout
+  if(bestRound){
+    html+=`<div class="tm-best"><div class="tm-best-label">⭐ Best Round on Team</div><div class="tm-best-val">${esc(bestRound.name)} — ${bestRound.gross} gross (${fmtPar(bestRound.ntp)}) in R${bestRound.rn}</div></div>`;
+  }
+
+  html+=`<div class="tm-tap-hint">Tap a player to see their full details</div>`;
+
+  document.getElementById('tmContent').innerHTML=html;
+  document.getElementById('teamModal').classList.add('open');
+
+  // Attach click handlers to member cards (open player modal)
+  document.querySelectorAll('#tmContent .tm-member[data-player]').forEach(card=>{
+    card.addEventListener('click',()=>{
+      document.getElementById('teamModal').classList.remove('open');
+      setTimeout(()=>openPlayerModal(card.dataset.player),150);
+    });
+  });
+}
+
+/* ═══ MODAL CLOSE HANDLERS ═══ */
+document.getElementById('playerModal').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open')});
+document.getElementById('teamModal').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open')});
+
+/* ═══ VIEW CONTROLS ═══ */
+document.querySelectorAll('#viewBtns .ctrl-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('#viewBtns .ctrl-btn').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
-    currentView = btn.dataset.view;
-    lastCSV = ''; // Force re-render
+    currentView=btn.dataset.view;
+    lastCSV='';
     render();
   });
 });
 
-// ── UTILITY ──
-function esc(s) {
-  const d = document.createElement('div');
-  d.textContent = s;
-  return d.innerHTML;
-}
-
-// ── INIT ──
+/* ═══ INIT ═══ */
 load();
-setInterval(load, POLL_SECONDS * 1000);
+setInterval(load,POLL_SECONDS*1000);
   </script>
 </body>
 </html>
