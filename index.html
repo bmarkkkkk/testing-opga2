@@ -184,6 +184,7 @@
 
     /* Chart */
     .chart-wrap { padding:16px; background:var(--surface-1); border:1px solid var(--border); border-radius:var(--radius); }
+    .chart-inner { position:relative; height:200px; }
     .chart-wrap canvas { width:100%!important; }
     .chart-hint { text-align:center; font-size:0.62rem; color:var(--text-muted); margin-top:8px; font-style:italic; }
 
@@ -330,7 +331,7 @@
         <span class="section-line"></span>
       </div>
       <div class="chart-wrap">
-        <canvas id="leadChart" height="220"></canvas>
+        <div class="chart-inner"><canvas id="leadChart"></canvas></div>
         <div class="chart-hint">↑ Higher on chart = better (lower net-to-par)</div>
       </div>
     </div>
@@ -503,20 +504,74 @@ function renderTicker(){
 /* ═══ HIGHLIGHTS ═══ */
 function renderHighlights(){
   const el=document.getElementById('highlights');
+  const isTourn=currentView==='tournament';
+  const viewRn=isTourn?null:parseInt(currentView);
+
   const data=players.map(p=>{const v=calcPlayerView(p,currentView);return{player:p,...v}}).filter(d=>d.thru>0);
   if(!data.length){el.style.display='none';return}
   el.style.display='flex';
   data.sort((a,b)=>a.netToPar-b.netToPar);
-  const leader=data[0];
-  let bestNine=null;
-  for(const p of players){for(let rn=1;rn<=4;rn++){const res=calcPlayerRound(p,rn);if(!res)continue;const hp=getCoursePar(rn)/2;if(res.hasFront){const s=res.frontNet-hp;if(!bestNine||s<bestNine.score)bestNine={name:p.name,score:s,label:`R${rn} Front`,gross:p.rounds[String(rn)].front}}if(res.hasBack){const s=res.backNet-hp;if(!bestNine||s<bestNine.score)bestNine={name:p.name,score:s,label:`R${rn} Back`,gross:p.rounds[String(rn)].back}}}}
-  let lowGross=null;
-  for(const d of data){for(let rn=1;rn<=4;rn++){const res=calcPlayerRound(d.player,rn);if(res&&res.thru===18&&(!lowGross||res.gross<lowGross.gross))lowGross={name:d.player.name,gross:res.gross,round:rn}}}
+
+  // Leader(s) — handle ties
+  const leaderScore=data[0].netToPar;
+  const leaders=data.filter(d=>d.netToPar===leaderScore);
+  const leaderNames=leaders.map(d=>esc(d.player.name)).join(' & ');
+  const leaderThru=leaders.map(d=>d.thru).join('/');
+
+  // Best Nine — filter by round if in round view
+  let bestNines=[];
+  const roundsToCheck=isTourn?[1,2,3,4]:[viewRn];
+  for(const p of players){
+    for(const rn of roundsToCheck){
+      const res=calcPlayerRound(p,rn);if(!res)continue;
+      const hp=getCoursePar(rn)/2;
+      if(res.hasFront){bestNines.push({name:p.name,score:res.frontNet-hp,label:`R${rn} Front`,gross:p.rounds[String(rn)].front})}
+      if(res.hasBack){bestNines.push({name:p.name,score:res.backNet-hp,label:`R${rn} Back`,gross:p.rounds[String(rn)].back})}
+    }
+  }
+  let bestNineCard='';
+  if(bestNines.length){
+    bestNines.sort((a,b)=>a.score-b.score);
+    const bestScore=bestNines[0].score;
+    const tied=bestNines.filter(b=>b.score===bestScore);
+    if(tied.length===1){
+      const b=tied[0];
+      bestNineCard=`<div class="hl-card hl-hot"><div class="hl-label">🔥 Best Nine</div><div class="hl-name">${esc(b.name)}</div><div class="hl-detail">${b.gross} gross (${fmtPar(b.score)}) · ${b.label}</div></div>`;
+    }else{
+      const names=tied.map(b=>esc(b.name)).join(' & ');
+      bestNineCard=`<div class="hl-card hl-hot"><div class="hl-label">🔥 Best Nine</div><div class="hl-name">${names}</div><div class="hl-detail">${fmtPar(bestScore)} net-to-par</div></div>`;
+    }
+  }
+
+  // Low Gross — filter by round if in round view, handle ties
+  let lowGrossList=[];
+  for(const d of data){
+    for(const rn of roundsToCheck){
+      const res=calcPlayerRound(d.player,rn);
+      if(res&&res.thru===18)lowGrossList.push({name:d.player.name,gross:res.gross,round:rn});
+    }
+  }
+  let lowGrossCard='';
+  if(lowGrossList.length){
+    lowGrossList.sort((a,b)=>a.gross-b.gross);
+    const bestGross=lowGrossList[0].gross;
+    const tied=lowGrossList.filter(l=>l.gross===bestGross);
+    if(tied.length===1){
+      const g=tied[0];
+      lowGrossCard=`<div class="hl-card hl-low"><div class="hl-label">🏌️ Low Gross</div><div class="hl-name">${esc(g.name)}</div><div class="hl-detail">${g.gross} in Round ${g.round}</div></div>`;
+    }else{
+      const names=tied.map(g=>esc(g.name)).join(' & ');
+      lowGrossCard=`<div class="hl-card hl-low"><div class="hl-label">🏌️ Low Gross</div><div class="hl-name">${names}</div><div class="hl-detail">${bestGross} gross</div></div>`;
+    }
+  }
+
+  // Team Lead
   const tMap={};for(const p of players){if(!p.team)continue;if(!tMap[p.team])tMap[p.team]=0;tMap[p.team]+=calcPlayerView(p,currentView).netToPar}
   const teams=Object.entries(tMap).sort((a,b)=>a[1]-b[1]);
   let marginCard='';
-  if(teams.length>=2){const m=Math.abs(teams[0][1]-teams[1][1]);marginCard=`<div class="hl-card hl-margin"><div class="hl-label">Team Lead</div><div class="hl-name">${esc(teams[0][0])}</div><div class="hl-detail">${m===0?'Tied!':`by ${m} stroke${m!==1?'s':''}`}</div></div>`}
-  el.innerHTML=`<div class="hl-card hl-mvp"><div class="hl-label">⛳ Leader</div><div class="hl-name">${esc(leader.player.name)}</div><div class="hl-detail">${fmtPar(leader.netToPar)} · thru ${leader.thru}</div></div>`+(bestNine?`<div class="hl-card hl-hot"><div class="hl-label">🔥 Best Nine</div><div class="hl-name">${esc(bestNine.name)}</div><div class="hl-detail">${bestNine.gross} gross (${fmtPar(bestNine.score)}) · ${bestNine.label}</div></div>`:'')+(lowGross?`<div class="hl-card hl-low"><div class="hl-label">🏌️ Low Gross</div><div class="hl-name">${esc(lowGross.name)}</div><div class="hl-detail">${lowGross.gross} in Round ${lowGross.round}</div></div>`:'')+marginCard;
+  if(teams.length>=2){const m=Math.abs(teams[0][1]-teams[1][1]);marginCard=`<div class="hl-card hl-margin"><div class="hl-label">Team Lead</div><div class="hl-name">${m===0?'Tied':esc(teams[0][0])}</div><div class="hl-detail">${m===0?'All square!':`by ${m} stroke${m!==1?'s':''}`}</div></div>`}
+
+  el.innerHTML=`<div class="hl-card hl-mvp"><div class="hl-label">⛳ Leader</div><div class="hl-name">${leaderNames}</div><div class="hl-detail">${fmtPar(leaderScore)} · thru ${leaderThru}</div></div>`+bestNineCard+lowGrossCard+marginCard;
 }
 
 /* ═══ TEAMS ═══ */
@@ -763,10 +818,11 @@ function openTeamModal(teamName){
   // Find MVP (lowest net-to-par on team)
   const mvp=memberData[0];
 
-  // Find best single round on team
+  // Find best single round on team (respect current view)
   let bestRound=null;
+  const tmRounds=currentView==='tournament'?[1,2,3,4]:[parseInt(currentView)];
   for(const m of members){
-    for(let rn=1;rn<=4;rn++){
+    for(const rn of tmRounds){
       const res=calcPlayerRound(m,rn);
       if(res&&res.thru===18&&(!bestRound||res.netToPar<bestRound.ntp)){
         bestRound={name:m.name,rn,ntp:res.netToPar,gross:res.gross};
