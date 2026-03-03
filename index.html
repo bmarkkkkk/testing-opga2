@@ -907,7 +907,12 @@ async function scanYears(){
   for(let y=START_YEAR;y<=MAX_SCAN_YEAR;y++){
     try{
       const r=await fetch(csvUrl(`Scores ${y}`),{cache:'no-store'});
-      if(r.ok){const t=await r.text();if(t.trim().length>10)found.push(y)}
+      if(!r.ok)break;
+      const t=await r.text();
+      // Google Sheets returns HTML error pages for missing tabs — verify it's real CSV
+      if(t.trim().startsWith('<'))break;
+      const lines=t.trim().split('\n').filter(l=>l.trim());
+      if(lines.length>=2 && lines[0].includes(','))found.push(y);
       else break;
     }catch{break}
   }
