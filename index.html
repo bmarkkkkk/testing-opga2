@@ -138,31 +138,36 @@ function playerNineSegments(player, cMap, rMap){
   return segments;
 }
 
+function cumulativeNetToParUpToSegment(player, segIndex, cMap, rMap){
+  const segments = playerNineSegments(player, cMap, rMap);
+  let sum=0; let has=false;
+  for(let i=0;i<=segIndex;i++){
+    if(segments[i]==null) return null;
+    sum += segments[i]; has=true;
+  }
+  return has ? sum : null;
+}
 function trendInfo(player, roundName, rows, cMap, rMap){
   if(roundName === 'Tournament'){
-    // compare rank after latest completed round vs previous completed round
-    const completed=[];
-    for(let r=1;r<=4;r++){ if(player.perRound[`Round ${r}`]?.thru==="18") completed.push(r); }
-    if(completed.length<2) return {arrow:'', cls:'trend-flat', delta:null};
-    const curR = completed[completed.length-1];
-    const prevR = completed[completed.length-2];
-    function ranksAtRound(r){
+    // compare rank after latest completed 9 vs previous completed 9
+    const segs = playerNineSegments(player, cMap, rMap);
+    let last=-1, prev=-1;
+    for(let i=segs.length-1;i>=0;i--){ if(segs[i]!=null){ last=i; break; } }
+    for(let i=last-1;i>=0;i--){ if(segs[i]!=null){ prev=i; break; } }
+    if(last<0 || prev<0) return {arrow:'', cls:'trend-flat', delta:null};
+    function ranksAt(segIdx){
       const vals = rows.map(p=>{
-        let net=0, par=0; let ok=true;
-        for(let i=1;i<=r;i++){
-          const pr=p.perRound[`Round ${i}`];
-          if(!(pr && pr.thru==="18" && pr.net!=null && pr.parFor!=null)){ ok=false; break; }
-          net+=pr.net; par+=pr.parFor;
-        }
-        return ok ? {name:p.name, v: net-par} : null;
+        const v = cumulativeNetToParUpToSegment(p, segIdx, cMap, rMap);
+        return v==null? null : {name:p.name, v};
       }).filter(Boolean).sort((a,b)=>a.v-b.v);
-      const rank=new Map(); vals.forEach((x,i)=>rank.set(x.name,i+1));
+      const rank = new Map();
+      vals.forEach((x,i)=>rank.set(x.name,i+1));
       return rank;
     }
-    const rCur = ranksAtRound(curR), rPrev = ranksAtRound(prevR);
+    const rCur = ranksAt(last), rPrev = ranksAt(prev);
     if(!rCur.has(player.name) || !rPrev.has(player.name)) return {arrow:'', cls:'trend-flat', delta:null};
     const curRank = rCur.get(player.name), prevRank = rPrev.get(player.name);
-    const delta = prevRank - curRank;
+    const delta = prevRank - curRank; // positive = moved up
     if(delta>0) return {arrow:'▲', cls:'trend-up', delta};
     if(delta<0) return {arrow:'▼', cls:'trend-down', delta};
     return {arrow:'•', cls:'trend-flat', delta};
