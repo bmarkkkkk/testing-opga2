@@ -286,6 +286,10 @@
       <div class="header-sub" id="lastUpdate">Connecting…</div>
     </header>
 
+    <div class="controls" id="yearControls" style="display:none">
+      <div class="ctrl-group" id="yearBtns"></div>
+    </div>
+
     <div class="controls">
       <div class="ctrl-group" id="viewBtns">
         <button class="ctrl-btn active" data-view="tournament">Tournament</button>
@@ -380,7 +384,11 @@
   <script>
 const SHEET_ID = '1YlBAFaODGvwT49IxAOgCjgAJgC2Xw9R9XJLolAuveGU';
 const POLL_SECONDS = 5;
-const TABS = { scores:'Scores', courses:'Courses', rounds:'Rounds' };
+const START_YEAR = 2026;
+const MAX_SCAN_YEAR = 2040;
+let availableYears = [];
+let currentYear = START_YEAR;
+function tabsForYear(y){return{scores:`Scores ${y}`,courses:`Courses ${y}`,rounds:`Rounds ${y}`}}
 function csvUrl(tab){return `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tab)}`;}
 
 let currentView = 'tournament';
@@ -414,7 +422,8 @@ async function fetchTab(tab){
 }
 
 async function load(){
-  const[scoresRaw,coursesRaw,roundsRaw]=await Promise.all([fetchTab(TABS.scores),fetchTab(TABS.courses),fetchTab(TABS.rounds)]);
+  const tabs=tabsForYear(currentYear);
+  const[scoresRaw,coursesRaw,roundsRaw]=await Promise.all([fetchTab(tabs.scores),fetchTab(tabs.courses),fetchTab(tabs.rounds)]);
   const csv=JSON.stringify(scoresRaw);
   if(csv===lastCSV)return;
   lastCSV=csv;
@@ -892,9 +901,47 @@ document.querySelectorAll('#viewBtns .ctrl-btn').forEach(btn=>{
   });
 });
 
-/* ═══ INIT ═══ */
-load();
-setInterval(load,POLL_SECONDS*1000);
+/* ═══ YEAR SCANNING & INIT ═══ */
+async function scanYears(){
+  const found=[];
+  for(let y=START_YEAR;y<=MAX_SCAN_YEAR;y++){
+    try{
+      const r=await fetch(csvUrl(`Scores ${y}`),{cache:'no-store'});
+      if(r.ok){const t=await r.text();if(t.trim().length>10)found.push(y)}
+      else break;
+    }catch{break}
+  }
+  return found.length?found:[START_YEAR];
+}
+
+function renderYearSelector(){
+  const wrap=document.getElementById('yearControls');
+  const btns=document.getElementById('yearBtns');
+  if(availableYears.length<=1){wrap.style.display='none';return}
+  wrap.style.display='flex';
+  btns.innerHTML=availableYears.map(y=>`<button class="ctrl-btn${y===currentYear?' active':''}" data-year="${y}">${y}</button>`).join('');
+  btns.querySelectorAll('.ctrl-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const y=parseInt(btn.dataset.year);
+      if(y===currentYear)return;
+      btns.querySelectorAll('.ctrl-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      currentYear=y;
+      lastCSV='';
+      players=[];courses={};roundMap={};prevRanks={};
+      load();
+    });
+  });
+}
+
+async function init(){
+  availableYears=await scanYears();
+  currentYear=availableYears[availableYears.length-1]; // default to most recent
+  renderYearSelector();
+  load();
+  setInterval(load,POLL_SECONDS*1000);
+}
+init();
   </script>
 </body>
 </html>
