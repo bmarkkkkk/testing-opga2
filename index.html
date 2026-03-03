@@ -97,21 +97,6 @@
     .section-badge { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); }
     .card { background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
 
-    /* Ticker */
-    .ticker-wrap { background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 0; margin-bottom: 24px; overflow: hidden; position: relative; }
-    .ticker-wrap::before,.ticker-wrap::after { content:''; position:absolute; top:0; bottom:0; width:40px; z-index:2; pointer-events:none; }
-    .ticker-wrap::before { left:0; background:linear-gradient(to right,var(--surface-1),transparent); }
-    .ticker-wrap::after { right:0; background:linear-gradient(to left,var(--surface-1),transparent); }
-    .ticker-track { display:flex; gap:32px; animation:tickerScroll 25s linear infinite; white-space:nowrap; width:max-content; }
-    @keyframes tickerScroll { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
-    .ticker-item { font-size:0.75rem; color:var(--text-secondary); display:flex; align-items:center; gap:6px; }
-    .ticker-item .ticker-name { font-weight:600; color:var(--text-primary); }
-    .ticker-item .ticker-val { font-weight:600; }
-    .ticker-item .ticker-val.under { color:var(--green-300); }
-    .ticker-item .ticker-val.over { color:var(--red); }
-    .ticker-item .ticker-val.even { color:var(--text-primary); }
-    .ticker-sep { color:var(--text-muted); opacity:0.3; }
-
     /* Highlights */
     .highlight-strip { display:flex; gap:10px; margin-bottom:24px; overflow-x:auto; scrollbar-width:none; padding-bottom:4px; }
     .highlight-strip::-webkit-scrollbar { display:none; }
@@ -147,9 +132,7 @@
     .last-nine-badge.over { background:var(--red-dim); color:var(--red); }
     .last-nine-badge.even { background:rgba(245,240,232,0.08); color:var(--text-secondary); }
     .diff-bar-wrap { padding:10px 16px 14px; border-top:1px solid var(--border); }
-    .diff-bar-label { font-size:0.6rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:6px; text-align:center; }
-    .diff-bar { height:6px; border-radius:3px; background:var(--surface-2); overflow:hidden; }
-    .diff-bar-fill { height:100%; border-radius:3px; transition:width 0.6s ease; }
+    .diff-bar-label { font-size:0.6rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:0; text-align:center; }
 
     /* Individual Leaderboard */
     .lb-header { display:grid; grid-template-columns:32px 1fr 54px 62px 54px 40px; gap:4px; padding:10px 14px; font-size:0.62rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-muted); background:var(--surface-2); border-bottom:1px solid var(--border); }
@@ -172,9 +155,6 @@
     .arrow { display:inline-block; font-size:0.7rem; margin-left:4px; vertical-align:middle; }
     .arrow.up { color:var(--green-300); }
     .arrow.down { color:var(--red); }
-    .trend-badge { display:inline-block; font-size:0.55rem; font-weight:700; letter-spacing:0.06em; padding:1px 5px; border-radius:4px; margin-left:6px; vertical-align:middle; }
-    .trend-badge.hot { background:rgba(62,185,127,0.18); color:var(--green-300); }
-    .trend-badge.cold { background:var(--red-dim); color:var(--red); }
     .round-dots { display:inline-flex; gap:3px; margin-left:6px; vertical-align:middle; }
     .round-dot { width:8px; height:8px; border-radius:2px; display:inline-block; }
     .round-dot.big-up { background:#2e9e6a; }
@@ -302,10 +282,6 @@
       <h1>OPGA Invitational</h1>
       <div class="header-sub" id="lastUpdate">Connecting…</div>
     </header>
-
-    <div class="ticker-wrap" id="tickerWrap" style="display:none">
-      <div class="ticker-track" id="tickerTrack"></div>
-    </div>
 
     <div class="controls">
       <div class="ctrl-group" id="viewBtns">
@@ -471,7 +447,7 @@ function calcPlayerRound(player,rn){
   const frontNet=hasFront?fg-fHc:0,backNet=hasBack?bg-bHc:0;
   const thru=(hasFront?9:0)+(hasBack?9:0);
   const net=frontNet+backNet,gross=(hasFront?fg:0)+(hasBack?bg:0);
-  const parForHoles=(hasFront&&hasBack)?par:par/2;
+  const parForHoles=(hasFront&&hasBack)?par:(hasFront?Math.ceil(par/2):Math.floor(par/2));
   return{net,gross,thru,netToPar:net-parForHoles,frontGross:fg,backGross:bg,frontNet,backNet,ch,hasFront,hasBack};
 }
 
@@ -491,18 +467,7 @@ function parClass(v){return v<0?'under':(v>0?'over':'even')}
 function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
 
 /* ── Render All ── */
-function render(){renderTicker();renderHighlights();renderTeams();renderIndividual();renderChart();renderHistory();renderHandicaps()}
-
-/* ═══ TICKER ═══ */
-function renderTicker(){
-  const wrap=document.getElementById('tickerWrap'),track=document.getElementById('tickerTrack');
-  const data=players.map(p=>{const v=calcPlayerView(p,currentView);return{name:p.name,...v}}).filter(d=>d.thru>0).sort((a,b)=>a.netToPar-b.netToPar);
-  if(!data.length){wrap.style.display='none';return}
-  wrap.style.display='block';
-  const items=data.map(d=>`<span class="ticker-item"><span style="font-size:0.85rem">⛳</span><span class="ticker-name">${esc(d.name)}</span><span class="ticker-val ${parClass(d.netToPar)}">${fmtPar(d.netToPar)}</span><span style="color:var(--text-muted);font-size:0.65rem">thru ${d.thru}</span></span>`);
-  const html=items.join('<span class="ticker-sep">·</span>');
-  track.innerHTML=html+'<span class="ticker-sep">·</span>'+html;
-}
+function render(){renderHighlights();renderTeams();renderIndividual();renderChart();renderHistory();renderHandicaps()}
 
 /* ═══ HIGHLIGHTS ═══ */
 function renderHighlights(){
@@ -527,9 +492,11 @@ function renderHighlights(){
   for(const p of players){
     for(const rn of roundsToCheck){
       const res=calcPlayerRound(p,rn);if(!res)continue;
-      const hp=getCoursePar(rn)/2;
-      if(res.hasFront){bestNines.push({name:p.name,score:res.frontNet-hp,label:`R${rn} Front`,gross:p.rounds[String(rn)].front})}
-      if(res.hasBack){bestNines.push({name:p.name,score:res.backNet-hp,label:`R${rn} Back`,gross:p.rounds[String(rn)].back})}
+      const par=getCoursePar(rn);
+      const frontPar=Math.ceil(par/2);
+      const backPar=Math.floor(par/2);
+      if(res.hasFront){bestNines.push({name:p.name,score:res.frontNet-frontPar,label:`R${rn} Front`,gross:p.rounds[String(rn)].front})}
+      if(res.hasBack){bestNines.push({name:p.name,score:res.backNet-backPar,label:`R${rn} Back`,gross:p.rounds[String(rn)].back})}
     }
   }
   let bestNineCard='';
@@ -593,8 +560,7 @@ function renderTeams(){
   }).join('');
   if(teamData.length>=2){
     const spread=Math.abs(teamData[0].netToPar-teamData[1].netToPar);
-    const pct=spread===0?50:Math.min(85,50+spread*3);
-    html+=`<div class="diff-bar-wrap"><div class="diff-bar-label">${spread===0?'Teams are tied':esc(teamData[0].name)+' leads by '+spread+' stroke'+(spread!==1?'s':'')}</div><div class="diff-bar"><div class="diff-bar-fill" style="width:${pct}%;background:${spread===0?'var(--text-muted)':'var(--green-300)'}"></div></div></div>`;
+    html+=`<div class="diff-bar-wrap"><div class="diff-bar-label">${spread===0?'Teams are tied':esc(teamData[0].name)+' leads by '+spread+' stroke'+(spread!==1?'s':'')}</div></div>`;
   }
   container.innerHTML=html;
   // Attach click handlers to team rows
@@ -611,7 +577,7 @@ function calcLastNine(members){
     for(const m of members){
       const r=m.rounds[String(cp.rn)];if(!r){ok=false;break}
       const val=cp.half==='front'?r.front:r.back;if(!val||val<=0){ok=false;break}
-      const ch=getCH(m.hi,cp.rn),par=getCoursePar(cp.rn)/2;
+      const ch=getCH(m.hi,cp.rn),fullPar=getCoursePar(cp.rn),par=cp.half==='front'?Math.ceil(fullPar/2):Math.floor(fullPar/2);
       const hc=cp.half==='front'?Math.ceil(ch/2):Math.floor(ch/2);
       total+=(val-hc-par);
     }
@@ -628,8 +594,6 @@ function renderIndividual(){
   if(!data.length){body.innerHTML='<div class="empty-state">No scores yet</div>';return}
   body.innerHTML=data.map((d,i)=>{
     const pos=i+1,arrowHtml=arrows[d.player.name]||'';
-    let trendHtml='';
-    if(currentView==='tournament'){const t=calcTrend(d.player);if(t==='hot')trendHtml='<span class="trend-badge hot">HOT</span>';else if(t==='cold')trendHtml='<span class="trend-badge cold">COLD</span>'}
     let dotsHtml='';
     if(currentView==='tournament'){
       dotsHtml='<span class="round-dots">';
@@ -656,7 +620,7 @@ function renderIndividual(){
     }
     return`<div class="lb-row${pos===1?' is-leader':''}" data-player="${esc(d.player.name)}">
       <span class="lb-pos ${pos<=3?'top-3':''}">${pos}</span>
-      <div class="lb-name-cell"><div class="lb-player-name">${esc(d.player.name)}${arrowHtml}${trendHtml}</div><div class="lb-team-tag">${esc(d.player.team)} ${dotsHtml}</div></div>
+      <div class="lb-name-cell"><div class="lb-player-name">${esc(d.player.name)}${arrowHtml}</div><div class="lb-team-tag">${esc(d.player.team)} ${dotsHtml}</div></div>
       <span class="lb-val">${d.net}</span><span class="lb-val net-par ${parClass(d.netToPar)}">${fmtPar(d.netToPar)}</span><span class="lb-val">${d.gross}</span><span class="lb-thru">${d.thru}</span>
     </div>`;
   }).join('');
@@ -664,13 +628,6 @@ function renderIndividual(){
   body.querySelectorAll('.lb-row[data-player]').forEach(row=>{
     row.addEventListener('click',()=>openPlayerModal(row.dataset.player));
   });
-}
-
-function calcTrend(player){
-  const results=[];for(let rn=1;rn<=4;rn++){const res=calcPlayerRound(player,rn);if(res&&res.thru===18)results.push(res.netToPar)}
-  if(results.length<2)return null;
-  const diff=results[results.length-1]-results[results.length-2];
-  return diff<=-3?'hot':(diff>=3?'cold':null);
 }
 
 /* ═══ ARROWS ═══ */
@@ -721,7 +678,7 @@ function renderChart(){
       for(const m of teamMap[tName]){
         const r=m.rounds[String(cp.rn)];if(!r){ok=false;break}
         const val=cp.half==='front'?r.front:r.back;if(!val||val<=0){ok=false;break}
-        const ch=getCH(m.hi,cp.rn),par=getCoursePar(cp.rn)/2;
+        const ch=getCH(m.hi,cp.rn),fullPar=getCoursePar(cp.rn),par=cp.half==='front'?Math.ceil(fullPar/2):Math.floor(fullPar/2);
         const hc=cp.half==='front'?Math.ceil(ch/2):Math.floor(ch/2);
         tp+=(val-hc-par);
       }
