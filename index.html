@@ -142,6 +142,9 @@
     .lb-header { display:grid; grid-template-columns:32px 1fr 54px 62px 54px 40px; gap:4px; padding:10px 14px; font-size:0.62rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-muted); background:var(--surface-2); border-bottom:1px solid var(--border); }
     .lb-header span { text-align:center; }
     .lb-header span:nth-child(2) { text-align:left; }
+    .lb-header span.sortable { cursor:pointer; transition:color 0.2s ease; }
+    .lb-header span.sortable:hover { color:var(--text-secondary); }
+    .lb-header span.sortable.sort-active { color:var(--gold); }
     .lb-row { display:grid; grid-template-columns:32px 1fr 54px 62px 54px 40px; gap:4px; padding:12px 14px; align-items:center; cursor:pointer; transition:background var(--transition); }
     .lb-row:hover { background:var(--surface-2); }
     .lb-row:not(:last-child) { border-bottom:1px solid var(--border); }
@@ -328,8 +331,8 @@
         <span class="section-line"></span>
       </div>
       <div class="card" id="individualCard">
-        <div class="lb-header">
-          <span>#</span><span>Player</span><span>Net</span><span>To Par</span><span>Gross</span><span>Thru</span>
+        <div class="lb-header" id="lbHeader">
+          <span>#</span><span>Player</span><span class="sortable" data-sort="net">Net</span><span class="sortable sort-active" data-sort="netToPar">To Par</span><span class="sortable" data-sort="gross">Gross</span><span class="sortable" data-sort="thru">Thru</span>
         </div>
         <div id="lbBody"><div class="loading-msg">Loading players…</div></div>
       </div>
@@ -397,6 +400,7 @@ let roundMap = {};
 let prevRanks = {};
 let chartInstance = null;
 let lastCSV = '';
+let currentSort = 'netToPar';
 
 /* ── CSV Parser ── */
 function parseCSV(text){
@@ -602,12 +606,22 @@ function calcLastNine(members){
 
 /* ═══ INDIVIDUAL ═══ */
 function renderIndividual(){
+  // Official ranking sort (always by netToPar)
   const data=players.map(p=>{const v=calcPlayerView(p,currentView);return{player:p,...v}}).filter(d=>d.thru>0).sort((a,b)=>a.netToPar-b.netToPar||a.net-b.net);
   const arrows=computeArrows(data);
+  // Assign official rank
+  data.forEach((d,i)=>{d.rank=i+1});
+  // Re-sort by selected column for display
+  if(currentSort!=='netToPar'){
+    const key=currentSort;
+    data.sort((a,b)=>a[key]-b[key]);
+  }
+  // Update header active state
+  document.querySelectorAll('#lbHeader .sortable').forEach(s=>{s.classList.toggle('sort-active',s.dataset.sort===currentSort)});
   const body=document.getElementById('lbBody');
   if(!data.length){body.innerHTML='<div class="empty-state">No scores yet</div>';return}
   body.innerHTML=data.map((d,i)=>{
-    const pos=i+1,arrowHtml=arrows[d.player.name]||'';
+    const pos=d.rank,arrowHtml=arrows[d.player.name]||'';
     let dotsHtml='';
     if(currentView==='tournament'){
       dotsHtml='<span class="round-dots">';
@@ -897,8 +911,17 @@ document.querySelectorAll('#viewBtns .ctrl-btn').forEach(btn=>{
     document.querySelectorAll('#viewBtns .ctrl-btn').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
     currentView=btn.dataset.view;
+    currentSort='netToPar';
     lastCSV='';
     render();
+  });
+});
+
+/* ═══ LEADERBOARD SORT ═══ */
+document.querySelectorAll('#lbHeader .sortable').forEach(col=>{
+  col.addEventListener('click',()=>{
+    currentSort=currentSort===col.dataset.sort?'netToPar':col.dataset.sort;
+    renderIndividual();
   });
 });
 
