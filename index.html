@@ -124,7 +124,7 @@
     .team-rank.rank-1 { color:var(--gold); }
     .team-rank.rank-2 { color:var(--text-secondary); }
     .team-name { font-weight:600; font-size:0.95rem; color:var(--text-primary); }
-    .team-thru { font-size:0.72rem; color:var(--text-muted); margin-top:2px; }
+    .team-thru { font-size:0.78rem; color:var(--text-muted); margin-top:2px; }
     .team-score { font-weight:700; font-size:1.3rem; text-align:right; min-width:48px; }
     .team-score.under { color:var(--green-300); }
     .team-score.over { color:var(--red); }
@@ -149,7 +149,7 @@
     .lb-pos { font-weight:700; font-size:0.85rem; color:var(--text-secondary); text-align:center; }
     .lb-pos.top-3 { color:var(--gold); }
     .lb-player-name { font-weight:600; font-size:0.88rem; color:var(--text-primary); }
-    .lb-team-tag { font-size:0.62rem; font-weight:500; color:var(--text-muted); margin-top:1px; }
+    .lb-team-tag { font-size:0.72rem; font-weight:500; color:var(--text-muted); margin-top:1px; }
     .lb-val { text-align:center; font-size:0.85rem; font-weight:500; font-variant-numeric:tabular-nums; }
     .lb-val.net-par { font-weight:700; }
     .lb-val.net-par.under { color:var(--green-300); }
@@ -181,7 +181,7 @@
     .history-card { background:var(--surface-1); border:1px solid var(--border); border-radius:var(--radius); padding:14px; }
     .history-card-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
     .history-card-title { font-family:'Cormorant Garamond',serif; font-weight:600; font-size:0.95rem; color:var(--cream); }
-    .history-course { font-size:0.6rem; color:var(--text-muted); font-weight:500; }
+    .history-course { font-size:0.72rem; color:var(--text-muted); font-weight:500; }
     .history-upcoming { font-size:0.78rem; color:var(--text-muted); font-style:italic; }
     .history-place { display:flex; justify-content:space-between; align-items:center; padding:5px 0; font-size:0.8rem; }
     .history-place:not(:last-child) { border-bottom:1px solid var(--border); }
@@ -423,6 +423,8 @@ async function fetchTab(tab){
 async function load(){
   const tabs=tabsForYear(currentYear);
   const[scoresRaw,coursesRaw,roundsRaw]=await Promise.all([fetchTab(tabs.scores),fetchTab(tabs.courses),fetchTab(tabs.rounds)]);
+  // If scores came back empty (rate-limited), keep existing data
+  if(scoresRaw.length<=1 && players.length>0)return;
   const csv=JSON.stringify(scoresRaw);
   if(csv===lastCSV)return;
   lastCSV=csv;
@@ -936,9 +938,11 @@ function renderYearSelector(){
 
 async function init(){
   availableYears=await scanYears();
-  currentYear=availableYears[availableYears.length-1]; // default to most recent
+  currentYear=availableYears[availableYears.length-1];
   renderYearSelector();
-  load();
+  await load();
+  // Retry if first load was rate-limited
+  if(!players.length){for(let i=0;i<3;i++){await new Promise(r=>setTimeout(r,2000));await load();if(players.length)break}}
   setInterval(load,POLL_SECONDS*1000);
 }
 init();
