@@ -719,14 +719,14 @@ function renderChampionState(complete){
     bestRoundList.sort((a,b)=>a.ntp-b.ntp);
     const bestNtp=bestRoundList[0].ntp;
     const tiedBR=bestRoundList.filter(b=>b.ntp===bestNtp);
-    const brNames=tiedBR.map(b=>esc(b.name)).join(' & ');
+    const brNames=[...new Set(tiedBR.map(b=>esc(b.name)))].join(' & ');
     accoladesHtml+=`<span>Best Round: <strong>${brNames}</strong> ${fmtPar(bestNtp)}${tiedBR.length===1?' · R'+tiedBR[0].rn:''}</span>`;
   }
   if(bestNines.length){
     bestNines.sort((a,b)=>a.score-b.score);
     const bestScore=bestNines[0].score;
     const tiedBN=bestNines.filter(b=>b.score===bestScore);
-    const bnNames=tiedBN.map(b=>esc(b.name)).join(' & ');
+    const bnNames=[...new Set(tiedBN.map(b=>esc(b.name)))].join(' & ');
     accoladesHtml+=`<span>Best Nine: <strong>${bnNames}</strong> ${fmtPar(bestScore)}${tiedBN.length===1?' · '+tiedBN[0].label:''}</span>`;
   }
   document.getElementById('champAccolades').innerHTML=accoladesHtml;
@@ -811,7 +811,7 @@ function renderHighlights(complete){
       const b=tied[0];
       bestNineCard=`<div class="hl-card hl-hot"><div class="hl-label">🔥 Best Nine</div><div class="hl-name">${esc(b.name)}</div><div class="hl-detail">${b.gross} gross (${fmtPar(b.score)}) · ${b.label}</div></div>`;
     }else{
-      const names=tied.map(b=>esc(b.name)).join(' & ');
+      const names=[...new Set(tied.map(b=>esc(b.name)))].join(' & ');
       bestNineCard=`<div class="hl-card hl-hot"><div class="hl-label">🔥 Best Nine</div><div class="hl-name">${names}</div><div class="hl-detail">${fmtPar(bestScore)} net-to-par</div></div>`;
     }
   }
@@ -833,7 +833,7 @@ function renderHighlights(complete){
       const g=tied[0];
       bestRoundCard=`<div class="hl-card hl-low"><div class="hl-label">🏆 Best Round</div><div class="hl-name">${esc(g.name)}</div><div class="hl-detail">${fmtPar(g.ntp)} net · R${g.round}</div></div>`;
     }else{
-      const names=tied.map(g=>esc(g.name)).join(' & ');
+      const names=[...new Set(tied.map(g=>esc(g.name)))].join(' & ');
       bestRoundCard=`<div class="hl-card hl-low"><div class="hl-label">🏆 Best Round</div><div class="hl-name">${names}</div><div class="hl-detail">${fmtPar(bestNtp)} net</div></div>`;
     }
   }
@@ -1035,11 +1035,15 @@ function renderChart(){
       }
     }
   });
-  // Dismiss tooltip on mobile tap-away
-  ctx.canvas.addEventListener('click',function(e){
-    const pts=chartInstance.getElementsAtEventForMode(e,'index',{intersect:false},false);
-    if(!pts.length){chartInstance.tooltip.setActiveElements([]);chartInstance.update('none')}
-  });
+  // Dismiss tooltip on mobile tap-away (only add once)
+  if(!ctx.canvas._chartTapHandler){
+    ctx.canvas._chartTapHandler=function(e){
+      if(!chartInstance)return;
+      const pts=chartInstance.getElementsAtEventForMode(e,'index',{intersect:false},false);
+      if(!pts.length){chartInstance.tooltip.setActiveElements([]);chartInstance.update('none')}
+    };
+    ctx.canvas.addEventListener('click',ctx.canvas._chartTapHandler);
+  }
 }
 
 /* ═══ HISTORY ═══ */
@@ -1057,14 +1061,14 @@ function renderHistory(){
         const tied1st=byNet.filter(p=>p.netToPar===bestNtp);
         const label1=tied1st.length>1?'T1':'1st';
         const names1=tied1st.map(p=>esc(p.name)).join(' & ');
-        html+=`<div class="history-place"><span><span class="history-medal gold">${label1}</span>${names1}</span><span class="history-place-score">${byNet[0].gross} / ${fmtPar(bestNtp)}</span></div>`;
+        html+=`<div class="history-place"><span><span class="history-medal gold">${label1}</span>${names1}</span><span class="history-place-score">${tied1st.length===1?tied1st[0].gross+' / ':'' }${fmtPar(bestNtp)}</span></div>`;
         const rest=byNet.filter(p=>p.netToPar!==bestNtp);
         if(rest.length>0){
           const secondNtp=rest[0].netToPar;
           const tied2nd=rest.filter(p=>p.netToPar===secondNtp);
           const label2=tied2nd.length>1?'T2':'2nd';
           const names2=tied2nd.map(p=>esc(p.name)).join(' & ');
-          html+=`<div class="history-place"><span><span class="history-medal silver">${label2}</span>${names2}</span><span class="history-place-score">${rest[0].gross} / ${fmtPar(secondNtp)}</span></div>`;
+          html+=`<div class="history-place"><span><span class="history-medal silver">${label2}</span>${names2}</span><span class="history-place-score">${tied2nd.length===1?tied2nd[0].gross+' / ':''}${fmtPar(secondNtp)}</span></div>`;
         }
       }
       if(!byNet.length&&rp.length)html+='<div class="history-upcoming">In progress…</div>';
@@ -1077,7 +1081,7 @@ function renderHistory(){
 /* ═══ HANDICAPS ═══ */
 function renderHandicaps(){
   document.getElementById('hcBody').innerHTML=[...players].sort((a,b)=>a.hi-b.hi).map(p=>{
-    const chs=[1,2,3,4].map(rn=>`<td class="hc-val">${getCH(p.hi,rn)||'—'}</td>`).join('');
+    const chs=[1,2,3,4].map(rn=>{const cName=getCourseName(rn);return`<td class="hc-val">${cName&&courses[cName]?getCH(p.hi,rn):'—'}</td>`}).join('');
     return`<tr><td class="hc-name">${esc(p.name)}</td><td class="hc-val">${p.hi.toFixed(1)}</td>${chs}</tr>`;
   }).join('');
 }
@@ -1384,8 +1388,11 @@ function renderChampionsWall(){
     // Individual champion
     const indiv=yd.players.map(p=>{let ntp=0,net=0;for(let rn=1;rn<=4;rn++){const res=recCalcRound(p,rn,yd.courses,yd.roundMap);if(res){ntp+=res.netToPar;net+=res.net}}return{name:p.name,netToPar:ntp,net}}).sort((a,b)=>a.netToPar-b.netToPar||a.net-b.net);
     const margin=teams.length>=2?Math.abs(teams[0].netToPar-teams[1].netToPar):0;
-    const loser=teams.length>=2?teams[1].name:'';
-    champData.push({year:y,team:teams[0].name,margin,loser,individual:indiv[0].name,score:indiv[0].netToPar,roster:teams[0].members.map(m=>{let ntp=0;for(let rn=1;rn<=4;rn++){const res=recCalcRound(m,rn,yd.courses,yd.roundMap);if(res)ntp+=res.netToPar}return{name:m.name,ntp}}).sort((a,b)=>a.ntp-b.ntp)});
+    const tiedChampTeams=teams.filter(t=>t.netToPar===teams[0].netToPar);
+    const loser=teams.length>tiedChampTeams.length?teams[tiedChampTeams.length].name:'';
+    const tiedIndivChamps=indiv.filter(d=>d.netToPar===indiv[0].netToPar&&d.net===indiv[0].net);
+    const champRoster=[];for(const ct of tiedChampTeams){for(const m of ct.members){let ntp=0;for(let rn=1;rn<=4;rn++){const res=recCalcRound(m,rn,yd.courses,yd.roundMap);if(res)ntp+=res.netToPar}champRoster.push({name:m.name,ntp})}}champRoster.sort((a,b)=>a.ntp-b.ntp);
+    champData.push({year:y,team:tiedChampTeams.map(t=>t.name).join(' & '),margin,loser,individual:tiedIndivChamps.map(d=>d.name).join(' & '),score:indiv[0].netToPar,roster:champRoster});
   }
   if(!champData.length){wall.innerHTML='<div class="empty-state">No completed tournaments yet</div>';return}
   wall.innerHTML=[...champData].reverse().map(c=>{
@@ -1491,14 +1498,18 @@ function renderIndivRecords(){
         let ntp=0;for(const m of members){for(let rn=1;rn<=4;rn++){const res=recCalcRound(m,rn,yd.courses,yd.roundMap);if(res)ntp+=res.netToPar}}
         return{name,netToPar:ntp,members};
       }).sort((a,b)=>a.netToPar-b.netToPar);
-      for(const m of teams[0].members){
+      const tiedWinTeams=teams.filter(t=>t.netToPar===teams[0].netToPar);
+      for(const wt of tiedWinTeams){for(const m of wt.members){
         if(!teamChampCounts[m.name])teamChampCounts[m.name]=[];
         teamChampCounts[m.name].push(y);
-      }
+      }}
       // Individual champion
       const indiv=yd.players.map(p=>{let ntp=0,net=0;for(let rn=1;rn<=4;rn++){const res=recCalcRound(p,rn,yd.courses,yd.roundMap);if(res){ntp+=res.netToPar;net+=res.net}}return{name:p.name,netToPar:ntp,net}}).sort((a,b)=>a.netToPar-b.netToPar||a.net-b.net);
-      if(!indivChampCounts[indiv[0].name])indivChampCounts[indiv[0].name]=[];
-      indivChampCounts[indiv[0].name].push(y);
+      const tiedWinIndiv=indiv.filter(d=>d.netToPar===indiv[0].netToPar&&d.net===indiv[0].net);
+      for(const wi of tiedWinIndiv){
+        if(!indivChampCounts[wi.name])indivChampCounts[wi.name]=[];
+        indivChampCounts[wi.name].push(y);
+      }
     }
   }
   const rows=[];
