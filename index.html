@@ -338,6 +338,7 @@
     .champ-roster { margin-top:12px; padding-top:10px; border-top:1px solid rgba(201,168,76,0.15); display:none; }
     .champ-roster.open { display:block; }
     .champ-roster-label { font-size:0.55rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); margin-bottom:6px; }
+    .champ-roster .champ-roster-label ~ .champ-roster-label { margin-top:10px; padding-top:8px; border-top:1px solid rgba(201,168,76,0.12); }
     .champ-roster-row { display:flex; justify-content:space-between; padding:4px 0; font-size:0.78rem; }
     .champ-roster-row .r-name { color:var(--text-secondary); }
     .champ-roster-row .r-score { font-weight:600; font-variant-numeric:tabular-nums; color:var(--text-secondary); }
@@ -1312,8 +1313,9 @@ function showRecordsPage(){
   recordsOpen = true;
   // Clear current year cache so we get fresh live data
   delete allYearsData[currentYear];
-  // Hide main content sections
+  // Hide main content sections and records link
   document.querySelectorAll('#yearControls, .controls, #championBanner, #highlights, #teamSection, #chartSection, #individualSection, #historySection, #coursesSection, #hcSection').forEach(el=>el.style.display='none');
+  document.getElementById('recordsLinkWrap').style.display='none';
   document.getElementById('recordsPage').style.display='block';
   loadAllYearsAndRender();
   window.scrollTo(0,0);
@@ -1328,6 +1330,7 @@ function hideRecordsPage(){
   document.querySelectorAll('#teamSection, #chartSection, #individualSection, #historySection, #coursesSection, #hcSection').forEach(el=>el.style.display='block');
   document.getElementById('championBanner').style.display='';
   document.getElementById('highlights').style.display='';
+  if(availableYears.length>1) document.getElementById('recordsLinkWrap').style.display='block';
   lastCSV='';
   render();
   window.scrollTo(0,0);
@@ -1391,24 +1394,34 @@ function renderChampionsWall(){
     const tiedChampTeams=teams.filter(t=>t.netToPar===teams[0].netToPar);
     const loser=teams.length>tiedChampTeams.length?teams[tiedChampTeams.length].name:'';
     const tiedIndivChamps=indiv.filter(d=>d.netToPar===indiv[0].netToPar&&d.net===indiv[0].net);
-    const champRoster=[];for(const ct of tiedChampTeams){for(const m of ct.members){let ntp=0;for(let rn=1;rn<=4;rn++){const res=recCalcRound(m,rn,yd.courses,yd.roundMap);if(res)ntp+=res.netToPar}champRoster.push({name:m.name,ntp})}}champRoster.sort((a,b)=>a.ntp-b.ntp);
-    champData.push({year:y,team:tiedChampTeams.map(t=>t.name).join(' & '),margin,loser,individual:tiedIndivChamps.map(d=>d.name).join(' & '),score:indiv[0].netToPar,roster:champRoster});
+    const teamRosters=tiedChampTeams.map(ct=>{
+      const members=ct.members.map(m=>{let ntp=0;for(let rn=1;rn<=4;rn++){const res=recCalcRound(m,rn,yd.courses,yd.roundMap);if(res)ntp+=res.netToPar}return{name:m.name,ntp}}).sort((a,b)=>a.ntp-b.ntp);
+      return{teamName:ct.name,members};
+    });
+    champData.push({year:y,teams:tiedChampTeams.map(t=>t.name),margin,loser,individuals:tiedIndivChamps.map(d=>d.name),score:indiv[0].netToPar,teamRosters});
   }
   if(!champData.length){wall.innerHTML='<div class="empty-state">No completed tournaments yet</div>';return}
   wall.innerHTML=[...champData].reverse().map(c=>{
-    const marginText=c.margin===0?'Tied':'Won by '+c.margin+' stroke'+(c.margin!==1?'s':'')+' over '+esc(c.loser);
+    const marginText=c.margin===0&&c.teams.length>1?'Tied':c.margin===0?'':'Won by '+c.margin+' stroke'+(c.margin!==1?'s':'')+' over '+esc(c.loser);
+    const teamLabel=c.teams.length>1?'Team Champions':'Team Champion';
+    const teamNames=c.teams.map(t=>esc(t)).join(' & ');
+    const indivLabel=c.individuals.length>1?'Individual Champions':'Individual Champion';
+    const indivNames=c.individuals.map(n=>esc(n)).join(' & ');
+    let rosterHtml='';
+    if(c.teams.length>1){
+      rosterHtml=c.teamRosters.map(tr=>`<div class="champ-roster-label">${esc(tr.teamName)}</div>${tr.members.map(m=>`<div class="champ-roster-row"><span class="r-name">${esc(m.name)}</span><span class="r-score">${fmtPar(m.ntp)}</span></div>`).join('')}`).join('');
+    }else{
+      rosterHtml=`<div class="champ-roster-label">Winning Roster</div>${c.teamRosters[0].members.map(m=>`<div class="champ-roster-row"><span class="r-name">${esc(m.name)}</span><span class="r-score">${fmtPar(m.ntp)}</span></div>`).join('')}`;
+    }
     return`<div class="champ-card" data-year="${c.year}">
       <div class="champ-year">${c.year}</div>
-      <div class="champ-label">Team Champion</div>
-      <div class="champ-name">${esc(c.team)}</div>
-      <div class="champ-detail">${marginText}</div>
-      <div class="champ-label">Individual Champion</div>
-      <div class="champ-name">${esc(c.individual)}</div>
+      <div class="champ-label">${teamLabel}</div>
+      <div class="champ-name">${teamNames}</div>
+      ${marginText?`<div class="champ-detail">${marginText}</div>`:''}
+      <div class="champ-label">${indivLabel}</div>
+      <div class="champ-name">${indivNames}</div>
       <div class="champ-score">${fmtPar(c.score)} net to par</div>
-      <div class="champ-roster" id="roster-${c.year}">
-        <div class="champ-roster-label">Winning Roster</div>
-        ${c.roster.map(m=>`<div class="champ-roster-row"><span class="r-name">${esc(m.name)}</span><span class="r-score">${fmtPar(m.ntp)}</span></div>`).join('')}
-      </div>
+      <div class="champ-roster" id="roster-${c.year}">${rosterHtml}</div>
       <div class="champ-tap-hint" id="hint-${c.year}">Tap to see roster</div>
     </div>`;
   }).join('');
