@@ -225,7 +225,7 @@
     /* Shared Modal Styles */
     .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.65); z-index:100; justify-content:center; align-items:flex-end; backdrop-filter:blur(4px); }
     .modal-overlay.open { display:flex; }
-    .modal-sheet { background:var(--surface-1); border:1px solid var(--border-bright); border-radius:16px 16px 0 0; width:100%; max-width:480px; max-height:80vh; overflow-y:auto; padding:24px 20px 32px; animation:slideUp 0.3s ease; box-shadow:var(--shadow-lg); }
+    .modal-sheet { position:relative; background:var(--surface-1); border:1px solid var(--border-bright); border-radius:16px 16px 0 0; width:100%; max-width:480px; max-height:80vh; overflow-y:auto; padding:24px 20px 32px; animation:slideUp 0.3s ease; box-shadow:var(--shadow-lg); }
     @keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
 
     /* Player Modal */
@@ -283,6 +283,12 @@
     .tm-best-label { font-size:0.6rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); margin-bottom:4px; }
     .tm-best-val { font-size:0.85rem; color:var(--text-primary); font-weight:500; }
     .tm-tap-hint { text-align:center; font-size:0.65rem; color:var(--text-muted); margin-top:14px; font-style:italic; }
+
+    /* Champion Modal Accents */
+    .modal-sheet.champion-modal { border-top:3px solid var(--gold); }
+    .modal-sheet.champion-modal::before { content:''; position:absolute; top:0; left:0; right:0; height:60px; background:linear-gradient(180deg, rgba(201,168,76,0.08) 0%, transparent 100%); pointer-events:none; border-radius:16px 16px 0 0; }
+    .champion-modal-label { font-size:0.6rem; font-weight:600; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold); text-align:center; margin-bottom:6px; }
+    .modal-stat.champion-accent { border:1px solid rgba(201,168,76,0.3); }
 
     /* Footer / Misc */
     .footer { text-align:center; padding:32px 0 20px; font-size:0.7rem; color:var(--text-muted); }
@@ -855,13 +861,24 @@ function renderHandicaps(){
 /* ═══ PLAYER MODAL ═══ */
 function openPlayerModal(name){
   const player=players.find(p=>p.name===name);if(!player)return;
+  const complete=isTournamentComplete();
+  const isTourn=currentView==='tournament';
+  // Check if this player is the individual champion
+  let isChamp=false;
+  if(complete&&isTourn){
+    const sorted=players.map(p=>{const v=calcPlayerView(p,'tournament');return{name:p.name,netToPar:v.netToPar,net:v.net}}).sort((a,b)=>a.netToPar-b.netToPar||a.net-b.net);
+    isChamp=sorted[0].name===name;
+  }
+  const sheet=document.querySelector('#playerModal .modal-sheet');
+  sheet.classList.toggle('champion-modal',isChamp);
   document.getElementById('pmName').textContent=player.name;
-  document.getElementById('pmTeam').textContent=player.team;
+  document.getElementById('pmTeam').innerHTML=(isChamp?'<span class="champion-modal-label">🏆 Individual Champion</span><br>':'')+esc(player.team);
   const v=calcPlayerView(player,currentView);
+  const toParAccent=isChamp?' champion-accent':'';
   document.getElementById('pmStats').innerHTML=`
     <div class="modal-stat"><div class="modal-stat-label">Net</div><div class="modal-stat-val">${v.net||'—'}</div></div>
     <div class="modal-stat"><div class="modal-stat-label">Gross</div><div class="modal-stat-val">${v.gross||'—'}</div></div>
-    <div class="modal-stat"><div class="modal-stat-label">To Par</div><div class="modal-stat-val ${parClass(v.netToPar)}">${v.thru>0?fmtPar(v.netToPar):'—'}</div></div>
+    <div class="modal-stat${toParAccent}"><div class="modal-stat-label">To Par</div><div class="modal-stat-val ${parClass(v.netToPar)}">${v.thru>0?fmtPar(v.netToPar):'—'}</div></div>
     <div class="modal-stat"><div class="modal-stat-label">Thru</div><div class="modal-stat-val">${v.thru||'—'}</div></div>`;
 
   // Performance bars (tournament view)
@@ -871,7 +888,7 @@ function openPlayerModal(name){
     for(let rn=1;rn<=4;rn++){const res=calcPlayerRound(player,rn);if(res&&res.thru>0){bars.push({rn,ntp:res.netToPar});minP=Math.min(minP,res.netToPar);maxP=Math.max(maxP,res.netToPar)}else bars.push({rn,ntp:null})}
     if(bars.some(b=>b.ntp!==null)){
       const range=Math.max(Math.abs(minP),Math.abs(maxP),1);
-      perfHtml='<div class="modal-perf-title">Round Performance (Net to Par)</div>';
+      perfHtml=`<div class="modal-perf-title"${isChamp?' style="color:var(--gold)"':''}>Round Performance (Net to Par)</div>`;
       for(const b of bars){
         if(b.ntp===null){perfHtml+=`<div class="modal-perf-row"><span class="modal-perf-label">R${b.rn}</span><div class="modal-perf-bar-wrap"></div><span class="modal-perf-val" style="color:var(--text-muted)">—</span></div>`}
         else{const pct=Math.min(100,Math.max(8,(Math.abs(b.ntp)/range)*80+10));const cls=b.ntp<0?'good':(b.ntp>0?'bad':'ok');perfHtml+=`<div class="modal-perf-row"><span class="modal-perf-label">R${b.rn}</span><div class="modal-perf-bar-wrap"><div class="modal-perf-bar ${cls}" style="width:${pct}%"></div></div><span class="modal-perf-val ${parClass(b.ntp)}">${fmtPar(b.ntp)}</span></div>`}
@@ -900,6 +917,18 @@ function openPlayerModal(name){
 function openTeamModal(teamName){
   const members=players.filter(p=>p.team===teamName);
   if(!members.length)return;
+  const complete=isTournamentComplete();
+  const isTourn=currentView==='tournament';
+  // Check if this team is the champion
+  let isChamp=false;
+  if(complete&&isTourn){
+    const teamMap2={};
+    for(const p of players){if(!p.team)continue;if(!teamMap2[p.team])teamMap2[p.team]=0;teamMap2[p.team]+=calcPlayerView(p,'tournament').netToPar}
+    const sorted=Object.entries(teamMap2).sort((a,b)=>a[1]-b[1]);
+    isChamp=sorted[0][0]===teamName;
+  }
+  const sheet=document.querySelector('#teamModal .modal-sheet');
+  sheet.classList.toggle('champion-modal',isChamp);
 
   // Team totals
   let teamNTP=0,teamGross=0,teamNet=0,teamThru=0;
@@ -924,12 +953,14 @@ function openTeamModal(teamName){
     }
   }
 
-  let html=`<div class="tm-title">${esc(teamName)}</div>`;
+  let html=isChamp?'<div class="champion-modal-label">🏆 Champions</div>':'';
+  html+=`<div class="tm-title">${esc(teamName)}</div>`;
   html+=`<div class="tm-subtitle">${currentView==='tournament'?'Tournament Overview':'Round '+currentView+' Overview'}</div>`;
 
   // Summary stats
+  const statAccent=isChamp?' champion-accent':'';
   html+=`<div class="tm-summary">
-    <div class="modal-stat"><div class="modal-stat-label">Net to Par</div><div class="modal-stat-val ${parClass(teamNTP)}">${teamThru>0?fmtPar(teamNTP):'—'}</div></div>
+    <div class="modal-stat${statAccent}"><div class="modal-stat-label">Net to Par</div><div class="modal-stat-val ${parClass(teamNTP)}">${teamThru>0?fmtPar(teamNTP):'—'}</div></div>
     <div class="modal-stat"><div class="modal-stat-label">Team Gross</div><div class="modal-stat-val">${teamGross||'—'}</div></div>
     <div class="modal-stat"><div class="modal-stat-label">Thru</div><div class="modal-stat-val">${teamThru||'—'}</div></div>
   </div>`;
