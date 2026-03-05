@@ -82,13 +82,13 @@
     .champion-banner { display:none; text-align:center; padding:20px 16px; margin-bottom:24px; background:linear-gradient(135deg, rgba(201,168,76,0.12) 0%, rgba(201,168,76,0.04) 100%); border:1px solid rgba(201,168,76,0.3); border-radius:var(--radius); position:relative; overflow:hidden; }
     .champion-banner::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg, transparent, var(--gold), transparent); }
     .champion-banner.show { display:block; animation:fadeUp 0.4s ease both; }
-    .champion-label { font-size:0.6rem; font-weight:600; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold); margin-bottom:8px; }
+    .champion-label { font-size:0.75rem; font-weight:600; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold); margin-bottom:4px; }
     .champion-team { font-family:'Cormorant Garamond',serif; font-weight:700; font-size:1.6rem; color:var(--cream); line-height:1.2; }
     .champion-margin { font-size:0.8rem; color:var(--text-secondary); margin-top:4px; }
     .champion-individual { font-size:0.82rem; color:var(--text-secondary); margin-top:10px; padding-top:10px; border-top:1px solid rgba(201,168,76,0.15); }
     .champion-individual strong { color:var(--cream); font-weight:600; }
-    .champion-accolades { display:flex; justify-content:center; gap:20px; margin-top:12px; padding-top:10px; border-top:1px solid rgba(201,168,76,0.15); font-size:0.78rem; color:var(--text-secondary); }
-    .champion-accolades span { white-space:nowrap; }
+    .champion-accolades { display:flex; flex-direction:column; align-items:center; gap:6px; margin-top:12px; padding-top:10px; border-top:1px solid rgba(201,168,76,0.15); font-size:0.68rem; color:var(--text-secondary); }
+    .champion-accolades span { display:flex; flex-wrap:wrap; justify-content:center; gap:0 4px; text-align:center; }
     .champion-accolades strong { color:var(--cream); font-weight:600; }
 
     /* Final mode badge */
@@ -103,6 +103,8 @@
     /* Controls */
     .controls { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin: 16px 0 24px; }
     .ctrl-group { display: flex; background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    #yearBtns { overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+    #yearBtns::-webkit-scrollbar { display: none; }
     .ctrl-btn {
       background: none; border: none; color: var(--text-secondary);
       font-family: 'Outfit', sans-serif; font-size: 0.78rem; font-weight: 500;
@@ -275,7 +277,9 @@
     .modal-perf-val.over { color:var(--red); }
     .modal-perf-val.even { color:var(--text-primary); }
     .modal-divider { height:1px; background:var(--border); margin:14px 0; }
-    .modal-rounds-title { font-size:0.68rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:8px; }
+    .modal-rounds-title { display:flex; align-items:center; gap:8px; font-size:0.68rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:8px; }
+    .modal-rounds-title .mrt-line { flex:1; height:1px; background:var(--border-bright); }
+    .modal-rounds-title .mrt-course { font-weight:500; letter-spacing:0.03em; text-transform:none; color:var(--text-secondary); font-size:0.75rem; }
     .modal-round-row { display:flex; justify-content:space-between; padding:8px 0; font-size:0.85rem; border-bottom:1px solid var(--border); }
     .modal-round-row:last-child { border-bottom:none; }
     .modal-round-label { color:var(--text-secondary); font-weight:500; }
@@ -329,6 +333,7 @@
     .champions-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
     .champ-card { background:var(--surface-1); border:1px solid var(--border); border-radius:var(--radius); padding:16px; position:relative; overflow:hidden; cursor:pointer; transition:background var(--transition); }
     .champ-card:hover { background:var(--surface-2); }
+    @media(hover:none){ .champ-card:hover { background:var(--surface-1); } }
     .champ-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg, transparent, rgba(201,168,76,0.5), transparent); }
     .champ-year { font-family:'Cormorant Garamond',serif; font-weight:700; font-size:1.3rem; color:var(--gold); margin-bottom:8px; }
     .champ-label { font-size:0.6rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:3px; }
@@ -369,7 +374,7 @@
     .empty-state { text-align:center; padding:30px 20px; color:var(--text-muted); font-size:0.85rem; }
 
     @media(max-width:480px){
-      html{font-size:14px}
+      html{font-size:13px}
       .header h1{font-size:2rem}
       .ctrl-btn{padding:7px 10px;font-size:0.72rem}
       .lb-header,.lb-row{grid-template-columns:28px 1fr 46px 54px 46px 36px;gap:2px;padding:10px 10px}
@@ -553,7 +558,7 @@
   <script>
 const SHEET_ID = '1YlBAFaODGvwT49IxAOgCjgAJgC2Xw9R9XJLolAuveGU';
 const POLL_SECONDS = 5;
-const START_YEAR = 2026;
+const START_YEAR = '2026';
 let availableYears = [];
 let currentYear = START_YEAR;
 function tabsForYear(y){return{scores:`Scores ${y}`,courses:`Courses ${y}`,rounds:`Rounds ${y}`}}
@@ -661,6 +666,7 @@ function isTournamentComplete(){
 }
 
 function render(){
+  if(recordsOpen)return;
   const complete=isTournamentComplete();
   renderChampionState(complete);
   renderCourseInfo();
@@ -670,15 +676,26 @@ function render(){
 function renderChampionState(complete){
   const badge=document.querySelector('.header-badge');
   const banner=document.getElementById('championBanner');
-  if(!complete||currentView!=='tournament'){
+
+  // Badge: "Final Results" if full tournament complete, or current round is complete for all players
+  let roundFinal=false;
+  if(!complete&&currentView!=='tournament'){
+    const rn=parseInt(currentView);
+    roundFinal=players.length>0&&players.every(p=>{const res=calcPlayerRound(p,rn);return res&&res.thru===18});
+  }
+  if(complete||roundFinal){
+    badge.classList.add('final');
+    badge.innerHTML='<span class="live-dot"></span>Final Results';
+  }else{
     badge.classList.remove('final');
     badge.innerHTML='<span class="live-dot"></span>Live Scoring';
+  }
+
+  // Banner: only for completed tournament in tournament view
+  if(!complete||currentView!=='tournament'){
     banner.classList.remove('show');
     return;
   }
-  // Final badge
-  badge.classList.add('final');
-  badge.innerHTML='<span class="live-dot"></span>Final Results';
 
   // Team champion
   const teamMap={};
@@ -691,7 +708,7 @@ function renderChampionState(complete){
   // Individual champion
   const indivData=players.map(p=>{const v=calcPlayerView(p,'tournament');return{name:p.name,netToPar:v.netToPar,net:v.net}}).sort((a,b)=>a.netToPar-b.netToPar||a.net-b.net);
 
-  document.querySelector('.champion-label').textContent=`🏆 ${currentYear} Champions`;
+  document.querySelector('.champion-label').innerHTML=`<span style="font-size:1.6em;vertical-align:middle;position:relative;top:-1px">🏆</span> ${currentYear} Champions`;
   const tiedTeams=teamData.filter(t=>t.netToPar===teamData[0].netToPar);
   document.getElementById('champTeam').textContent=tiedTeams.map(t=>t.name).join(' & ');
   if(teamData.length>=2){
@@ -701,7 +718,7 @@ function renderChampionState(complete){
   }
   const tiedIndiv=indivData.filter(d=>d.netToPar===indivData[0].netToPar&&d.net===indivData[0].net);
   const indivNames=tiedIndiv.map(d=>'<strong>'+esc(d.name)+'</strong>').join(' & ');
-  document.getElementById('champIndividual').innerHTML='Individual Champion'+(tiedIndiv.length>1?'s':'')+': '+indivNames+' ('+fmtPar(indivData[0].netToPar)+')';
+  document.getElementById('champIndividual').innerHTML='<span style="font-size:0.72em;vertical-align:middle;position:relative;top:-1px">🏆</span> Individual Champion'+(tiedIndiv.length>1?'s':'')+': '+indivNames+' ('+fmtPar(indivData[0].netToPar)+')';
 
   // Best Round & Best Nine for banner
   let bestRoundList=[], bestNines=[];
@@ -1129,12 +1146,13 @@ function openPlayerModal(name){
 
   let roundsHtml='';
   if(currentView==='tournament'){
-    document.getElementById('pmRoundsTitle').textContent='Round Breakdown (Gross)';
-    for(let rn=1;rn<=4;rn++){const res=calcPlayerRound(player,rn);roundsHtml+=`<div class="modal-round-row"><span class="modal-round-label">Round ${rn}</span><span class="modal-round-val">${res&&res.thru>0?res.gross:'—'}</span></div>`}
+    document.getElementById('pmRoundsTitle').innerHTML='<span>Round Breakdown (Gross)</span>';
+    for(let rn=1;rn<=4;rn++){const res=calcPlayerRound(player,rn);const cn=getCourseName(rn);roundsHtml+=`<div class="modal-round-row"><span class="modal-round-label">Round ${rn}${cn?' <span style="color:var(--text-muted);font-weight:400;font-size:0.78em">'+esc(cn)+'</span>':''}</span><span class="modal-round-val">${res&&res.thru>0?res.gross:'—'}</span></div>`}
     document.getElementById('pmSummary').textContent=`Handicap Index: ${player.hi}`;
   }else{
     const rn=parseInt(currentView);
-    document.getElementById('pmRoundsTitle').textContent=`Round ${rn} Detail (Gross)`;
+    const cName=getCourseName(rn);
+    document.getElementById('pmRoundsTitle').innerHTML=`<span>Round ${rn} Detail (Gross)</span>${cName?'<span class="mrt-line"></span><span class="mrt-course">'+esc(cName)+'</span>':''}`;
     const res=calcPlayerRound(player,rn);
     if(res){roundsHtml+=`<div class="modal-round-row"><span class="modal-round-label">Front Nine</span><span class="modal-round-val">${res.hasFront?res.frontGross:'—'}</span></div><div class="modal-round-row"><span class="modal-round-label">Back Nine</span><span class="modal-round-val">${res.hasBack?res.backGross:'—'}</span></div>`}
     document.getElementById('pmSummary').textContent=`Course Handicap: ${getCH(player.hi,rn)}`;
@@ -1167,9 +1185,6 @@ function openTeamModal(teamName){
     teamNTP+=v.netToPar;teamGross+=v.gross;teamNet+=v.net;teamThru+=v.thru;
     return{player:m,...v};
   }).sort((a,b)=>a.netToPar-b.netToPar);
-
-  // Find MVP (lowest net-to-par on team)
-  const mvp=memberData[0];
 
   // Find best single round on team (respect current view)
   let bestRoundNtp=Infinity, bestRounds=[];
@@ -1277,10 +1292,9 @@ async function scanYears(){
     const rows=await fetchTab('Config');
     const found=[];
     for(let i=1;i<rows.length;i++){
-      const y=parseInt(rows[i][0]);
-      if(y>=2000 && y<=2100)found.push(y);
+      const v=(rows[i][0]||'').trim();
+      if(v)found.push(v);
     }
-    found.sort((a,b)=>a-b);
     return found.length?found:[START_YEAR];
   }catch{return[START_YEAR]}
 }
@@ -1293,7 +1307,7 @@ function renderYearSelector(){
   btns.innerHTML=availableYears.map(y=>`<button class="ctrl-btn${y===currentYear?' active':''}" data-year="${y}">${y}</button>`).join('');
   btns.querySelectorAll('.ctrl-btn').forEach(btn=>{
     btn.addEventListener('click',()=>{
-      const y=parseInt(btn.dataset.year);
+      const y=btn.dataset.year;
       if(y===currentYear)return;
       btns.querySelectorAll('.ctrl-btn').forEach(b=>b.classList.remove('active'));
       btn.classList.add('active');
@@ -1421,15 +1435,14 @@ function renderChampionsWall(){
       <div class="champ-label">${indivLabel}</div>
       <div class="champ-name">${indivNames}</div>
       <div class="champ-score">${fmtPar(c.score)} net to par</div>
-      <div class="champ-roster" id="roster-${c.year}">${rosterHtml}</div>
-      <div class="champ-tap-hint" id="hint-${c.year}">Tap to see roster</div>
+      <div class="champ-roster" data-roster="${esc(c.year)}">${rosterHtml}</div>
+      <div class="champ-tap-hint" data-hint="${esc(c.year)}">Tap to see roster</div>
     </div>`;
   }).join('');
   wall.querySelectorAll('.champ-card').forEach(card=>{
     card.addEventListener('click',()=>{
-      const y=card.dataset.year;
-      const roster=document.getElementById('roster-'+y);
-      const hint=document.getElementById('hint-'+y);
+      const roster=card.querySelector('.champ-roster');
+      const hint=card.querySelector('.champ-tap-hint');
       const isOpen=roster.classList.contains('open');
       roster.classList.toggle('open');
       hint.textContent=isOpen?'Tap to see roster':'Tap to collapse';
@@ -1447,7 +1460,7 @@ function renderTeamRecords(){
     // Tournament totals
     const teamTotals=Object.entries(teamMap).map(([name,members])=>{
       let ntp=0,complete=true;
-      for(const m of members){for(let rn=1;rn<=4;rn++){const res=recCalcRound(m,rn,yd.courses,yd.roundMap);if(res)ntp+=res.netToPar;else{complete=false}}}
+      for(const m of members){for(let rn=1;rn<=4;rn++){const res=recCalcRound(m,rn,yd.courses,yd.roundMap);if(res&&res.thru===18)ntp+=res.netToPar;else{complete=false}}}
       return{name,netToPar:ntp,members,complete};
     }).sort((a,b)=>a.netToPar-b.netToPar);
     // Best tournament
@@ -1456,7 +1469,7 @@ function renderTeamRecords(){
     const completedTeams=teamTotals.filter(t=>t.complete);
     if(completedTeams.length>=2){
       const margin=Math.abs(completedTeams[0].netToPar-completedTeams[1].netToPar);
-      const md=esc(completedTeams[0].name)+' over '+esc(completedTeams[1].name)+' · '+y;
+      const md=margin===0?esc(completedTeams[0].name)+' & '+esc(completedTeams[1].name)+' (tied) · '+y:esc(completedTeams[0].name)+' over '+esc(completedTeams[1].name)+' · '+y;
       if(margin>largestVictory.val){largestVictory={val:margin,details:[md]}}else if(margin===largestVictory.val){largestVictory.details.push(md)}
       if(margin<closestFinish.val){closestFinish={val:margin,details:[md]}}else if(margin===closestFinish.val){closestFinish.details.push(md)}
     }
@@ -1499,7 +1512,8 @@ function renderIndivRecords(){
       for(let rn=1;rn<=4;rn++){
         const res=recCalcRound(p,rn,yd.courses,yd.roundMap);if(!res||res.thru<18)continue;
         if(res.netToPar<bestNetRound.val){bestNetRound={val:res.netToPar,details:[esc(p.name)+' · R'+rn+' · '+y]}}else if(res.netToPar===bestNetRound.val){bestNetRound.details.push(esc(p.name)+' · R'+rn+' · '+y)}
-        if(res.gross<bestGrossRound.val){bestGrossRound={val:res.gross,details:[esc(p.name)+' · R'+rn+' · '+y]}}else if(res.gross===bestGrossRound.val){bestGrossRound.details.push(esc(p.name)+' · R'+rn+' · '+y)}
+        const grossToPar=res.gross-recGetPar(rn,yd.courses,yd.roundMap);
+        if(grossToPar<bestGrossRound.val){bestGrossRound={val:grossToPar,details:[{text:esc(p.name)+' · R'+rn+' · '+y,gross:res.gross}]}}else if(grossToPar===bestGrossRound.val){bestGrossRound.details.push({text:esc(p.name)+' · R'+rn+' · '+y,gross:res.gross})}
       }
     }
     // Championship counts (only for complete years)
@@ -1528,7 +1542,15 @@ function renderIndivRecords(){
   const rows=[];
   if(bestTourn.details.length)rows.push({icon:'👑',label:'Best Tournament',value:fmtPar(bestTourn.val),detail:bestTourn.details.join('<br>')});
   if(bestNetRound.details.length)rows.push({icon:'🏆',label:'Best Net Round',value:fmtPar(bestNetRound.val),detail:bestNetRound.details.join('<br>')});
-  if(bestGrossRound.details.length)rows.push({icon:'💪',label:'Best Gross Round',value:String(bestGrossRound.val),detail:bestGrossRound.details.join('<br>')});
+  if(bestGrossRound.details.length){
+    if(bestGrossRound.details.length===1){
+      const d=bestGrossRound.details[0];
+      rows.push({icon:'💪',label:'Best Gross Round',value:String(d.gross),detail:d.text+' ('+fmtPar(bestGrossRound.val)+')'});
+    }else{
+      const detail=bestGrossRound.details.map(d=>d.text+' ('+d.gross+')').join('<br>');
+      rows.push({icon:'💪',label:'Best Gross Round',value:fmtPar(bestGrossRound.val),detail});
+    }
+  }
   // Most team championships
   const teamChampSorted=Object.entries(teamChampCounts).sort((a,b)=>b[1].length-a[1].length);
   if(teamChampSorted.length){const topCount=teamChampSorted[0][1].length;const tied=teamChampSorted.filter(e=>e[1].length===topCount);const detail=tied.map(tc=>esc(tc[0])+' ('+tc[1].join(', ')+')').join('<br>');rows.push({icon:'🥇',label:'Most Team Championships',value:String(topCount),detail})};
@@ -1562,7 +1584,7 @@ function renderCourseHistory(){
   if(!sorted.length){card.innerHTML='<div class="empty-state">No course data yet</div>';return}
   card.innerHTML=sorted.map(([name,d],i)=>{
     const avgNtp=d.totalPlayers>0?(d.totalNtp/d.totalPlayers):0;
-    const avgStr=avgNtp>=0?'+'+avgNtp.toFixed(1):avgNtp.toFixed(1);
+    const avgStr=avgNtp===0?'E':(avgNtp>0?'+'+avgNtp.toFixed(1):avgNtp.toFixed(1));
     const avgClass=avgNtp<0?'under':(avgNtp>0?'over':'even');
     const bestClass=d.bestNet<0?'under':(d.bestNet>0?'over':'even');
     return`<div class="course-hist-item">
