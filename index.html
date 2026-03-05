@@ -280,7 +280,7 @@
     .modal-rounds-title { display:flex; align-items:center; gap:8px; font-size:0.68rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:8px; }
     .modal-rounds-title .mrt-line { flex:1; height:1px; background:var(--border-bright); }
     .modal-rounds-title .mrt-course { font-weight:500; letter-spacing:0.03em; text-transform:none; color:var(--text-secondary); font-size:0.75rem; }
-    .modal-round-row { display:flex; justify-content:space-between; padding:8px 0; font-size:0.85rem; border-bottom:1px solid var(--border); }
+    .modal-round-row { display:flex; justify-content:space-between; align-items:center; padding:8px 0; font-size:0.85rem; border-bottom:1px solid var(--border); }
     .modal-round-row:last-child { border-bottom:none; }
     .modal-round-label { color:var(--text-secondary); font-weight:500; }
     .modal-round-val { font-weight:600; font-variant-numeric:tabular-nums; }
@@ -290,12 +290,12 @@
     .tm-title { font-family:'Cormorant Garamond',serif; font-weight:700; font-size:1.5rem; color:var(--cream); text-align:center; }
     .tm-subtitle { text-align:center; font-size:0.75rem; color:var(--text-muted); margin-top:2px; margin-bottom:16px; }
     .tm-summary { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:18px; }
-    .tm-member { background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius); padding:14px; margin-bottom:10px; cursor:pointer; transition:background var(--transition); }
+    .tm-member { background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius); padding:14px; margin-bottom:10px; cursor:pointer; transition:background var(--transition); position:relative; }
     .tm-member:hover { background:var(--surface-3); }
     .tm-member:last-child { margin-bottom:0; }
     .tm-member-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
     .tm-member-name { font-weight:600; font-size:0.92rem; color:var(--text-primary); }
-    .tm-member-hi { font-size:0.65rem; color:var(--text-muted); font-weight:500; }
+    .tm-member-hi { font-size:0.62rem; color:var(--text-muted); font-weight:500; position:absolute; top:8px; right:10px; }
     .tm-member-score { font-weight:700; font-size:1rem; }
     .tm-member-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; }
     .tm-ms { text-align:center; }
@@ -333,7 +333,7 @@
     .champions-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
     .champ-card { background:var(--surface-1); border:1px solid var(--border); border-radius:var(--radius); padding:16px; position:relative; overflow:hidden; cursor:pointer; transition:background var(--transition); }
     .champ-card:hover { background:var(--surface-2); }
-    @media(hover:none){ .champ-card:hover { background:var(--surface-1); } }
+    @media(hover:none){ .champ-card:hover,.team-row:hover,.lb-row:hover,.tm-member:hover { background:transparent; } }
     .champ-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg, transparent, rgba(201,168,76,0.5), transparent); }
     .champ-year { font-family:'Cormorant Garamond',serif; font-weight:700; font-size:1.3rem; color:var(--gold); margin-bottom:8px; }
     .champ-label { font-size:0.6rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:3px; }
@@ -749,6 +749,14 @@ function renderChampionState(complete){
   }
   document.getElementById('champAccolades').innerHTML=accoladesHtml;
 
+  // Make banner clickable to open winning team modal (only if single winner)
+  if(tiedTeams.length===1){
+    banner.style.cursor='pointer';
+    banner.dataset.champTeam=tiedTeams[0].name;
+  }else{
+    banner.style.cursor='default';
+    banner.dataset.champTeam='';
+  }
   banner.classList.add('show');
 }
 
@@ -830,7 +838,7 @@ function renderHighlights(complete){
       bestNineCard=`<div class="hl-card hl-hot"><div class="hl-label">🔥 Best Nine</div><div class="hl-name">${esc(b.name)}</div><div class="hl-detail">${b.gross} gross (${fmtPar(b.score)}) · ${b.label}</div></div>`;
     }else{
       const names=[...new Set(tied.map(b=>esc(b.name)))].join(' & ');
-      bestNineCard=`<div class="hl-card hl-hot"><div class="hl-label">🔥 Best Nine</div><div class="hl-name">${names}</div><div class="hl-detail">${fmtPar(bestScore)} net-to-par</div></div>`;
+      bestNineCard=`<div class="hl-card hl-hot"><div class="hl-label">🔥 Best Nine</div><div class="hl-name">${names}</div><div class="hl-detail">Tie ${fmtPar(bestScore)} net-to-par</div></div>`;
     }
   }
 
@@ -852,7 +860,7 @@ function renderHighlights(complete){
       bestRoundCard=`<div class="hl-card hl-low"><div class="hl-label">🏆 Best Round</div><div class="hl-name">${esc(g.name)}</div><div class="hl-detail">${fmtPar(g.ntp)} net · R${g.round}</div></div>`;
     }else{
       const names=[...new Set(tied.map(g=>esc(g.name)))].join(' & ');
-      bestRoundCard=`<div class="hl-card hl-low"><div class="hl-label">🏆 Best Round</div><div class="hl-name">${names}</div><div class="hl-detail">${fmtPar(bestNtp)} net</div></div>`;
+      bestRoundCard=`<div class="hl-card hl-low"><div class="hl-label">🏆 Best Round</div><div class="hl-name">${names}</div><div class="hl-detail">Tie ${fmtPar(bestNtp)} net</div></div>`;
     }
   }
 
@@ -1147,7 +1155,7 @@ function openPlayerModal(name){
   let roundsHtml='';
   if(currentView==='tournament'){
     document.getElementById('pmRoundsTitle').innerHTML='<span>Round Breakdown (Gross)</span>';
-    for(let rn=1;rn<=4;rn++){const res=calcPlayerRound(player,rn);const cn=getCourseName(rn);roundsHtml+=`<div class="modal-round-row"><span class="modal-round-label">Round ${rn}${cn?' <span style="color:var(--text-muted);font-weight:400;font-size:0.78em">'+esc(cn)+'</span>':''}</span><span class="modal-round-val">${res&&res.thru>0?res.gross:'—'}</span></div>`}
+    for(let rn=1;rn<=4;rn++){const res=calcPlayerRound(player,rn);const cn=getCourseName(rn);roundsHtml+=`<div class="modal-round-row"><div><span class="modal-round-label">Round ${rn}</span>${cn?'<div style="font-size:0.72rem;color:var(--text-muted);margin-top:1px">'+esc(cn)+'</div>':''}</div><span class="modal-round-val">${res&&res.thru>0?res.gross:'—'}</span></div>`}
     document.getElementById('pmSummary').textContent=`Handicap Index: ${player.hi}`;
   }else{
     const rn=parseInt(currentView);
@@ -1201,7 +1209,8 @@ function openTeamModal(teamName){
 
   let html=isChamp?'<div class="champion-modal-label">🏆 Champions</div>':'';
   html+=`<div class="tm-title">${esc(teamName)}</div>`;
-  html+=`<div class="tm-subtitle">${currentView==='tournament'?'Tournament Overview':'Round '+currentView+' Overview'}</div>`;
+  if(currentView!=='tournament'){const cName=getCourseName(parseInt(currentView));if(cName)html+=`<div class="tm-subtitle">${'Round '+currentView+' Overview'}<br><span style="font-size:0.85em;color:var(--text-muted)">${esc(cName)}</span></div>`; else html+=`<div class="tm-subtitle">Round ${currentView} Overview</div>`}
+  else html+=`<div class="tm-subtitle">Tournament Overview</div>`;
 
   // Summary stats
   const statAccent=isChamp?' champion-accent':'';
@@ -1232,7 +1241,8 @@ function openTeamModal(teamName){
   // Member cards
   for(const md of memberData){
     html+=`<div class="tm-member" data-player="${esc(md.player.name)}">`;
-    html+=`<div class="tm-member-head"><div class="tm-member-name">${esc(md.player.name)}</div><div class="tm-member-hi">HI ${md.player.hi}</div></div>`;
+    const hcLabel=currentView==='tournament'?'HI '+md.player.hi:'CH '+getCH(md.player.hi,parseInt(currentView));
+    html+=`<div class="tm-member-head"><div class="tm-member-name">${esc(md.player.name)}</div><div class="tm-member-hi">${hcLabel}</div></div>`;
     html+=`<div class="tm-member-stats">
       <div class="tm-ms"><div class="tm-ms-label">Net</div><div class="tm-ms-val">${md.net||'—'}</div></div>
       <div class="tm-ms"><div class="tm-ms-label">To Par</div><div class="tm-ms-val ${parClass(md.netToPar)}">${md.thru>0?fmtPar(md.netToPar):'—'}</div></div>
@@ -1607,6 +1617,7 @@ async function init(){
   // Records navigation
   document.getElementById('recordsLink').addEventListener('click',showRecordsPage);
   document.getElementById('recordsBack').addEventListener('click',hideRecordsPage);
+  document.getElementById('championBanner').addEventListener('click',function(){const t=this.dataset.champTeam;if(t)openTeamModal(t)});
   await load();
   // Retry if first load was rate-limited
   if(!players.length){for(let i=0;i<3;i++){await new Promise(r=>setTimeout(r,2000));await load();if(players.length)break}}
