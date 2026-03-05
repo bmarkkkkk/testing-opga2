@@ -295,7 +295,7 @@
     .tm-member:last-child { margin-bottom:0; }
     .tm-member-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
     .tm-member-name { font-weight:600; font-size:0.92rem; color:var(--text-primary); }
-    .tm-member-hi { font-size:0.62rem; color:var(--text-muted); font-weight:500; position:absolute; top:8px; right:10px; }
+    .tm-member-hi { font-size:0.72rem; color:var(--text-muted); font-weight:500; position:absolute; top:8px; right:10px; }
     .tm-member-score { font-weight:700; font-size:1rem; }
     .tm-member-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; }
     .tm-ms { text-align:center; }
@@ -303,7 +303,7 @@
     .tm-ms-val { font-size:0.82rem; font-weight:600; font-variant-numeric:tabular-nums; color:var(--text-primary); }
     .tm-ms-val.under { color:var(--green-300); }
     .tm-ms-val.over { color:var(--red); }
-    .tm-rounds-grid { display:grid; grid-template-columns:auto repeat(4,1fr); gap:0; margin-top:6px; font-size:0.72rem; }
+    .tm-rounds-grid { display:grid; gap:0; margin-top:6px; font-size:0.72rem; }
     .tm-rg-cell { padding:4px 6px; text-align:center; font-variant-numeric:tabular-nums; border-bottom:1px solid var(--border); }
     .tm-rg-cell:first-child { text-align:left; }
     .tm-rg-head { color:var(--text-muted); font-weight:600; font-size:0.6rem; letter-spacing:0.08em; text-transform:uppercase; background:rgba(0,0,0,0.15); }
@@ -388,7 +388,7 @@
   <div class="app">
     <header class="header">
       <div class="header-badge"><span class="live-dot"></span>Live Scoring</div>
-      <h1>OPGA Invitational</h1>
+      <h1 id="siteName">OPGA Invitational</h1>
       <div class="header-sub" id="lastUpdate">Connecting…</div>
       <div class="records-link-wrap" id="recordsLinkWrap" style="display:none"><span class="records-link" id="recordsLink">All-Time Records <span style="color:var(--gold)">→</span></span></div>
     </header>
@@ -400,10 +400,6 @@
     <div class="controls">
       <div class="ctrl-group" id="viewBtns">
         <button class="ctrl-btn active" data-view="tournament">Tournament</button>
-        <button class="ctrl-btn" data-view="1">R1</button>
-        <button class="ctrl-btn" data-view="2">R2</button>
-        <button class="ctrl-btn" data-view="3">R3</button>
-        <button class="ctrl-btn" data-view="4">R4</button>
       </div>
     </div>
 
@@ -484,7 +480,7 @@
       </div>
       <div class="card" style="overflow-x:auto">
         <table class="hc-table">
-          <thead><tr><th>Player</th><th>HI</th><th>CH R1</th><th>CH R2</th><th>CH R3</th><th>CH R4</th></tr></thead>
+          <thead id="hcHead"><tr><th>Player</th><th>HI</th></tr></thead>
           <tbody id="hcBody"></tbody>
         </table>
       </div>
@@ -495,7 +491,7 @@
       <div class="records-header">
         <span class="records-back" id="recordsBack">← Back to Leaderboard</span>
         <h2 class="records-title">All-Time Records</h2>
-        <div class="records-subtitle">Across all OPGA Invitational tournaments</div>
+        <div class="records-subtitle" id="recordsSubtitle">Across all tournaments</div>
       </div>
 
       <div class="section">
@@ -506,7 +502,7 @@
         <div class="champions-grid" id="championsWall"></div>
       </div>
 
-      <div class="section">
+      <div class="section" id="teamRecordsSection">
         <div class="section-head">
           <span class="section-title">Team Records</span>
           <span class="section-line"></span>
@@ -531,7 +527,7 @@
       </div>
     </div>
 
-    <div class="footer">OPGA Invitational &middot; Live Leaderboard</div>
+    <div class="footer" id="siteFooter">Live Leaderboard</div>
   </div>
 
   <!-- Player Modal -->
@@ -559,15 +555,19 @@
 const SHEET_ID = '1YlBAFaODGvwT49IxAOgCjgAJgC2Xw9R9XJLolAuveGU';
 const POLL_SECONDS = 5;
 const START_YEAR = '2026';
+const DEFAULT_NAME = 'OPGA Invitational';
+let tournamentName = DEFAULT_NAME;
 let availableYears = [];
 let currentYear = START_YEAR;
-function tabsForYear(y){return{scores:`Scores ${y}`,courses:`Courses ${y}`,rounds:`Rounds ${y}`}}
+function tabsForYear(y){return{scores:`Scores ${y}`,rounds:`Rounds ${y}`}}
 function csvUrl(tab){return `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tab)}`;}
 
 let currentView = 'tournament';
 let players = [];
 let courses = {};
 let roundMap = {};
+let totalRounds = 4;
+let teamMode = true;
 let prevRanks = {};
 let chartInstance = null;
 let lastCSV = '';
@@ -597,24 +597,27 @@ async function fetchTab(tab){
 
 async function load(){
   const tabs=tabsForYear(currentYear);
-  const[scoresRaw,coursesRaw,roundsRaw]=await Promise.all([fetchTab(tabs.scores),fetchTab(tabs.courses),fetchTab(tabs.rounds)]);
+  const[scoresRaw,roundsRaw]=await Promise.all([fetchTab(tabs.scores),fetchTab(tabs.rounds)]);
   // If scores came back empty (rate-limited), keep existing data
   if(scoresRaw.length<=1 && players.length>0)return;
   const csv=JSON.stringify(scoresRaw);
   if(csv===lastCSV)return;
   lastCSV=csv;
 
-  if(coursesRaw.length>1){courses={};for(let i=1;i<coursesRaw.length;i++){const r=coursesRaw[i];if(r[0])courses[r[0].trim()]={par:num(r[1]),rating:num(r[2]),slope:num(r[3])}}}
   if(roundsRaw.length>1){roundMap={};for(let i=1;i<roundsRaw.length;i++){const r=roundsRaw[i];if(r[0]&&r[1])roundMap[r[0].replace(/[^0-9]/g,'')]=r[1].trim()}}
+  totalRounds=Math.max(1,Object.keys(roundMap).length);
   if(scoresRaw.length>1){
     players=[];
     for(let i=1;i<scoresRaw.length;i++){
       const r=scoresRaw[i];if(!r[0]||!r[0].trim())continue;
-      players.push({name:r[0].trim(),hi:num(r[1]),team:(r[2]||'').trim(),
-        rounds:{'1':{front:num(r[3]),back:num(r[4])},'2':{front:num(r[5]),back:num(r[6])},'3':{front:num(r[7]),back:num(r[8])},'4':{front:num(r[9]),back:num(r[10])}}
-      });
+      const pRounds={};
+      for(let rn=1;rn<=totalRounds;rn++){const ci=3+(rn-1)*2;pRounds[String(rn)]={front:num(r[ci]),back:num(r[ci+1])}}
+      players.push({name:r[0].trim(),hi:num(r[1]),team:(r[2]||'').trim(),rounds:pRounds});
     }
   }
+  teamMode=!players.every(p=>!p.team);
+  buildViewButtons();
+  buildHcHeader();
   render();
   document.getElementById('lastUpdate').textContent='Updated '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'});
 }
@@ -641,7 +644,7 @@ function calcPlayerRound(player,rn){
 function calcPlayerView(player,view){
   if(view==='tournament'){
     let tNet=0,tGross=0,tThru=0,tNTP=0;const rr={};
-    for(let rn=1;rn<=4;rn++){const res=calcPlayerRound(player,rn);rr[rn]=res;if(res){tNet+=res.net;tGross+=res.gross;tThru+=res.thru;tNTP+=res.netToPar}}
+    for(let rn=1;rn<=totalRounds;rn++){const res=calcPlayerRound(player,rn);rr[rn]=res;if(res){tNet+=res.net;tGross+=res.gross;tThru+=res.thru;tNTP+=res.netToPar}}
     return{net:tNet,gross:tGross,thru:tThru,netToPar:tNTP,roundResults:rr};
   }
   const res=calcPlayerRound(player,parseInt(view));
@@ -653,11 +656,35 @@ function fmtPar(v){return v===0?'E':(v>0?'+'+v:''+v)}
 function parClass(v){return v<0?'under':(v>0?'over':'even')}
 function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
 
+/* ── Dynamic UI ── */
+function buildViewButtons(){
+  const container=document.getElementById('viewBtns');
+  let html='<button class="ctrl-btn'+(currentView==='tournament'?' active':'')+'" data-view="tournament">Tournament</button>';
+  for(let rn=1;rn<=totalRounds;rn++){html+=`<button class="ctrl-btn${currentView===String(rn)?' active':''}" data-view="${rn}">R${rn}</button>`}
+  container.innerHTML=html;
+  container.querySelectorAll('.ctrl-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      container.querySelectorAll('.ctrl-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      currentView=btn.dataset.view;
+      currentSort='netToPar';
+      lastCSV='';
+      render();
+    });
+  });
+}
+function buildHcHeader(){
+  let html='<tr><th>Player</th><th>HI</th>';
+  for(let rn=1;rn<=totalRounds;rn++){html+=`<th>CH R${rn}</th>`}
+  html+='</tr>';
+  document.getElementById('hcHead').innerHTML=html;
+}
+
 /* ── Render All ── */
 function isTournamentComplete(){
   if(!players.length)return false;
   for(const p of players){
-    for(let rn=1;rn<=4;rn++){
+    for(let rn=1;rn<=totalRounds;rn++){
       const r=p.rounds[String(rn)];
       if(!r||!r.front||!r.back||r.front<=0||r.back<=0)return false;
     }
@@ -667,10 +694,17 @@ function isTournamentComplete(){
 
 function render(){
   if(recordsOpen)return;
+  // Show/hide team sections based on teamMode
+  document.getElementById('teamSection').style.display=teamMode?'block':'none';
+  document.getElementById('chartSection').style.display=teamMode?'block':'none';
   const complete=isTournamentComplete();
   renderChampionState(complete);
   renderCourseInfo();
-  renderHighlights(complete);renderTeams(complete);renderIndividual(complete);renderChart();renderHistory();renderHandicaps();
+  renderHighlights(complete);
+  if(teamMode)renderTeams(complete);
+  renderIndividual(complete);
+  if(teamMode)renderChart();
+  renderHistory();renderHandicaps();
 }
 
 function renderChampionState(complete){
@@ -699,22 +733,34 @@ function renderChampionState(complete){
 
   // Team champion
   const teamMap={};
-  for(const p of players){if(!p.team)continue;if(!teamMap[p.team])teamMap[p.team]=[];teamMap[p.team].push(p)}
-  const teamData=Object.entries(teamMap).map(([name,members])=>{
+  if(teamMode){for(const p of players){if(!p.team)continue;if(!teamMap[p.team])teamMap[p.team]=[];teamMap[p.team].push(p)}}
+  const teamData=teamMode?Object.entries(teamMap).map(([name,members])=>{
     let ntp=0;for(const m of members){ntp+=calcPlayerView(m,'tournament').netToPar}
     return{name,netToPar:ntp};
-  }).sort((a,b)=>a.netToPar-b.netToPar);
+  }).sort((a,b)=>a.netToPar-b.netToPar):[];
 
   // Individual champion
   const indivData=players.map(p=>{const v=calcPlayerView(p,'tournament');return{name:p.name,netToPar:v.netToPar,net:v.net}}).sort((a,b)=>a.netToPar-b.netToPar||a.net-b.net);
 
   document.querySelector('.champion-label').innerHTML=`<span style="font-size:1.6em;vertical-align:middle;position:relative;top:-1px">🏆</span> ${currentYear} Champions`;
-  const tiedTeams=teamData.filter(t=>t.netToPar===teamData[0].netToPar);
-  document.getElementById('champTeam').textContent=tiedTeams.map(t=>t.name).join(' & ');
-  if(teamData.length>=2){
-    const spread=Math.abs(teamData[0].netToPar-teamData[1].netToPar);
-    if(tiedTeams.length>1){document.getElementById('champMargin').textContent='Teams tied at '+fmtPar(teamData[0].netToPar)}
-    else{document.getElementById('champMargin').textContent='Won by '+spread+' stroke'+(spread!==1?'s':'')+' over '+teamData[1].name}
+
+  if(teamMode&&teamData.length){
+    const tiedTeams=teamData.filter(t=>t.netToPar===teamData[0].netToPar);
+    document.getElementById('champTeam').textContent=tiedTeams.map(t=>t.name).join(' & ');
+    document.getElementById('champTeam').style.display='';
+    document.getElementById('champMargin').style.display='';
+    if(teamData.length>=2){
+      const spread=Math.abs(teamData[0].netToPar-teamData[1].netToPar);
+      if(tiedTeams.length>1){document.getElementById('champMargin').textContent='Teams tied at '+fmtPar(teamData[0].netToPar)}
+      else{document.getElementById('champMargin').textContent='Won by '+spread+' stroke'+(spread!==1?'s':'')+' over '+teamData[1].name}
+    }
+    // Make banner clickable to open winning team modal (only if single winner)
+    if(tiedTeams.length===1){banner.style.cursor='pointer';banner.dataset.champTeam=tiedTeams[0].name}
+    else{banner.style.cursor='default';banner.dataset.champTeam=''}
+  }else{
+    document.getElementById('champTeam').style.display='none';
+    document.getElementById('champMargin').style.display='none';
+    banner.style.cursor='default';banner.dataset.champTeam='';
   }
   const tiedIndiv=indivData.filter(d=>d.netToPar===indivData[0].netToPar&&d.net===indivData[0].net);
   const indivNames=tiedIndiv.map(d=>'<strong>'+esc(d.name)+'</strong>').join(' & ');
@@ -723,7 +769,7 @@ function renderChampionState(complete){
   // Best Round & Best Nine for banner
   let bestRoundList=[], bestNines=[];
   for(const p of players){
-    for(let rn=1;rn<=4;rn++){
+    for(let rn=1;rn<=totalRounds;rn++){
       const res=calcPlayerRound(p,rn);if(!res||res.thru<18)continue;
       bestRoundList.push({name:p.name,ntp:res.netToPar,gross:res.gross,rn});
       const par=getCoursePar(rn);
@@ -749,14 +795,6 @@ function renderChampionState(complete){
   }
   document.getElementById('champAccolades').innerHTML=accoladesHtml;
 
-  // Make banner clickable to open winning team modal (only if single winner)
-  if(tiedTeams.length===1){
-    banner.style.cursor='pointer';
-    banner.dataset.champTeam=tiedTeams[0].name;
-  }else{
-    banner.style.cursor='default';
-    banner.dataset.champTeam='';
-  }
   banner.classList.add('show');
 }
 
@@ -785,14 +823,10 @@ function renderCourseInfo(){
 
   // Courses table at bottom
   let html='';
-  for(let rn=1;rn<=4;rn++){
-    const cName=getCourseName(rn);
-    const c=courses[cName];
-    if(cName&&c){
-      html+=`<tr><td>R${rn}</td><td class="course-name-cell">${esc(cName)}</td><td>${c.par}</td><td>${c.rating}</td><td>${c.slope}</td></tr>`;
-    }else{
-      html+=`<tr><td>R${rn}</td><td style="color:var(--text-muted)">—</td><td>—</td><td>—</td><td>—</td></tr>`;
-    }
+  for(let rn=1;rn<=totalRounds;rn++){
+    const cName=getCourseName(rn);const c=courses[cName];
+    if(cName&&c){html+=`<tr><td>R${rn}</td><td class="course-name-cell">${esc(cName)}</td><td>${c.par}</td><td>${c.rating}</td><td>${c.slope}</td></tr>`}
+    else{html+=`<tr><td>R${rn}</td><td style="color:var(--text-muted)">—</td><td>—</td><td>—</td><td>—</td></tr>`}
   }
   document.getElementById('coursesBody').innerHTML=html;
 }
@@ -817,7 +851,7 @@ function renderHighlights(complete){
 
   // Best Nine — filter by round if in round view
   let bestNines=[];
-  const roundsToCheck=isTourn?[1,2,3,4]:[viewRn];
+  const roundsToCheck=isTourn?Array.from({length:totalRounds},(_,i)=>i+1):[viewRn];
   for(const p of players){
     for(const rn of roundsToCheck){
       const res=calcPlayerRound(p,rn);if(!res)continue;
@@ -865,10 +899,12 @@ function renderHighlights(complete){
   }
 
   // Team Lead
-  const tMap={};for(const p of players){if(!p.team)continue;if(!tMap[p.team])tMap[p.team]=0;tMap[p.team]+=calcPlayerView(p,currentView).netToPar}
-  const teams=Object.entries(tMap).sort((a,b)=>a[1]-b[1]);
   let marginCard='';
-  if(teams.length>=2){const m=Math.abs(teams[0][1]-teams[1][1]);marginCard=`<div class="hl-card hl-margin"><div class="hl-label">Team Lead</div><div class="hl-name">${m===0?'Tied':esc(teams[0][0])}</div><div class="hl-detail">${m===0?'All square!':`by ${m} stroke${m!==1?'s':''}`}</div></div>`}
+  if(teamMode){
+    const tMap={};for(const p of players){if(!p.team)continue;if(!tMap[p.team])tMap[p.team]=0;tMap[p.team]+=calcPlayerView(p,currentView).netToPar}
+    const teams=Object.entries(tMap).sort((a,b)=>a[1]-b[1]);
+    if(teams.length>=2){const m=Math.abs(teams[0][1]-teams[1][1]);marginCard=`<div class="hl-card hl-margin"><div class="hl-label">Team Lead</div><div class="hl-name">${m===0?'Tied':esc(teams[0][0])}</div><div class="hl-detail">${m===0?'All square!':`by ${m} stroke${m!==1?'s':''}`}</div></div>`}
+  }
 
   const leaderCard=isTourn&&!isFinal?`<div class="hl-card hl-mvp"><div class="hl-label">⛳ Leader</div><div class="hl-name">${leaderNames}</div><div class="hl-detail">${fmtPar(leaderScore)} · thru ${leaderThru}</div></div>`:'';
   el.innerHTML=leaderCard+bestRoundCard+bestNineCard+(isFinal?'':marginCard);
@@ -907,7 +943,7 @@ function renderTeams(complete){
 }
 
 function calcLastNine(members){
-  const cps=[];for(let rn=1;rn<=4;rn++){cps.push({rn,half:'front'});cps.push({rn,half:'back'})}
+  const cps=[];for(let rn=1;rn<=totalRounds;rn++){cps.push({rn,half:'front'});cps.push({rn,half:'back'})}
   let last=null;
   for(const cp of cps){
     let ok=true,total=0;
@@ -949,10 +985,10 @@ function renderIndividual(complete){
     const pos=d.rank,arrowHtml=arrows[d.player.name]||'';
     let dotsHtml='';
     if(currentView==='tournament'){
-      // Check if all 4 rounds complete for this player
+      // Check if all rounds complete for this player
       const rScores=[];
       let allDone=true;
-      for(let rn=1;rn<=4;rn++){
+      for(let rn=1;rn<=totalRounds;rn++){
         const res=calcPlayerRound(d.player,rn);
         if(!res||res.thru<18){allDone=false;break}
         rScores.push({rn,ntp:res.netToPar});
@@ -963,18 +999,17 @@ function renderIndividual(complete){
         // Assign rank to each, handling ties
         const colorMap={};
         sorted.forEach((s,i)=>{
-          // If tied with previous, use same color
           if(i>0&&s.ntp===sorted[i-1].ntp){colorMap[s.rn]=colorMap[sorted[i-1].rn]}
-          else{colorMap[s.rn]=rankColors[i]}
+          else{colorMap[s.rn]=rankColors[Math.min(i,rankColors.length-1)]}
         });
         dotsHtml='<span class="round-dots">';
-        for(let rn=1;rn<=4;rn++){dotsHtml+=`<span class="round-dot ${colorMap[rn]}"></span>`}
+        for(let rn=1;rn<=totalRounds;rn++){dotsHtml+=`<span class="round-dot ${colorMap[rn]}"></span>`}
         dotsHtml+='</span>';
       }
     }
     return`<div class="lb-row${d.rank===1?' is-leader':''}${isFinal&&d.rank===1?' champion':''}" data-player="${esc(d.player.name)}">
       <span class="lb-pos ${pos<=3?'top-3':''}">${d.tied?'T':''}${pos}</span>
-      <div class="lb-name-cell"><div class="lb-player-name">${esc(d.player.name)}${arrowHtml}</div><div class="lb-team-tag">${esc(d.player.team)} ${dotsHtml}</div></div>
+      <div class="lb-name-cell"><div class="lb-player-name">${esc(d.player.name)}${arrowHtml}</div>${teamMode?`<div class="lb-team-tag">${esc(d.player.team)} ${dotsHtml}</div>`:(dotsHtml?`<div class="lb-team-tag">${dotsHtml}</div>`:'')}</div>
       <span class="lb-val">${d.net}</span><span class="lb-val net-par ${parClass(d.netToPar)}">${fmtPar(d.netToPar)}</span><span class="lb-val">${d.gross}</span><span class="lb-thru">${d.thru}</span>
     </div>`;
   }).join('');
@@ -990,7 +1025,7 @@ function computeArrows(sortedData){
   if(currentView==='tournament'){
     const cur={};sortedData.forEach((d,i)=>{cur[d.player.name]=i+1});
     for(const d of sortedData){
-      let comp=0;for(let rn=1;rn<=4;rn++){const rr=calcPlayerRound(d.player,rn);if(rr&&rr.thru===18)comp++}
+      let comp=0;for(let rn=1;rn<=totalRounds;rn++){const rr=calcPlayerRound(d.player,rn);if(rr&&rr.thru===18)comp++}
       if(comp<2)continue;
       if(prevRanks[d.player.name]!==undefined){
         const diff=prevRanks[d.player.name]-cur[d.player.name];
@@ -1023,7 +1058,7 @@ function ranksThruRound(thru){
 function renderChart(){
   const teamMap={};for(const p of players){if(!p.team)continue;if(!teamMap[p.team])teamMap[p.team]=[];teamMap[p.team].push(p)}
   const teamNames=Object.keys(teamMap);if(teamNames.length<2)return;
-  const cps=[];for(let rn=1;rn<=4;rn++){cps.push({rn,half:'front',label:`R${rn} F9`});cps.push({rn,half:'back',label:`R${rn} B9`})}
+  const cps=[];for(let rn=1;rn<=totalRounds;rn++){cps.push({rn,half:'front',label:`R${rn} F9`});cps.push({rn,half:'back',label:`R${rn} B9`})}
   const labels=[],datasets={};teamNames.forEach(t=>{datasets[t]=[]});
   for(const cp of cps){
     let ok=true;const scores={};
@@ -1075,7 +1110,7 @@ function renderChart(){
 /* ═══ HISTORY ═══ */
 function renderHistory(){
   const grid=document.getElementById('historyGrid');let html='';
-  for(let rn=1;rn<=4;rn++){
+  for(let rn=1;rn<=totalRounds;rn++){
     const rp=players.map(p=>{const res=calcPlayerRound(p,rn);return res&&res.thru>0?{name:p.name,...res}:null}).filter(Boolean);
     const cn=getCourseName(rn);
     html+=`<div class="history-card"><div class="history-card-head"><div class="history-card-title">Round ${rn}</div>${cn?`<div class="history-course">${esc(cn)}</div>`:''}</div>`;
@@ -1107,7 +1142,7 @@ function renderHistory(){
 /* ═══ HANDICAPS ═══ */
 function renderHandicaps(){
   document.getElementById('hcBody').innerHTML=[...players].sort((a,b)=>a.hi-b.hi).map(p=>{
-    const chs=[1,2,3,4].map(rn=>{const cName=getCourseName(rn);return`<td class="hc-val">${cName&&courses[cName]?getCH(p.hi,rn):'—'}</td>`}).join('');
+    const chs=Array.from({length:totalRounds},(_,i)=>i+1).map(rn=>{const cName=getCourseName(rn);return`<td class="hc-val">${cName&&courses[cName]?getCH(p.hi,rn):'—'}</td>`}).join('');
     return`<tr><td class="hc-name">${esc(p.name)}</td><td class="hc-val">${p.hi.toFixed(1)}</td>${chs}</tr>`;
   }).join('');
 }
@@ -1127,7 +1162,7 @@ function openPlayerModal(name){
   const sheet=document.querySelector('#playerModal .modal-sheet');
   sheet.classList.toggle('champion-modal',isChamp);
   document.getElementById('pmName').textContent=player.name;
-  document.getElementById('pmTeam').innerHTML=(isChamp?'<span class="champion-modal-label">🏆 Individual Champion</span><br>':'')+esc(player.team);
+  document.getElementById('pmTeam').innerHTML=(isChamp?'<span class="champion-modal-label">🏆 Individual Champion</span><br>':'')+(teamMode?esc(player.team):'');
   const v=calcPlayerView(player,currentView);
   const toParAccent=isChamp?' champion-accent':'';
   document.getElementById('pmStats').innerHTML=`
@@ -1140,7 +1175,7 @@ function openPlayerModal(name){
   let perfHtml='';
   if(currentView==='tournament'){
     const bars=[];let minP=0,maxP=0;
-    for(let rn=1;rn<=4;rn++){const res=calcPlayerRound(player,rn);if(res&&res.thru>0){bars.push({rn,ntp:res.netToPar});minP=Math.min(minP,res.netToPar);maxP=Math.max(maxP,res.netToPar)}else bars.push({rn,ntp:null})}
+    for(let rn=1;rn<=totalRounds;rn++){const res=calcPlayerRound(player,rn);if(res&&res.thru>0){bars.push({rn,ntp:res.netToPar});minP=Math.min(minP,res.netToPar);maxP=Math.max(maxP,res.netToPar)}else bars.push({rn,ntp:null})}
     if(bars.some(b=>b.ntp!==null)){
       const range=Math.max(Math.abs(minP),Math.abs(maxP),1);
       perfHtml=`<div class="modal-perf-title"${isChamp?' style="color:var(--gold)"':''}>Round Performance (Net to Par)</div>`;
@@ -1155,7 +1190,7 @@ function openPlayerModal(name){
   let roundsHtml='';
   if(currentView==='tournament'){
     document.getElementById('pmRoundsTitle').innerHTML='<span>Round Breakdown (Gross)</span>';
-    for(let rn=1;rn<=4;rn++){const res=calcPlayerRound(player,rn);const cn=getCourseName(rn);roundsHtml+=`<div class="modal-round-row"><div><span class="modal-round-label">Round ${rn}</span>${cn?'<div style="font-size:0.72rem;color:var(--text-muted);margin-top:1px">'+esc(cn)+'</div>':''}</div><span class="modal-round-val">${res&&res.thru>0?res.gross:'—'}</span></div>`}
+    for(let rn=1;rn<=totalRounds;rn++){const res=calcPlayerRound(player,rn);const cn=getCourseName(rn);roundsHtml+=`<div class="modal-round-row"><div><span class="modal-round-label">Round ${rn}</span>${cn?'<div style="font-size:0.72rem;color:var(--text-muted);margin-top:1px">'+esc(cn)+'</div>':''}</div><span class="modal-round-val">${res&&res.thru>0?res.gross:'—'}</span></div>`}
     document.getElementById('pmSummary').textContent=`Handicap Index: ${player.hi}`;
   }else{
     const rn=parseInt(currentView);
@@ -1196,7 +1231,7 @@ function openTeamModal(teamName){
 
   // Find best single round on team (respect current view)
   let bestRoundNtp=Infinity, bestRounds=[];
-  const tmRounds=currentView==='tournament'?[1,2,3,4]:[parseInt(currentView)];
+  const tmRounds=currentView==='tournament'?Array.from({length:totalRounds},(_,i)=>i+1):[parseInt(currentView)];
   for(const m of members){
     for(const rn of tmRounds){
       const res=calcPlayerRound(m,rn);
@@ -1209,7 +1244,7 @@ function openTeamModal(teamName){
 
   let html=isChamp?'<div class="champion-modal-label">🏆 Champions</div>':'';
   html+=`<div class="tm-title">${esc(teamName)}</div>`;
-  if(currentView!=='tournament'){const cName=getCourseName(parseInt(currentView));if(cName)html+=`<div class="tm-subtitle">${'Round '+currentView+' Overview'}<br><span style="font-size:0.85em;color:var(--text-muted)">${esc(cName)}</span></div>`; else html+=`<div class="tm-subtitle">Round ${currentView} Overview</div>`}
+  if(currentView!=='tournament'){const cName=getCourseName(parseInt(currentView));if(cName)html+=`<div class="tm-subtitle">${'Round '+currentView+' Overview'}<br><span style="color:var(--text-muted)">${esc(cName)}</span></div>`; else html+=`<div class="tm-subtitle">Round ${currentView} Overview</div>`}
   else html+=`<div class="tm-subtitle">Tournament Overview</div>`;
 
   // Summary stats
@@ -1223,11 +1258,12 @@ function openTeamModal(teamName){
   // Round-by-round gross grid (tournament view)
   if(currentView==='tournament'){
     html+=`<div class="modal-perf-title">Gross Scores by Round</div>`;
-    html+=`<div class="tm-rounds-grid">`;
-    html+=`<div class="tm-rg-cell tm-rg-head"></div><div class="tm-rg-cell tm-rg-head">R1</div><div class="tm-rg-cell tm-rg-head">R2</div><div class="tm-rg-cell tm-rg-head">R3</div><div class="tm-rg-cell tm-rg-head">R4</div>`;
+    html+=`<div class="tm-rounds-grid" style="grid-template-columns:auto repeat(${totalRounds},1fr)">`;
+    let gridHead=`<div class="tm-rg-cell tm-rg-head"></div>`;for(let rn=1;rn<=totalRounds;rn++){gridHead+=`<div class="tm-rg-cell tm-rg-head">R${rn}</div>`}
+    html+=gridHead;
     for(const md of memberData){
       html+=`<div class="tm-rg-cell tm-rg-name">${esc(md.player.name)}</div>`;
-      for(let rn=1;rn<=4;rn++){
+      for(let rn=1;rn<=totalRounds;rn++){
         const res=calcPlayerRound(md.player,rn);
         html+=`<div class="tm-rg-cell">${res&&res.thru>0?res.gross:'—'}</div>`;
       }
@@ -1296,18 +1332,7 @@ document.querySelectorAll('#lbHeader .sortable').forEach(col=>{
   });
 });
 
-/* ═══ YEAR SCANNING & INIT ═══ */
-async function scanYears(){
-  try{
-    const rows=await fetchTab('Config');
-    const found=[];
-    for(let i=1;i<rows.length;i++){
-      const v=(rows[i][0]||'').trim();
-      if(v)found.push(v);
-    }
-    return found.length?found:[START_YEAR];
-  }catch{return[START_YEAR]}
-}
+/* ═══ YEAR SELECTOR ═══ */
 
 function renderYearSelector(){
   const wrap=document.getElementById('yearControls');
@@ -1363,13 +1388,15 @@ function hideRecordsPage(){
 async function loadAllYearsAndRender(){
   for(const y of availableYears){
     if(allYearsData[y]) continue;
-    const tabs={scores:`Scores ${y}`,courses:`Courses ${y}`,rounds:`Rounds ${y}`};
-    const[scoresRaw,coursesRaw,roundsRaw]=await Promise.all([fetchTab(tabs.scores),fetchTab(tabs.courses),fetchTab(tabs.rounds)]);
-    const yPlayers=[], yCourses={}, yRoundMap={};
-    if(coursesRaw.length>1){for(let i=1;i<coursesRaw.length;i++){const r=coursesRaw[i];if(r[0])yCourses[r[0].trim()]={par:num(r[1]),rating:num(r[2]),slope:num(r[3])}}}
+    const tabs={scores:`Scores ${y}`,rounds:`Rounds ${y}`};
+    const[scoresRaw,roundsRaw]=await Promise.all([fetchTab(tabs.scores),fetchTab(tabs.rounds)]);
+    const yPlayers=[], yRoundMap={};
     if(roundsRaw.length>1){for(let i=1;i<roundsRaw.length;i++){const r=roundsRaw[i];if(r[0]&&r[1])yRoundMap[r[0].replace(/[^0-9]/g,'')]=r[1].trim()}}
-    if(scoresRaw.length>1){for(let i=1;i<scoresRaw.length;i++){const r=scoresRaw[i];if(!r[0]||!r[0].trim())continue;yPlayers.push({name:r[0].trim(),hi:num(r[1]),team:(r[2]||'').trim(),rounds:{'1':{front:num(r[3]),back:num(r[4])},'2':{front:num(r[5]),back:num(r[6])},'3':{front:num(r[7]),back:num(r[8])},'4':{front:num(r[9]),back:num(r[10])}}})}}
-    allYearsData[y]={players:yPlayers,courses:yCourses,roundMap:yRoundMap};
+    const yTotalRounds=Math.max(1,Object.keys(yRoundMap).length);
+    if(scoresRaw.length>1){for(let i=1;i<scoresRaw.length;i++){const r=scoresRaw[i];if(!r[0]||!r[0].trim())continue;
+      const pRounds={};for(let rn=1;rn<=yTotalRounds;rn++){const ci=3+(rn-1)*2;pRounds[String(rn)]={front:num(r[ci]),back:num(r[ci+1])}}
+      yPlayers.push({name:r[0].trim(),hi:num(r[1]),team:(r[2]||'').trim(),rounds:pRounds})}}
+    allYearsData[y]={players:yPlayers,courses,roundMap:yRoundMap,totalRounds:yTotalRounds};
   }
   renderRecordsPage();
 }
@@ -1390,8 +1417,11 @@ function recCalcRound(p,rn,yCourses,yRoundMap){
 }
 
 function renderRecordsPage(){
+  // Check if any tournament had teams
+  const anyTeams=availableYears.some(y=>{const yd=allYearsData[y];return yd&&yd.players.some(p=>!!p.team)});
+  document.getElementById('teamRecordsSection').style.display=anyTeams?'block':'none';
   renderChampionsWall();
-  renderTeamRecords();
+  if(anyTeams)renderTeamRecords();
   renderIndivRecords();
   renderCourseHistory();
 }
@@ -1402,57 +1432,62 @@ function renderChampionsWall(){
   for(const y of availableYears){
     const yd=allYearsData[y];if(!yd||!yd.players.length)continue;
     // Check if year is complete
-    let complete=true;
-    for(const p of yd.players){for(let rn=1;rn<=4;rn++){const r=p.rounds[String(rn)];if(!r||!r.front||!r.back||r.front<=0||r.back<=0){complete=false;break}}if(!complete)break}
+    let complete=true;const yTR=yd.totalRounds||4;
+    for(const p of yd.players){for(let rn=1;rn<=yTR;rn++){const r=p.rounds[String(rn)];if(!r||!r.front||!r.back||r.front<=0||r.back<=0){complete=false;break}}if(!complete)break}
     if(!complete)continue;
+    const hasTeams=yd.players.some(p=>!!p.team);
     // Team champion
     const teamMap={};
-    for(const p of yd.players){if(!p.team)continue;if(!teamMap[p.team])teamMap[p.team]=[];teamMap[p.team].push(p)}
-    const teams=Object.entries(teamMap).map(([name,members])=>{
-      let ntp=0;for(const m of members){for(let rn=1;rn<=4;rn++){const res=recCalcRound(m,rn,yd.courses,yd.roundMap);if(res)ntp+=res.netToPar}}
+    if(hasTeams){for(const p of yd.players){if(!p.team)continue;if(!teamMap[p.team])teamMap[p.team]=[];teamMap[p.team].push(p)}}
+    const teams=hasTeams?Object.entries(teamMap).map(([name,members])=>{
+      let ntp=0;for(const m of members){for(let rn=1;rn<=yTR;rn++){const res=recCalcRound(m,rn,yd.courses,yd.roundMap);if(res)ntp+=res.netToPar}}
       return{name,netToPar:ntp,members};
-    }).sort((a,b)=>a.netToPar-b.netToPar);
+    }).sort((a,b)=>a.netToPar-b.netToPar):[];
     // Individual champion
-    const indiv=yd.players.map(p=>{let ntp=0,net=0;for(let rn=1;rn<=4;rn++){const res=recCalcRound(p,rn,yd.courses,yd.roundMap);if(res){ntp+=res.netToPar;net+=res.net}}return{name:p.name,netToPar:ntp,net}}).sort((a,b)=>a.netToPar-b.netToPar||a.net-b.net);
-    const margin=teams.length>=2?Math.abs(teams[0].netToPar-teams[1].netToPar):0;
-    const tiedChampTeams=teams.filter(t=>t.netToPar===teams[0].netToPar);
-    const loser=teams.length>tiedChampTeams.length?teams[tiedChampTeams.length].name:'';
+    const indiv=yd.players.map(p=>{let ntp=0,net=0;for(let rn=1;rn<=yTR;rn++){const res=recCalcRound(p,rn,yd.courses,yd.roundMap);if(res){ntp+=res.netToPar;net+=res.net}}return{name:p.name,netToPar:ntp,net}}).sort((a,b)=>a.netToPar-b.netToPar||a.net-b.net);
+    const margin=hasTeams&&teams.length>=2?Math.abs(teams[0].netToPar-teams[1].netToPar):0;
+    const tiedChampTeams=hasTeams&&teams.length?teams.filter(t=>t.netToPar===teams[0].netToPar):[];
+    const loser=hasTeams&&teams.length>tiedChampTeams.length?teams[tiedChampTeams.length].name:'';
     const tiedIndivChamps=indiv.filter(d=>d.netToPar===indiv[0].netToPar&&d.net===indiv[0].net);
     const teamRosters=tiedChampTeams.map(ct=>{
-      const members=ct.members.map(m=>{let ntp=0;for(let rn=1;rn<=4;rn++){const res=recCalcRound(m,rn,yd.courses,yd.roundMap);if(res)ntp+=res.netToPar}return{name:m.name,ntp}}).sort((a,b)=>a.ntp-b.ntp);
+      const members=ct.members.map(m=>{let ntp=0;for(let rn=1;rn<=yTR;rn++){const res=recCalcRound(m,rn,yd.courses,yd.roundMap);if(res)ntp+=res.netToPar}return{name:m.name,ntp}}).sort((a,b)=>a.ntp-b.ntp);
       return{teamName:ct.name,members};
     });
     champData.push({year:y,teams:tiedChampTeams.map(t=>t.name),margin,loser,individuals:tiedIndivChamps.map(d=>d.name),score:indiv[0].netToPar,teamRosters});
   }
   if(!champData.length){wall.innerHTML='<div class="empty-state">No completed tournaments yet</div>';return}
   wall.innerHTML=[...champData].reverse().map(c=>{
-    const marginText=c.margin===0&&c.teams.length>1?'Tied':c.margin===0?'':'Won by '+c.margin+' stroke'+(c.margin!==1?'s':'')+' over '+esc(c.loser);
+    const hasT=c.teams.length>0;
+    const marginText=hasT?(c.margin===0&&c.teams.length>1?'Tied':c.margin===0?'':'Won by '+c.margin+' stroke'+(c.margin!==1?'s':'')+' over '+esc(c.loser)):'';
     const teamLabel=c.teams.length>1?'Team Champions':'Team Champion';
     const teamNames=c.teams.map(t=>esc(t)).join(' & ');
     const indivLabel=c.individuals.length>1?'Individual Champions':'Individual Champion';
     const indivNames=c.individuals.map(n=>esc(n)).join(' & ');
     let rosterHtml='';
-    if(c.teams.length>1){
-      rosterHtml=c.teamRosters.map(tr=>`<div class="champ-roster-label">${esc(tr.teamName)}</div>${tr.members.map(m=>`<div class="champ-roster-row"><span class="r-name">${esc(m.name)}</span><span class="r-score">${fmtPar(m.ntp)}</span></div>`).join('')}`).join('');
-    }else{
-      rosterHtml=`<div class="champ-roster-label">Winning Roster</div>${c.teamRosters[0].members.map(m=>`<div class="champ-roster-row"><span class="r-name">${esc(m.name)}</span><span class="r-score">${fmtPar(m.ntp)}</span></div>`).join('')}`;
+    if(hasT){
+      if(c.teams.length>1){
+        rosterHtml=c.teamRosters.map(tr=>`<div class="champ-roster-label">${esc(tr.teamName)}</div>${tr.members.map(m=>`<div class="champ-roster-row"><span class="r-name">${esc(m.name)}</span><span class="r-score">${fmtPar(m.ntp)}</span></div>`).join('')}`).join('');
+      }else if(c.teamRosters.length){
+        rosterHtml=`<div class="champ-roster-label">Winning Roster</div>${c.teamRosters[0].members.map(m=>`<div class="champ-roster-row"><span class="r-name">${esc(m.name)}</span><span class="r-score">${fmtPar(m.ntp)}</span></div>`).join('')}`;
+      }
     }
     return`<div class="champ-card" data-year="${c.year}">
       <div class="champ-year">${c.year}</div>
-      <div class="champ-label">${teamLabel}</div>
+      ${hasT?`<div class="champ-label">${teamLabel}</div>
       <div class="champ-name">${teamNames}</div>
-      ${marginText?`<div class="champ-detail">${marginText}</div>`:''}
+      ${marginText?`<div class="champ-detail">${marginText}</div>`:''}`:''}
       <div class="champ-label">${indivLabel}</div>
       <div class="champ-name">${indivNames}</div>
       <div class="champ-score">${fmtPar(c.score)} net to par</div>
-      <div class="champ-roster" data-roster="${esc(c.year)}">${rosterHtml}</div>
-      <div class="champ-tap-hint" data-hint="${esc(c.year)}">Tap to see roster</div>
+      ${rosterHtml?`<div class="champ-roster" data-roster="${esc(c.year)}">${rosterHtml}</div>
+      <div class="champ-tap-hint" data-hint="${esc(c.year)}">Tap to see roster</div>`:''}
     </div>`;
   }).join('');
   wall.querySelectorAll('.champ-card').forEach(card=>{
     card.addEventListener('click',()=>{
       const roster=card.querySelector('.champ-roster');
       const hint=card.querySelector('.champ-tap-hint');
+      if(!roster||!hint)return;
       const isOpen=roster.classList.contains('open');
       roster.classList.toggle('open');
       hint.textContent=isOpen?'Tap to see roster':'Tap to collapse';
@@ -1465,12 +1500,13 @@ function renderTeamRecords(){
   let bestTourn={val:Infinity,details:[]},largestVictory={val:0,details:[]},closestFinish={val:Infinity,details:[]},bestRound={val:Infinity,details:[]},worstRound={val:-Infinity,details:[]};
   for(const y of availableYears){
     const yd=allYearsData[y];if(!yd||!yd.players.length)continue;
+    const yTR=yd.totalRounds||4;
     const teamMap={};
     for(const p of yd.players){if(!p.team)continue;if(!teamMap[p.team])teamMap[p.team]=[];teamMap[p.team].push(p)}
     // Tournament totals
     const teamTotals=Object.entries(teamMap).map(([name,members])=>{
       let ntp=0,complete=true;
-      for(const m of members){for(let rn=1;rn<=4;rn++){const res=recCalcRound(m,rn,yd.courses,yd.roundMap);if(res&&res.thru===18)ntp+=res.netToPar;else{complete=false}}}
+      for(const m of members){for(let rn=1;rn<=yTR;rn++){const res=recCalcRound(m,rn,yd.courses,yd.roundMap);if(res&&res.thru===18)ntp+=res.netToPar;else{complete=false}}}
       return{name,netToPar:ntp,members,complete};
     }).sort((a,b)=>a.netToPar-b.netToPar);
     // Best tournament
@@ -1484,7 +1520,7 @@ function renderTeamRecords(){
       if(margin<closestFinish.val){closestFinish={val:margin,details:[md]}}else if(margin===closestFinish.val){closestFinish.details.push(md)}
     }
     // Round-by-round
-    for(let rn=1;rn<=4;rn++){
+    for(let rn=1;rn<=yTR;rn++){
       for(const[tName,members] of Object.entries(teamMap)){
         let rnNtp=0,allPlayed=true;
         for(const m of members){const res=recCalcRound(m,rn,yd.courses,yd.roundMap);if(res&&res.thru===18)rnNtp+=res.netToPar;else allPlayed=false}
@@ -1512,14 +1548,14 @@ function renderIndivRecords(){
     const yd=allYearsData[y];if(!yd||!yd.players.length)continue;
     // Check if year is complete
     let complete=true;
-    for(const p of yd.players){for(let rn=1;rn<=4;rn++){const r=p.rounds[String(rn)];if(!r||!r.front||!r.back||r.front<=0||r.back<=0){complete=false;break}}if(!complete)break}
+    for(const p of yd.players){for(let rn=1;rn<=yTR;rn++){const r=p.rounds[String(rn)];if(!r||!r.front||!r.back||r.front<=0||r.back<=0){complete=false;break}}if(!complete)break}
     for(const p of yd.players){
       // Tournament
       let tNtp=0,tComplete=true;
-      for(let rn=1;rn<=4;rn++){const res=recCalcRound(p,rn,yd.courses,yd.roundMap);if(res&&res.thru===18)tNtp+=res.netToPar;else tComplete=false}
+      for(let rn=1;rn<=yTR;rn++){const res=recCalcRound(p,rn,yd.courses,yd.roundMap);if(res&&res.thru===18)tNtp+=res.netToPar;else tComplete=false}
       if(tComplete){if(tNtp<bestTourn.val){bestTourn={val:tNtp,details:[esc(p.name)+' · '+y]}}else if(tNtp===bestTourn.val){bestTourn.details.push(esc(p.name)+' · '+y)}}
       // Rounds
-      for(let rn=1;rn<=4;rn++){
+      for(let rn=1;rn<=yTR;rn++){
         const res=recCalcRound(p,rn,yd.courses,yd.roundMap);if(!res||res.thru<18)continue;
         if(res.netToPar<bestNetRound.val){bestNetRound={val:res.netToPar,details:[esc(p.name)+' · R'+rn+' · '+y]}}else if(res.netToPar===bestNetRound.val){bestNetRound.details.push(esc(p.name)+' · R'+rn+' · '+y)}
         const grossToPar=res.gross-recGetPar(rn,yd.courses,yd.roundMap);
@@ -1532,7 +1568,7 @@ function renderIndivRecords(){
       const teamMap={};
       for(const p of yd.players){if(!p.team)continue;if(!teamMap[p.team])teamMap[p.team]=[];teamMap[p.team].push(p)}
       const teams=Object.entries(teamMap).map(([name,members])=>{
-        let ntp=0;for(const m of members){for(let rn=1;rn<=4;rn++){const res=recCalcRound(m,rn,yd.courses,yd.roundMap);if(res)ntp+=res.netToPar}}
+        let ntp=0;for(const m of members){for(let rn=1;rn<=yTR;rn++){const res=recCalcRound(m,rn,yd.courses,yd.roundMap);if(res)ntp+=res.netToPar}}
         return{name,netToPar:ntp,members};
       }).sort((a,b)=>a.netToPar-b.netToPar);
       const tiedWinTeams=teams.filter(t=>t.netToPar===teams[0].netToPar);
@@ -1541,7 +1577,7 @@ function renderIndivRecords(){
         teamChampCounts[m.name].push(y);
       }}
       // Individual champion
-      const indiv=yd.players.map(p=>{let ntp=0,net=0;for(let rn=1;rn<=4;rn++){const res=recCalcRound(p,rn,yd.courses,yd.roundMap);if(res){ntp+=res.netToPar;net+=res.net}}return{name:p.name,netToPar:ntp,net}}).sort((a,b)=>a.netToPar-b.netToPar||a.net-b.net);
+      const indiv=yd.players.map(p=>{let ntp=0,net=0;for(let rn=1;rn<=yTR;rn++){const res=recCalcRound(p,rn,yd.courses,yd.roundMap);if(res){ntp+=res.netToPar;net+=res.net}}return{name:p.name,netToPar:ntp,net}}).sort((a,b)=>a.netToPar-b.netToPar||a.net-b.net);
       const tiedWinIndiv=indiv.filter(d=>d.netToPar===indiv[0].netToPar&&d.net===indiv[0].net);
       for(const wi of tiedWinIndiv){
         if(!indivChampCounts[wi.name])indivChampCounts[wi.name]=[];
@@ -1575,7 +1611,8 @@ function renderCourseHistory(){
   const courseData={};
   for(const y of availableYears){
     const yd=allYearsData[y];if(!yd)continue;
-    for(let rn=1;rn<=4;rn++){
+    const yTR=yd.totalRounds||4;
+    for(let rn=1;rn<=yTR;rn++){
       const cName=yd.roundMap[String(rn)];if(!cName)continue;
       const c=yd.courses[cName];if(!c)continue;
       if(!courseData[cName])courseData[cName]={rounds:0,totalNtp:0,totalPlayers:0,bestNet:Infinity,bestBys:[],par:c.par,rating:c.rating,slope:c.slope};
@@ -1609,17 +1646,29 @@ function renderCourseHistory(){
 }
 
 async function init(){
-  availableYears=await scanYears();
+  // Load Config tab for years and tournament name
+  const configRows=await fetchTab('Config');
+  const found=[];
+  for(let i=1;i<configRows.length;i++){const v=(configRows[i][0]||'').trim();if(v)found.push(v)}
+  availableYears=found.length?found:[START_YEAR];
+  // Tournament name from B2
+  if(configRows.length>1&&configRows[1][1]){tournamentName=configRows[1][1].trim()||DEFAULT_NAME}
+  document.title=tournamentName;
+  document.getElementById('siteName').textContent=tournamentName;
+  document.getElementById('siteFooter').innerHTML=esc(tournamentName)+' &middot; Live Leaderboard';
+  document.getElementById('recordsSubtitle').textContent='Across all '+tournamentName+' tournaments';
+
+  // Load global Courses tab
+  const coursesRaw=await fetchTab('Courses');
+  if(coursesRaw.length>1){courses={};for(let i=1;i<coursesRaw.length;i++){const r=coursesRaw[i];if(r[0])courses[r[0].trim()]={par:num(r[1]),rating:num(r[2]),slope:num(r[3])}}}
+
   currentYear=availableYears[availableYears.length-1];
   renderYearSelector();
-  // Show records link if we have multiple years
   if(availableYears.length>1) document.getElementById('recordsLinkWrap').style.display='block';
-  // Records navigation
   document.getElementById('recordsLink').addEventListener('click',showRecordsPage);
   document.getElementById('recordsBack').addEventListener('click',hideRecordsPage);
   document.getElementById('championBanner').addEventListener('click',function(){const t=this.dataset.champTeam;if(t)openTeamModal(t)});
   await load();
-  // Retry if first load was rate-limited
   if(!players.length){for(let i=0;i<3;i++){await new Promise(r=>setTimeout(r,2000));await load();if(players.length)break}}
   setInterval(load,POLL_SECONDS*1000);
 }
