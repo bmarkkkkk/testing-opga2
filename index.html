@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>OPGA Invitational</title>
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="apple-touch-icon" href="favicon.png">
@@ -144,7 +144,7 @@
     .team-row { display:grid; grid-template-columns:36px 1fr auto auto; align-items:center; gap:12px; padding:14px 16px; transition:background var(--transition); cursor:pointer; }
     .team-row:hover { background:var(--surface-2); }
     .team-row:not(:last-child) { border-bottom:1px solid var(--border); }
-    .team-rank { font-family:'Cormorant Garamond',serif; font-weight:700; font-size:1.3rem; text-align:center; }
+    .team-rank { font-weight:700; font-size:1rem; text-align:center; }
     .team-rank.rank-1 { color:var(--gold); }
     .team-rank.rank-2 { color:var(--text-secondary); }
     .team-name { font-weight:600; font-size:0.95rem; color:var(--text-primary); }
@@ -290,12 +290,12 @@
     .tm-title { font-family:'Cormorant Garamond',serif; font-weight:700; font-size:1.5rem; color:var(--cream); text-align:center; }
     .tm-subtitle { text-align:center; font-size:0.75rem; color:var(--text-muted); margin-top:2px; margin-bottom:16px; }
     .tm-summary { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:18px; }
-    .tm-member { background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius); padding:14px; margin-bottom:10px; cursor:pointer; transition:background var(--transition); position:relative; }
+    .tm-member { background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius); padding:10px 14px 14px; margin-bottom:10px; cursor:pointer; transition:background var(--transition); position:relative; }
     .tm-member:hover { background:var(--surface-3); }
     .tm-member:last-child { margin-bottom:0; }
     .tm-member-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
     .tm-member-name { font-weight:600; font-size:0.92rem; color:var(--text-primary); }
-    .tm-member-hi { font-size:0.72rem; color:var(--text-muted); font-weight:500; position:absolute; top:8px; right:10px; }
+    .tm-member-hi { font-size:0.72rem; color:var(--text-muted); font-weight:500; position:absolute; top:10px; right:14px; }
     .tm-member-score { font-weight:700; font-size:1rem; }
     .tm-member-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; }
     .tm-ms { text-align:center; }
@@ -333,7 +333,7 @@
     .champions-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
     .champ-card { background:var(--surface-1); border:1px solid var(--border); border-radius:var(--radius); padding:16px; position:relative; overflow:hidden; cursor:pointer; transition:background var(--transition); }
     .champ-card:hover { background:var(--surface-2); }
-    @media(hover:none){ .champ-card:hover,.team-row:hover,.lb-row:hover,.tm-member:hover { background:transparent; } }
+    @media(hover:none){ .champ-card:hover,.team-row:hover,.lb-row:hover { background:transparent; } .tm-member:hover { background:var(--surface-2); } }
     .champ-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg, transparent, rgba(201,168,76,0.5), transparent); }
     .champ-year { font-family:'Cormorant Garamond',serif; font-weight:700; font-size:1.3rem; color:var(--gold); margin-bottom:8px; }
     .champ-label { font-size:0.6rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:3px; }
@@ -361,17 +361,214 @@
     .course-hist-name-text { font-weight:600; font-size:0.95rem; color:var(--text-primary); }
     .course-hist-name-line { flex:1; height:1px; background:var(--border); }
     .course-hist-name-info { font-size:0.72rem; color:var(--text-muted); font-weight:400; white-space:nowrap; }
-    .course-hist-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+    .course-hist-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+    @media(max-width:480px){ .course-hist-stats{grid-template-columns:repeat(2,1fr)} }
     .course-hist-stat { background:var(--surface-2); border-radius:var(--radius-sm); padding:8px 10px; text-align:center; display:flex; flex-direction:column; }
     .course-hist-stat-label { font-size:0.55rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:3px; }
     .course-hist-stat-val { font-weight:700; font-size:0.95rem; color:var(--text-primary); flex:1; display:flex; align-items:center; justify-content:center; }
     .course-hist-stat-sub { font-size:0.6rem; color:var(--text-secondary); margin-top:2px; }
     @media(max-width:480px){ .champions-grid{grid-template-columns:1fr} }
 
+    /* Player History */
+    .ph-item { padding:16px; }
+    .ph-item:not(:last-child) { border-bottom:1px solid var(--border); }
+    .ph-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; flex-wrap:wrap; gap:6px; }
+    .ph-name { font-weight:700; font-size:1.05rem; color:var(--text-primary); }
+    .ph-badges { display:flex; gap:6px; }
+    .ph-badge { font-size:0.58rem; font-weight:600; letter-spacing:0.05em; padding:2px 8px; border-radius:10px; }
+    .ph-badge-champ { background:rgba(201,168,76,0.15); color:var(--gold); }
+    .ph-badge-tourn { background:rgba(245,240,232,0.08); color:var(--text-secondary); }
+    .ph-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:8px; }
+    .ph-stats2 { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+    .ph-stat { background:var(--surface-2); border-radius:var(--radius-sm); padding:8px 6px; text-align:center; }
+    .ph-stat-label { font-size:0.52rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--text-muted); margin-bottom:3px; }
+    .ph-stat-val { font-weight:700; font-size:0.9rem; color:var(--text-primary); font-variant-numeric:tabular-nums; }
+    .ph-stat-val.under { color:var(--green-300); }
+    .ph-stat-val.over { color:var(--red); }
+    .ph-stat-val.gold { color:var(--gold); }
+    .ph-stat-sub { font-size:0.55rem; color:var(--text-muted); margin-top:2px; }
+
+    /* Collapsible sections (records page) */
+    .section-head.collapsible { cursor:pointer; user-select:none; }
+    .section-head.collapsible .section-chevron { font-size:0.7rem; color:var(--text-muted); transition:transform 0.2s ease; }
+    .section-head.collapsible.collapsed .section-chevron { transform:rotate(-90deg); }
+    .section-body.collapsed { display:none; }
+
     /* Footer / Misc */
     .footer { text-align:center; padding:32px 0 20px; font-size:0.7rem; color:var(--text-muted); }
+
+    /* Info Tab Buttons */
+    .info-tabs-wrap { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-bottom:24px; }
+    .info-tab-btn { display:inline-block; font-size:0.82rem; font-weight:500; color:var(--text-secondary); cursor:pointer; letter-spacing:0.03em; padding:7px 18px; border:1px solid var(--border); border-radius:var(--radius-sm); background:rgba(245,240,232,0.04); transition:all var(--transition); }
+    .info-tab-btn:hover { background:rgba(245,240,232,0.08); color:var(--text-primary); }
+
+    /* Info Modal Content */
+    .info-modal-title { font-family:'Cormorant Garamond',serif; font-weight:700; font-size:1.5rem; color:var(--cream); text-align:center; margin-bottom:16px; }
+    .info-item { padding:12px 0; border-bottom:1px solid var(--border); }
+    .info-item:last-child { border-bottom:none; }
+    .info-item-title { font-weight:600; font-size:0.9rem; color:var(--cream); margin-bottom:4px; }
+    .info-item-body { font-size:0.82rem; color:var(--text-secondary); line-height:1.5; }
     .loading-msg { text-align:center; padding:40px 0; color:var(--text-muted); font-size:0.85rem; }
     .empty-state { text-align:center; padding:30px 20px; color:var(--text-muted); font-size:0.85rem; }
+
+    /* Setup Screen */
+    .setup-screen { display:none; text-align:center; padding:40px 16px 60px; }
+    .setup-screen.show { display:block; }
+    .setup-icon { font-size:3rem; margin-bottom:16px; }
+    .setup-title { font-family:'Cormorant Garamond',serif; font-weight:700; font-size:2rem; color:var(--cream); margin-bottom:8px; }
+    .setup-subtitle { font-size:0.85rem; color:var(--text-secondary); margin-bottom:32px; line-height:1.5; }
+    .setup-steps { text-align:left; max-width:520px; margin:0 auto; }
+    .setup-step { background:var(--surface-1); border:1px solid var(--border); border-radius:var(--radius); padding:16px 18px; margin-bottom:12px; }
+    .setup-step-num { font-size:0.6rem; font-weight:600; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold); margin-bottom:6px; }
+    .setup-step-title { font-weight:600; font-size:0.95rem; color:var(--cream); margin-bottom:4px; }
+    .setup-step-body { font-size:0.8rem; color:var(--text-secondary); line-height:1.5; }
+    .setup-step-body code { background:rgba(245,240,232,0.08); padding:2px 6px; border-radius:4px; font-size:0.78rem; color:var(--gold); font-family:monospace; }
+    .setup-step-body .tip { display:block; margin-top:8px; font-size:0.72rem; color:var(--text-muted); font-style:italic; }
+    .setup-note { max-width:520px; margin:24px auto 0; font-size:0.72rem; color:var(--text-muted); line-height:1.5; text-align:center; }
+
+    /* ═══ SCORE ENTRY & ADMIN STYLES ═══ */
+    .score-entry-fab { position:fixed; bottom:24px; right:20px; z-index:50; background:var(--green-500); color:var(--cream); border:none; border-radius:50px; padding:9px 16px; font-family:'Outfit',sans-serif; font-size:0.75rem; font-weight:700; letter-spacing:0.04em; cursor:pointer; box-shadow:0 4px 20px rgba(0,103,71,0.5); transition:all 0.2s; display:flex; align-items:center; gap:6px; }
+    .score-entry-fab:hover { background:var(--green-400); transform:translateY(-2px); }
+    .score-entry-fab .fab-dot { width:6px; height:6px; background:var(--green-300); border-radius:50%; animation:pulse 2s ease-in-out infinite; }
+    .pin-modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:200; justify-content:center; align-items:flex-end; backdrop-filter:blur(6px); }
+    .pin-modal-overlay.open { display:flex; }
+    .pin-sheet { background:var(--surface-1); border:1px solid var(--border-bright); border-radius:16px 16px 0 0; width:100%; max-width:400px; padding:28px 24px 40px; animation:slideUp 0.3s ease; box-shadow:var(--shadow-lg); display:flex; flex-direction:column; align-items:center; }
+    .pin-sheet-title { font-family:'Cormorant Garamond',serif; font-weight:700; font-size:1.3rem; color:var(--cream); margin-bottom:4px; text-align:center; }
+    .pin-sheet-sub { font-size:0.72rem; color:var(--text-muted); margin-bottom:24px; text-align:center; }
+    .pin-dots-row { display:flex; gap:14px; margin-bottom:28px; }
+    .pin-dot-el { width:14px; height:14px; border-radius:50%; border:2px solid rgba(245,240,232,0.2); transition:all 0.15s; }
+    .pin-dot-el.filled { background:var(--gold); border-color:var(--gold); transform:scale(1.1); }
+    .pin-dot-el.error { background:var(--red); border-color:var(--red); }
+    @keyframes pinShake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }
+    .pin-dots-row.shake { animation:pinShake 0.4s ease; }
+    .numpad-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; width:100%; max-width:280px; touch-action:manipulation; }
+    .np-btn { background:rgba(245,240,232,0.06); border:1px solid rgba(245,240,232,0.08); border-radius:12px; color:var(--cream); font-family:'Outfit',sans-serif; font-size:1.3rem; font-weight:500; height:60px; cursor:pointer; transition:all 0.15s; display:flex; align-items:center; justify-content:center; touch-action:manipulation; -webkit-tap-highlight-color:transparent; }
+    .np-btn:active { background:rgba(245,240,232,0.14); transform:scale(0.94); }
+    .np-btn.np-del { font-size:2rem; color:var(--text-secondary); }
+    .np-btn.np-empty { background:transparent; border-color:transparent; pointer-events:none; }
+    .pin-error-msg { margin-top:14px; font-size:0.75rem; color:var(--red); height:18px; text-align:center; }
+    .scorer-sheet { position:relative; background:var(--surface-1); border:1px solid var(--border-bright); border-radius:16px 16px 0 0; width:100%; max-width:480px; max-height:88vh; display:flex; flex-direction:column; animation:slideUp 0.3s ease; box-shadow:var(--shadow-lg); overflow:hidden; }
+    .scorer-header { background:var(--surface-2); border-bottom:1px solid var(--border); padding:14px 18px 12px; flex-shrink:0; position:relative; }
+    .scorer-header-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:10px; }
+    .scorer-back-btn { background:none; border:none; color:var(--text-secondary); font-family:'Outfit',sans-serif; font-size:0.88rem; font-weight:600; cursor:pointer; padding:6px 10px; position:absolute; top:10px; right:12px; }
+    .scorer-title-area { text-align:left; }
+    .scorer-title-text { font-family:'Cormorant Garamond',serif; font-weight:700; font-size:1.4rem; color:var(--cream); }
+    .scorer-course-text { font-size:0.85rem; color:var(--gold); margin-top:3px; font-weight:500; }
+    .scorer-round-tabs { display:flex; gap:4px; margin-bottom:10px; }
+    .scorer-rtab { padding:6px 14px; border-radius:6px; border:none; font-family:'Outfit',sans-serif; font-size:0.75rem; font-weight:700; cursor:pointer; transition:all 0.2s; }
+    .scorer-rtab.active { background:var(--green-500); color:var(--cream); }
+    .scorer-rtab.inactive { background:rgba(245,240,232,0.06); color:var(--text-muted); }
+    .scorer-progress-row { display:flex; align-items:center; gap:10px; }
+    .scorer-prog-bar { flex:1; height:3px; background:rgba(245,240,232,0.08); border-radius:2px; overflow:hidden; }
+    .scorer-prog-fill { height:100%; background:var(--green-300); border-radius:2px; transition:width 0.5s ease; }
+    .scorer-prog-label { font-size:0.65rem; color:var(--text-muted); white-space:nowrap; font-weight:500; }
+    .scorer-body { flex:1; overflow-y:auto; padding:12px 16px 28px; -webkit-overflow-scrolling:touch; }
+    .scorer-body::-webkit-scrollbar { display:none; }
+    .scorer-team-divider { display:flex; align-items:center; gap:8px; margin:8px 0 10px; }
+    .scorer-team-label { font-size:0.6rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--gold); white-space:nowrap; }
+    .scorer-team-line { flex:1; height:1px; background:rgba(201,168,76,0.2); }
+    .scorer-player-card { background:var(--surface-2); border:1px solid var(--border); border-radius:12px; padding:14px; margin-bottom:10px; transition:border-color 0.3s; position:relative; }
+    .scorer-player-card.complete { border-color:rgba(62,185,127,0.3); background:linear-gradient(135deg,var(--surface-2) 0%,rgba(62,185,127,0.04) 100%); }
+    .scorer-card-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+    .scorer-player-name { font-weight:700; font-size:0.92rem; color:var(--cream); }
+    .scorer-player-team { font-size:0.68rem; color:var(--text-muted); margin-top:1px; }
+    .scorer-ch-badge { font-size:0.68rem; font-weight:600; color:var(--text-secondary); background:rgba(245,240,232,0.06); padding:3px 8px; border-radius:6px; }
+    .scorer-inputs-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .scorer-input-wrap { display:flex; flex-direction:column; align-items:center; gap:5px; }
+    .scorer-input-label { font-size:0.58rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-muted); }
+    .scorer-input { width:100%; height:54px; background:rgba(245,240,232,0.05); border:1.5px solid rgba(245,240,232,0.1); border-radius:10px; color:var(--cream); font-size:1.4rem; font-weight:700; text-align:center; outline:none; font-family:'Outfit',sans-serif; font-variant-numeric:tabular-nums; transition:all 0.2s; -webkit-appearance:none; appearance:none; }
+    .scorer-input:focus { border-color:var(--gold); background:rgba(201,168,76,0.07); }
+    .scorer-input.saved { border-color:rgba(62,185,127,0.4); background:rgba(62,185,127,0.07); color:var(--green-300); }
+    .scorer-input::placeholder { color:rgba(245,240,232,0.15); font-size:1rem; font-weight:400; }
+    .scorer-save-badge { position:absolute; bottom:10px; right:12px; font-size:0.62rem; font-weight:600; color:var(--green-300); opacity:0; transition:opacity 0.2s; }
+    .scorer-save-badge.show { opacity:1; }
+    .scorer-complete-banner { background:linear-gradient(135deg,rgba(201,168,76,0.1) 0%,rgba(201,168,76,0.04) 100%); border:1px solid rgba(201,168,76,0.25); border-radius:10px; padding:14px 16px; text-align:center; margin-bottom:14px; }
+    .scorer-complete-title { font-family:'Cormorant Garamond',serif; font-weight:700; font-size:1.05rem; color:var(--cream); }
+    .scorer-complete-sub { font-size:0.7rem; color:var(--text-secondary); margin-top:2px; }
+    .admin-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:300; backdrop-filter:blur(6px); overflow-y:auto; }
+    .admin-overlay.open { display:block; }
+    .admin-panel { background:var(--surface-0); min-height:100vh; max-width:900px; margin:0 auto; display:flex; flex-direction:column; }
+    .admin-topbar { background:var(--surface-1); border-bottom:1px solid var(--border); padding:0 20px; display:flex; align-items:center; justify-content:space-between; height:56px; flex-shrink:0; position:sticky; top:0; z-index:10; }
+    .admin-topbar-left { display:flex; align-items:center; gap:10px; }
+    .admin-logo { width:30px; height:30px; background:linear-gradient(135deg,var(--green-500),var(--green-400)); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:0.75rem; flex-shrink:0; }
+    .admin-brand { font-family:'Cormorant Garamond',serif; font-weight:700; font-size:1rem; color:var(--cream); line-height:1.1; }
+    .admin-brand-sub { font-size:0.58rem; color:var(--text-muted); letter-spacing:0.08em; text-transform:uppercase; }
+    .admin-close-btn { background:rgba(245,240,232,0.06); border:1px solid var(--border); border-radius:8px; color:var(--text-secondary); font-family:'Outfit',sans-serif; font-size:0.78rem; font-weight:600; padding:7px 14px; cursor:pointer; transition:all 0.2s; }
+    .admin-close-btn:hover { background:rgba(245,240,232,0.1); color:var(--cream); }
+    .admin-tabs { background:var(--surface-1); border-bottom:1px solid var(--border); display:flex; overflow-x:auto; padding:0 16px; scrollbar-width:none; }
+    .admin-tabs::-webkit-scrollbar { display:none; }
+    .admin-tab { background:none; border:none; cursor:pointer; padding:14px 16px; font-size:0.8rem; font-weight:600; font-family:'Outfit',sans-serif; color:var(--text-muted); border-bottom:2px solid transparent; transition:all 0.2s; white-space:nowrap; margin-bottom:-1px; }
+    .admin-tab:hover { color:var(--text-secondary); }
+    .admin-tab.active { color:var(--cream); border-bottom-color:var(--gold); }
+    .admin-content { padding:24px 20px 60px; flex:1; }
+    .admin-section-title { font-family:'Cormorant Garamond',serif; font-weight:700; font-size:1.4rem; color:var(--cream); margin-bottom:4px; }
+    .admin-section-sub { font-size:0.75rem; color:var(--text-muted); margin-bottom:20px; }
+    .admin-field-group { margin-bottom:18px; }
+    .admin-field-label { font-size:0.64rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-muted); margin-bottom:6px; }
+    .admin-input { background:rgba(245,240,232,0.05); border:1px solid rgba(245,240,232,0.1); border-radius:8px; color:var(--cream); font-size:0.88rem; font-weight:500; padding:10px 14px; width:100%; outline:none; transition:all 0.2s; font-family:'Outfit',sans-serif; box-sizing:border-box; }
+    .admin-input:focus { border-color:rgba(201,168,76,0.5); background:rgba(201,168,76,0.04); }
+    .admin-input::placeholder { color:var(--text-muted); }
+    .admin-input[readonly] { text-overflow:ellipsis; overflow:hidden; }
+    select.admin-input { cursor:pointer; }
+    .admin-btn { display:inline-flex; align-items:center; gap:6px; padding:9px 18px; border-radius:8px; font-size:0.8rem; font-weight:600; border:none; cursor:pointer; transition:all 0.2s; font-family:'Outfit',sans-serif; }
+    .admin-btn-primary { background:var(--green-500); color:var(--cream); }
+    .admin-btn-primary:hover { background:var(--green-400); }
+    .admin-btn-primary:disabled { background:var(--surface-3); color:var(--text-muted); cursor:not-allowed; }
+    .admin-btn-secondary { background:rgba(245,240,232,0.06); color:var(--text-secondary); border:1px solid rgba(245,240,232,0.1); }
+    .admin-btn-secondary:hover { background:rgba(245,240,232,0.1); color:var(--cream); }
+    .admin-btn-sm { padding:6px 12px; font-size:0.72rem; }
+    .admin-btn-icon { padding:5px 8px; background:transparent; color:var(--text-muted); border:none; cursor:pointer; font-size:0.9rem; transition:color 0.2s; }
+    .admin-btn-icon:hover { color:var(--red); }
+    .admin-table-wrap { border-radius:10px; overflow-x:auto; border:1px solid var(--border); margin-bottom:8px; }
+    .admin-table-head { display:grid; padding:9px 14px; background:var(--surface-2); font-size:0.6rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-muted); border-bottom:1px solid var(--border); min-width:480px; }
+    .admin-table-row { display:grid; padding:11px 14px; align-items:center; border-bottom:1px solid rgba(245,240,232,0.05); min-width:480px; }
+    .admin-table-row:last-child { border-bottom:none; }
+    .admin-inline-input { background:transparent; border:none; border-bottom:1px solid transparent; color:var(--cream); font-size:0.85rem; font-weight:500; padding:2px 4px; width:100%; outline:none; transition:border-color 0.2s; font-family:'Outfit',sans-serif; }
+    .admin-inline-input:focus { border-bottom-color:var(--gold); background:rgba(201,168,76,0.04); border-radius:3px 3px 0 0; }
+    .admin-inline-input::placeholder { color:var(--text-muted); }
+    .admin-actions-row { display:flex; gap:8px; justify-content:flex-end; margin-top:16px; }
+    .admin-grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    @media(max-width:600px){ .admin-grid-2 { grid-template-columns:1fr; } .admin-content { padding:16px 14px 60px; } .admin-topbar { padding:0 14px; } }
+    .admin-status-row { display:flex; align-items:center; gap:8px; font-size:0.72rem; color:var(--text-muted); margin-top:6px; }
+    .admin-status-dot { width:6px; height:6px; border-radius:50%; background:var(--green-300); flex-shrink:0; animation:pulse 2s ease-in-out infinite; }
+    .admin-score-round-tabs { display:flex; gap:4px; background:var(--surface-1); border:1px solid var(--border); border-radius:8px; padding:3px; margin-bottom:16px; width:fit-content; }
+    .admin-score-rtab { padding:6px 16px; border-radius:6px; border:none; font-family:'Outfit',sans-serif; font-size:0.78rem; font-weight:600; cursor:pointer; transition:all 0.2s; }
+    .admin-score-rtab.active { background:var(--green-500); color:var(--cream); }
+    .admin-score-rtab.inactive { background:transparent; color:var(--text-muted); }
+    .admin-score-input { background:rgba(245,240,232,0.06); border:1px solid rgba(245,240,232,0.1); border-radius:6px; color:var(--cream); font-size:0.95rem; font-weight:700; padding:6px 4px; width:58px; text-align:center; outline:none; font-family:'Outfit',sans-serif; transition:all 0.2s; -webkit-appearance:none; }
+    .admin-score-input:focus { border-color:var(--gold); background:rgba(0,103,71,0.12); }
+    .admin-score-input.has-val { border-color:rgba(62,185,127,0.3); background:rgba(62,185,127,0.06); }
+    .admin-progress-bar { height:4px; background:var(--surface-2); border-radius:2px; overflow:hidden; flex:1; }
+    .admin-progress-fill { height:100%; background:var(--green-300); border-radius:2px; transition:width 0.4s ease; }
+    .admin-toast { position:fixed; top:16px; left:50%; transform:translateX(-50%) translateY(-80px); background:var(--surface-1); border:1.5px solid rgba(62,185,127,0.4); color:var(--green-300); padding:14px 28px; border-radius:12px; font-size:0.95rem; font-weight:600; z-index:9999; transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1); pointer-events:none; white-space:nowrap; box-shadow:0 8px 30px rgba(0,0,0,0.5); }
+    .admin-toast.show { transform:translateX(-50%) translateY(40px); }
+    .admin-toast.err { border-color:rgba(212,68,68,0.4); color:var(--red); background:var(--surface-1); }
+    .admin-year-pills { display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
+    .admin-year-pill { display:inline-flex; align-items:center; gap:5px; font-size:0.68rem; font-weight:600; padding:4px 12px; border-radius:20px; }
+    .admin-year-pill.active { background:rgba(201,168,76,0.15); color:var(--gold); border:1px solid rgba(201,168,76,0.3); }
+    .admin-year-pill.inactive { background:rgba(62,185,127,0.08); color:var(--green-300); border:1px solid rgba(62,185,127,0.2); }
+    .admin-search-input { background:rgba(245,240,232,0.05); border:1px solid rgba(245,240,232,0.1); border-radius:8px; color:var(--cream); font-size:0.85rem; padding:9px 14px; width:100%; outline:none; font-family:'Outfit',sans-serif; margin-bottom:10px; }
+
+    .skins-team-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+    .skins-team { text-align:center; flex:1; }
+    .skins-team-name { font-size:0.7rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--text-muted); margin-bottom:4px; }
+    .skins-team-count { font-family:'Cormorant Garamond',serif; font-size:2.2rem; font-weight:700; line-height:1; }
+    .skins-team-label { font-size:0.65rem; color:var(--text-muted); }
+    .skins-vs { font-size:0.72rem; color:var(--text-muted); font-weight:600; }
+    .skins-bar { display:flex; height:6px; border-radius:3px; overflow:hidden; background:rgba(245,240,232,0.06); }
+    .skins-bar-fill { background:var(--gold); border-radius:3px 0 0 3px; transition:width 0.3s ease; }
+    .skins-lead-text { text-align:center; font-size:0.75rem; font-weight:600; margin-top:8px; }
+    .skins-round-card { background:var(--surface-1); border:1px solid var(--border); border-radius:var(--radius); margin-bottom:8px; overflow:hidden; }
+    .skins-round-head { display:flex; justify-content:space-between; align-items:center; padding:10px 14px; cursor:pointer; }
+    .skins-round-body { border-top:1px solid var(--border); padding:0 14px 12px; }
+    .skins-match-title { font-size:0.62rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); margin:12px 0 8px; }
+    .skins-match-players { display:flex; justify-content:space-between; font-size:0.78rem; margin-bottom:8px; }
+    .skins-grid { display:grid; grid-template-columns:1fr auto 1fr; gap:3px 10px; background:var(--surface-2); border-radius:8px; padding:8px 12px; font-size:0.76rem; }
+    .skins-grid-head { font-size:0.6rem; font-weight:600; letter-spacing:0.08em; color:var(--text-muted); }
+    .skins-grid-label { text-align:center; color:var(--text-muted); font-size:0.66rem; }
+    .skins-grid-total { border-top:1px solid var(--border); padding-top:3px; }
+    .admin-header-btn { display:inline-block; font-size:0.7rem; font-weight:500; color:var(--text-secondary); cursor:pointer; padding:4px 14px; border:1px solid var(--border); border-radius:var(--radius-sm); background:rgba(245,240,232,0.03); transition:all var(--transition); }
+    .admin-header-btn:hover { color:var(--text-primary); }
 
     @media(max-width:480px){
       html{font-size:13px}
@@ -386,6 +583,39 @@
 </head>
 <body>
   <div class="app">
+    <!-- Setup Screen (shown when no Sheet ID configured) -->
+    <div class="setup-screen" id="setupScreen">
+      <div class="setup-icon">⛳</div>
+      <div class="setup-title">Golf Leaderboard</div>
+      <div class="setup-subtitle">A live tournament leaderboard powered by Google Sheets.<br>Follow the steps below to connect your data.</div>
+      <div class="setup-steps">
+        <div class="setup-step">
+          <div class="setup-step-num">Step 1</div>
+          <div class="setup-step-title">Set up your Google Sheet</div>
+          <div class="setup-step-body">Create a Google Sheet with the required tabs: <code>Config</code>, <code>Courses</code>, <code>Scores YYYY</code>, and <code>Rounds YYYY</code>. See the README for the exact column layouts. Make sure the sheet is published (File → Share → Publish to web).</div>
+        </div>
+        <div class="setup-step">
+          <div class="setup-step-num">Step 2</div>
+          <div class="setup-step-title">Find your Google Sheet ID</div>
+          <div class="setup-step-body">Open your Google Sheet. The Sheet ID is the long string in the URL between <code>/d/</code> and the next <code>/</code>.<span class="tip">Example: docs.google.com/spreadsheets/d/<strong style="color:var(--gold)">1YlBA...veGU</strong>/edit</span></div>
+        </div>
+        <div class="setup-step">
+          <div class="setup-step-num">Step 3</div>
+          <div class="setup-step-title">Open this file in a text editor</div>
+          <div class="setup-step-body">
+            <strong style="color:var(--cream)">Mac:</strong> Open TextEdit → Settings → "Open and Save" tab → check "Display HTML files as HTML code instead of formatted text". Then open <code>index.html</code>.<br><br>
+            <strong style="color:var(--cream)">Windows:</strong> Right-click <code>index.html</code> → Open with → Notepad.<br><br>
+            Or use any code editor (VS Code, Sublime Text, etc.)
+          </div>
+        </div>
+        <div class="setup-step">
+          <div class="setup-step-num">Step 4</div>
+          <div class="setup-step-title">Paste your Sheet ID</div>
+          <div class="setup-step-body">Near the top of the file, find the line:<br><br><code>const SHEET_ID = '';</code><br><br>Paste your Sheet ID between the quotes:<br><br><code>const SHEET_ID = 'your-sheet-id-here';</code><br><br>Save the file and open it in a browser, or deploy to GitHub Pages.</div>
+        </div>
+      </div>
+      <div class="setup-note">For detailed instructions on Google Sheet structure, tab layouts, and deployment, see the README on GitHub.</div>
+    </div>
     <header class="header">
       <div class="header-badge"><span class="live-dot"></span>Live Scoring</div>
       <h1 id="siteName">OPGA Invitational</h1>
@@ -430,6 +660,20 @@
       <div class="chart-wrap">
         <div class="chart-inner"><canvas id="leadChart"></canvas></div>
         <div class="chart-hint">↑ Higher on chart = better (lower net-to-par)</div>
+      </div>
+    </div>
+
+
+    <!-- Skins Match -->
+    <div class="section" id="skinsSection" style="display:none">
+      <div class="section-head">
+        <span class="section-title">Skins Match</span>
+        <span class="section-line"></span>
+        <span class="section-label">2v2 NET</span>
+      </div>
+      <div class="card" id="skinsCard" style="cursor:pointer" onclick="openSkinsModal()">
+        <div id="skinsSummary"></div>
+        <div style="text-align:center;font-size:0.62rem;color:var(--text-muted);margin-top:8px;font-style:italic">Tap for full skins breakdown</div>
       </div>
     </div>
 
@@ -495,39 +739,87 @@
       </div>
 
       <div class="section">
-        <div class="section-head">
+        <div class="section-head collapsible" data-collapse="championsWall">
           <span class="section-title">Champions Wall</span>
           <span class="section-line"></span>
+          <span class="section-chevron">▾</span>
         </div>
-        <div class="champions-grid" id="championsWall"></div>
+        <div class="section-body" id="championsWallBody">
+          <div class="champions-grid" id="championsWall"></div>
+        </div>
       </div>
 
       <div class="section" id="teamRecordsSection">
-        <div class="section-head">
+        <div class="section-head collapsible" data-collapse="teamRecordsCard">
           <span class="section-title">Team Records</span>
           <span class="section-line"></span>
+          <span class="section-chevron">▾</span>
         </div>
-        <div class="card" id="teamRecordsCard"></div>
+        <div class="section-body" id="teamRecordsBody">
+          <div class="card" id="teamRecordsCard"></div>
+        </div>
       </div>
 
       <div class="section">
-        <div class="section-head">
+        <div class="section-head collapsible" data-collapse="indivRecordsCard">
           <span class="section-title">Individual Records</span>
           <span class="section-line"></span>
+          <span class="section-chevron">▾</span>
         </div>
-        <div class="card" id="indivRecordsCard"></div>
+        <div class="section-body" id="indivRecordsBody">
+          <div class="card" id="indivRecordsCard"></div>
+        </div>
       </div>
 
       <div class="section">
-        <div class="section-head">
+        <div class="section-head collapsible" data-collapse="playerHistoryCard">
+          <span class="section-title">Player History</span>
+          <span class="section-line"></span>
+          <span class="section-chevron">▾</span>
+        </div>
+        <div class="section-body" id="playerHistoryBody">
+          <div class="card" id="playerHistoryCard"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-head collapsible" data-collapse="courseHistoryCard">
           <span class="section-title">Course History</span>
           <span class="section-line"></span>
+          <span class="section-chevron">▾</span>
         </div>
-        <div class="card" id="courseHistoryCard"></div>
+        <div class="section-body" id="courseHistoryBody">
+          <div class="card" id="courseHistoryCard"></div>
+        </div>
       </div>
     </div>
 
+    <div class="info-tabs-wrap" id="infoTabsWrap" style="display:none"></div>
+
     <div class="footer" id="siteFooter">Live Leaderboard</div>
+    <div style="text-align:center;padding-bottom:24px"><span class="admin-header-btn" id="adminHeaderBtn">Setup</span></div>
+  <button class="score-entry-fab" id="scoreEntryFab" style="display:none"><span class="fab-dot"></span>Enter Scores</button>
+  <div class="pin-modal-overlay" id="pinModal"><div class="pin-sheet"><div class="pin-sheet-title" id="pinTitle">Enter PIN</div><div class="pin-sheet-sub" id="pinSub">Enter your PIN to continue</div><div class="pin-dots-row" id="pinDots"><div class="pin-dot-el"></div><div class="pin-dot-el"></div><div class="pin-dot-el"></div><div class="pin-dot-el"></div></div><div class="numpad-grid"><button class="np-btn" data-n="1">1</button><button class="np-btn" data-n="2">2</button><button class="np-btn" data-n="3">3</button><button class="np-btn" data-n="4">4</button><button class="np-btn" data-n="5">5</button><button class="np-btn" data-n="6">6</button><button class="np-btn" data-n="7">7</button><button class="np-btn" data-n="8">8</button><button class="np-btn" data-n="9">9</button><button class="np-btn np-empty"></button><button class="np-btn" data-n="0">0</button><button class="np-btn np-del" id="pinDel">⌫</button></div><div class="pin-error-msg" id="pinError"></div></div></div>
+  <div class="modal-overlay" id="scorerModal"><div class="scorer-sheet"><div class="scorer-header"><div class="scorer-header-top"><div class="scorer-title-area"><div class="scorer-title-text">Enter Scores</div><div class="scorer-course-text" id="scorerCourseName"></div></div><button class="scorer-back-btn" id="scorerClose">✕ Close</button></div><div style="display:flex;gap:4px;margin-bottom:8px" id="scorerModeToggle"><button class="scorer-rtab active" id="scorerModeScores" onclick="switchScorerMode('scores')">Scores</button><button class="scorer-rtab inactive" id="scorerModeSkins" onclick="switchScorerMode('skins')">Skins</button></div><div class="scorer-round-tabs" id="scorerRoundTabs"></div><div class="scorer-progress-row"><div class="scorer-prog-bar"><div class="scorer-prog-fill" id="scorerProgFill" style="width:0%"></div></div><div class="scorer-prog-label" id="scorerProgLabel">0 / 0 done</div></div></div><div class="scorer-body" id="scorerBody"></div></div></div>
+  <div class="admin-overlay" id="adminOverlay"><div class="admin-panel"><div class="admin-topbar"><div class="admin-topbar-left"><div><div class="admin-brand" id="adminBrandName">Admin</div><div class="admin-brand-sub">Tournament Dashboard</div></div></div><button class="admin-close-btn" id="adminClose">← Back to Leaderboard</button></div><div class="admin-tabs" id="adminTabs"><button class="admin-tab active" data-tab="config">Config</button><button class="admin-tab" data-tab="courses">Courses</button><button class="admin-tab" data-tab="rounds">Rounds</button><button class="admin-tab" data-tab="players">Players</button><button class="admin-tab" data-tab="scores">Scores</button><button class="admin-tab" data-tab="matchups">Matchups</button><button class="admin-tab" data-tab="infotabs">Info Tabs</button></div><div class="admin-content" id="adminContent"></div></div></div>
+  <div class="admin-toast" id="adminToast"></div>
+  </div>
+
+
+  <!-- Skins Modal -->
+  <div class="modal-overlay" id="skinsModal">
+    <div class="modal-sheet">
+      <div class="info-modal-title">Skins Match</div>
+      <div id="skinsModalBody"></div>
+    </div>
+  </div>
+
+  <!-- Info Modal -->
+  <div class="modal-overlay" id="infoModal">
+    <div class="modal-sheet">
+      <div class="info-modal-title" id="infoModalTitle"></div>
+      <div id="infoModalBody"></div>
+    </div>
   </div>
 
   <!-- Player Modal -->
@@ -608,6 +900,7 @@ async function load(){
   totalRounds=Math.max(1,Object.keys(roundMap).length);
   if(scoresRaw.length>1){
     players=[];
+    
     for(let i=1;i<scoresRaw.length;i++){
       const r=scoresRaw[i];if(!r[0]||!r[0].trim())continue;
       const pRounds={};
@@ -618,6 +911,7 @@ async function load(){
   teamMode=!players.every(p=>!p.team);
   buildViewButtons();
   buildHcHeader();
+  await loadSkins();
   render();
   document.getElementById('lastUpdate').textContent='Updated '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'});
 }
@@ -697,6 +991,7 @@ function render(){
   // Show/hide team sections based on teamMode
   document.getElementById('teamSection').style.display=teamMode?'block':'none';
   document.getElementById('chartSection').style.display=teamMode?'block':'none';
+  renderSkinsSection();
   const complete=isTournamentComplete();
   renderChampionState(complete);
   renderCourseInfo();
@@ -741,8 +1036,11 @@ function renderChampionState(complete){
 
   // Individual champion
   const indivData=players.map(p=>{const v=calcPlayerView(p,'tournament');return{name:p.name,netToPar:v.netToPar,net:v.net}}).sort((a,b)=>a.netToPar-b.netToPar||a.net-b.net);
+  const tiedIndiv=indivData.filter(d=>d.netToPar===indivData[0].netToPar&&d.net===indivData[0].net);
+  const indivNames=tiedIndiv.map(d=>'<strong>'+esc(d.name)+'</strong>').join(' & ');
 
-  document.querySelector('.champion-label').innerHTML=`<span style="font-size:1.6em;vertical-align:middle;position:relative;top:-1px">🏆</span> ${currentYear} Champions`;
+  // Banner label — "Champion" singular for individual-only, "Champions" for teams or ties
+  document.querySelector('.champion-label').innerHTML=`<span style="font-size:1.6em;vertical-align:middle;position:relative;top:-1px">🏆</span> ${currentYear} ${teamMode?'Champions':(tiedIndiv.length>1?'Champions':'Champion')}`;
 
   if(teamMode&&teamData.length){
     const tiedTeams=teamData.filter(t=>t.netToPar===teamData[0].netToPar);
@@ -755,16 +1053,24 @@ function renderChampionState(complete){
       else{document.getElementById('champMargin').textContent='Won by '+spread+' stroke'+(spread!==1?'s':'')+' over '+teamData[1].name}
     }
     // Make banner clickable to open winning team modal (only if single winner)
-    if(tiedTeams.length===1){banner.style.cursor='pointer';banner.dataset.champTeam=tiedTeams[0].name}
-    else{banner.style.cursor='default';banner.dataset.champTeam=''}
+    if(tiedTeams.length===1){banner.style.cursor='pointer';banner.dataset.champTeam=tiedTeams[0].name;banner.dataset.champPlayer=''}
+    else{banner.style.cursor='default';banner.dataset.champTeam='';banner.dataset.champPlayer=''}
   }else{
     document.getElementById('champTeam').style.display='none';
     document.getElementById('champMargin').style.display='none';
-    banner.style.cursor='default';banner.dataset.champTeam='';
+    // Make banner clickable for individual champion (single winner only)
+    if(tiedIndiv.length===1){banner.style.cursor='pointer';banner.dataset.champTeam='';banner.dataset.champPlayer=tiedIndiv[0].name}
+    else{banner.style.cursor='default';banner.dataset.champTeam='';banner.dataset.champPlayer=''}
   }
-  const tiedIndiv=indivData.filter(d=>d.netToPar===indivData[0].netToPar&&d.net===indivData[0].net);
-  const indivNames=tiedIndiv.map(d=>'<strong>'+esc(d.name)+'</strong>').join(' & ');
-  document.getElementById('champIndividual').innerHTML='<span style="font-size:0.72em;vertical-align:middle;position:relative;top:-1px">🏆</span> Individual Champion'+(tiedIndiv.length>1?'s':'')+': '+indivNames+' ('+fmtPar(indivData[0].netToPar)+')';
+
+  // Individual champion display
+  if(teamMode){
+    document.getElementById('champIndividual').innerHTML='<span style="font-size:0.72em;vertical-align:middle;position:relative;top:-1px">🏆</span> Individual Champion'+(tiedIndiv.length>1?'s':'')+': '+indivNames+' ('+fmtPar(indivData[0].netToPar)+')';
+    document.getElementById('champIndividual').style.fontSize='';
+  }else{
+    document.getElementById('champIndividual').innerHTML=indivNames+' <span style="font-weight:400;color:var(--text-secondary)">('+fmtPar(indivData[0].netToPar)+')</span>';
+    document.getElementById('champIndividual').style.fontSize='1.1rem';
+  }
 
   // Best Round & Best Nine for banner
   let bestRoundList=[], bestNines=[];
@@ -784,14 +1090,14 @@ function renderChampionState(complete){
     const bestNtp=bestRoundList[0].ntp;
     const tiedBR=bestRoundList.filter(b=>b.ntp===bestNtp);
     const brNames=[...new Set(tiedBR.map(b=>esc(b.name)))].join(' & ');
-    accoladesHtml+=`<span>Best Round: <strong>${brNames}</strong> ${fmtPar(bestNtp)}${tiedBR.length===1?' · R'+tiedBR[0].rn:''}</span>`;
+    accoladesHtml+=`<span>Best Round: <strong>${brNames}</strong> ${tiedBR.length>1?'Tie ':''}${fmtPar(bestNtp)}${tiedBR.length===1?' · R'+tiedBR[0].rn:''}</span>`;
   }
   if(bestNines.length){
     bestNines.sort((a,b)=>a.score-b.score);
     const bestScore=bestNines[0].score;
     const tiedBN=bestNines.filter(b=>b.score===bestScore);
     const bnNames=[...new Set(tiedBN.map(b=>esc(b.name)))].join(' & ');
-    accoladesHtml+=`<span>Best Nine: <strong>${bnNames}</strong> ${fmtPar(bestScore)}${tiedBN.length===1?' · '+tiedBN[0].label:''}</span>`;
+    accoladesHtml+=`<span>Best Nine: <strong>${bnNames}</strong> ${tiedBN.length>1?'Tie ':''}${fmtPar(bestScore)}${tiedBN.length===1?' · '+tiedBN[0].label:''}</span>`;
   }
   document.getElementById('champAccolades').innerHTML=accoladesHtml;
 
@@ -815,7 +1121,7 @@ function renderCourseInfo(){
       document.getElementById('ciRound').textContent='Round '+rn;
       document.getElementById('ciStats').innerHTML=`
         <div class="course-info-stat"><div class="course-info-stat-label">Par</div><div class="course-info-stat-val">${c.par}</div></div>
-        <div class="course-info-stat"><div class="course-info-stat-label">Rating</div><div class="course-info-stat-val">${c.rating}</div></div>
+        <div class="course-info-stat"><div class="course-info-stat-label">Rating</div><div class="course-info-stat-val">${parseFloat(c.rating).toFixed(1)}</div></div>
         <div class="course-info-stat"><div class="course-info-stat-label">Slope</div><div class="course-info-stat-val">${c.slope}</div></div>`;
       card.classList.add('show');
     }else{card.classList.remove('show')}
@@ -825,7 +1131,7 @@ function renderCourseInfo(){
   let html='';
   for(let rn=1;rn<=totalRounds;rn++){
     const cName=getCourseName(rn);const c=courses[cName];
-    if(cName&&c){html+=`<tr><td>R${rn}</td><td class="course-name-cell">${esc(cName)}</td><td>${c.par}</td><td>${c.rating}</td><td>${c.slope}</td></tr>`}
+    if(cName&&c){html+=`<tr><td>R${rn}</td><td class="course-name-cell">${esc(cName)}</td><td>${c.par}</td><td>${parseFloat(c.rating).toFixed(1)}</td><td>${c.slope}</td></tr>`}
     else{html+=`<tr><td>R${rn}</td><td style="color:var(--text-muted)">—</td><td>—</td><td>—</td><td>—</td></tr>`}
   }
   document.getElementById('coursesBody').innerHTML=html;
@@ -919,18 +1225,22 @@ function renderTeams(complete){
   const teamData=Object.entries(teamMap).map(([name,members])=>{
     let ntp=0,thru=0;for(const m of members){const v=calcPlayerView(m,currentView);ntp+=v.netToPar;thru+=v.thru}
     return{name,netToPar:ntp,thru,lastNine:calcLastNine(members)}
-  }).sort((a,b)=>{if(a.netToPar!==b.netToPar)return a.netToPar-b.netToPar;if(a.lastNine===null&&b.lastNine===null)return 0;if(a.lastNine===null)return 1;if(b.lastNine===null)return-1;return a.lastNine-b.lastNine});
+  }).sort((a,b)=>a.netToPar-b.netToPar);
   const container=document.getElementById('teamCard');
   if(!teamData.length){container.innerHTML='<div class="empty-state">No team data available</div>';return}
+  // Assign ranks with ties
+  teamData.forEach((t,i)=>{if(i>0&&t.netToPar===teamData[i-1].netToPar){t.rank=teamData[i-1].rank}else{t.rank=i+1}});
+  const teamRankCounts={};teamData.forEach(t=>{teamRankCounts[t.rank]=(teamRankCounts[t.rank]||0)+1});
+  teamData.forEach(t=>{t.tied=teamRankCounts[t.rank]>1});
   let html=teamData.map((t,i)=>{
-    const ln=t.lastNine!==null?` <span class="last-nine-badge ${parClass(t.lastNine)}">Last 9: ${fmtPar(t.lastNine)}</span>`:'';
-    const champClass=isFinal&&t.netToPar===teamData[0].netToPar?' champion':'';
-    return`<div class="team-row${champClass}" data-team="${esc(t.name)}"><div class="team-rank rank-${i+1}">${i+1}</div><div><div class="team-name">${esc(t.name)}</div><div class="team-thru">Thru ${t.thru}${ln}</div></div><div></div><div class="team-score ${parClass(t.netToPar)}">${fmtPar(t.netToPar)}</div></div>`;
+    const ln='';
+    const champClass=isFinal&&t.rank===1?' champion':'';
+    return`<div class="team-row${champClass}" data-team="${esc(t.name)}"><div class="team-rank rank-${t.rank}">${t.tied?'T':''}${t.rank}</div><div><div class="team-name">${esc(t.name)}</div><div class="team-thru">Thru ${t.thru}${ln}</div></div><div></div><div class="team-score ${t.thru>0?parClass(t.netToPar):''}">${t.thru>0?fmtPar(t.netToPar):'—'}</div></div>`;
   }).join('');
   if(teamData.length>=2){
     const spread=Math.abs(teamData[0].netToPar-teamData[1].netToPar);
     const pct=spread===0?50:Math.min(85,50+spread*3);
-    const barColor=isFinal?(spread===0?'var(--text-muted)':'var(--gold)'):(spread===0?'var(--text-muted)':'var(--green-300)');
+    const barColor=isFinal?(spread===0?'var(--text-muted)':'var(--green-300)'):(spread===0?'var(--text-muted)':'var(--green-300)');
     const verb=isFinal?(spread===0?'Teams tied':'wins by'):(spread===0?'Teams are tied':'leads by');
     const label=spread===0?verb:(esc(teamData[0].name)+' '+verb+' '+spread+' stroke'+(spread!==1?'s':''));
     html+=`<div class="diff-bar-wrap"><div class="diff-bar-label">${label}</div><div class="diff-bar"><div class="diff-bar-fill" style="width:${pct}%;background:${barColor}"></div></div></div>`;
@@ -963,29 +1273,30 @@ function calcLastNine(members){
 function renderIndividual(complete){
   const isTourn=currentView==='tournament';
   const isFinal=complete&&isTourn;
-  // Official ranking sort (always by netToPar)
-  const data=players.map(p=>{const v=calcPlayerView(p,currentView);return{player:p,...v}}).filter(d=>d.thru>0).sort((a,b)=>a.netToPar-b.netToPar||a.net-b.net);
-  const arrows=computeArrows(data);
-  // Assign official rank with ties
-  data.forEach((d,i)=>{
-    if(i>0&&d.netToPar===data[i-1].netToPar&&d.net===data[i-1].net){d.rank=data[i-1].rank}else{d.rank=i+1}
+  // Split into scored and unscored
+  const allData=players.map(p=>{const v=calcPlayerView(p,currentView);return{player:p,...v}});
+  const scored=allData.filter(d=>d.thru>0).sort((a,b)=>a.netToPar-b.netToPar||a.net-b.net);
+  const unscored=allData.filter(d=>d.thru===0);
+  const arrows=computeArrows(scored);
+  // Assign official rank with ties (scored only)
+  scored.forEach((d,i)=>{
+    if(i>0&&d.netToPar===scored[i-1].netToPar&&d.net===scored[i-1].net){d.rank=scored[i-1].rank}else{d.rank=i+1}
   });
-  const rankCounts={};data.forEach(d=>{rankCounts[d.rank]=(rankCounts[d.rank]||0)+1});
-  data.forEach(d=>{d.tied=rankCounts[d.rank]>1});
+  const rankCounts={};scored.forEach(d=>{rankCounts[d.rank]=(rankCounts[d.rank]||0)+1});
+  scored.forEach(d=>{d.tied=rankCounts[d.rank]>1});
   // Re-sort by selected column for display
   if(currentSort!=='netToPar'){
     const key=currentSort;
-    data.sort((a,b)=>a[key]-b[key]);
+    scored.sort((a,b)=>a[key]-b[key]);
   }
   // Update header active state
   document.querySelectorAll('#lbHeader .sortable').forEach(s=>{s.classList.toggle('sort-active',s.dataset.sort===currentSort)});
   const body=document.getElementById('lbBody');
-  if(!data.length){body.innerHTML='<div class="empty-state">No scores yet</div>';return}
-  body.innerHTML=data.map((d,i)=>{
+  if(!scored.length&&!unscored.length){body.innerHTML='<div class="empty-state">No scores yet</div>';return}
+  let html=scored.map((d,i)=>{
     const pos=d.rank,arrowHtml=arrows[d.player.name]||'';
     let dotsHtml='';
     if(currentView==='tournament'){
-      // Check if all rounds complete for this player
       const rScores=[];
       let allDone=true;
       for(let rn=1;rn<=totalRounds;rn++){
@@ -996,7 +1307,6 @@ function renderIndividual(complete){
       if(allDone){
         const sorted=[...rScores].sort((a,b)=>a.ntp-b.ntp);
         const rankColors=['rank-best','rank-good','rank-poor','rank-worst'];
-        // Assign rank to each, handling ties
         const colorMap={};
         sorted.forEach((s,i)=>{
           if(i>0&&s.ntp===sorted[i-1].ntp){colorMap[s.rn]=colorMap[sorted[i-1].rn]}
@@ -1013,6 +1323,14 @@ function renderIndividual(complete){
       <span class="lb-val">${d.net}</span><span class="lb-val net-par ${parClass(d.netToPar)}">${fmtPar(d.netToPar)}</span><span class="lb-val">${d.gross}</span><span class="lb-thru">${d.thru}</span>
     </div>`;
   }).join('');
+  if(unscored.length){
+    html+=unscored.map(d=>`<div class="lb-row" data-player="${esc(d.player.name)}" style="opacity:0.5">
+      <span class="lb-pos">—</span>
+      <div class="lb-name-cell"><div class="lb-player-name">${esc(d.player.name)}</div>${teamMode?`<div class="lb-team-tag">${esc(d.player.team)}</div>`:''}</div>
+      <span class="lb-val">—</span><span class="lb-val">—</span><span class="lb-val">—</span><span class="lb-thru">0</span>
+    </div>`).join('');
+  }
+  body.innerHTML=html;
   // Attach click handlers
   body.querySelectorAll('.lb-row[data-player]').forEach(row=>{
     row.addEventListener('click',()=>openPlayerModal(row.dataset.player));
@@ -1074,6 +1392,7 @@ function renderChart(){
       if(!ok)break;scores[tName]=tp;
     }
     if(!ok)break;
+    if(!labels.length){labels.push('E');teamNames.forEach(t=>{datasets[t].push(0)})}
     labels.push(cp.label);
     for(const t of teamNames){const prev=datasets[t].length?datasets[t][datasets[t].length-1]:0;datasets[t].push(prev+scores[t])}
   }
@@ -1087,7 +1406,7 @@ function renderChart(){
       responsive:true,maintainAspectRatio:false,
       interaction:{mode:'index',intersect:false},
       plugins:{
-        legend:{labels:{color:'#a8b5a0',font:{family:'Outfit',size:12},usePointStyle:true,pointStyle:'circle'}},
+        legend:{labels:{color:'#a8b5a0',font:{family:'Outfit',size:12},boxWidth:12,boxHeight:12}},
         tooltip:{backgroundColor:'rgba(15,46,29,0.95)',borderColor:'rgba(245,240,232,0.15)',borderWidth:1,titleFont:{family:'Outfit',size:13},bodyFont:{family:'Outfit',size:12},titleColor:'#f5f0e8',bodyColor:'#a8b5a0',padding:10,cornerRadius:8,callbacks:{label:function(ctx){const v=ctx.parsed.y;return` ${ctx.dataset.label}: ${v===0?'E':(v>0?'+'+v:v)}`}}}
       },
       scales:{
@@ -1120,16 +1439,22 @@ function renderHistory(){
       if(byNet.length>0){
         const bestNtp=byNet[0].netToPar;
         const tied1st=byNet.filter(p=>p.netToPar===bestNtp);
-        const label1=tied1st.length>1?'T1':'1st';
-        const names1=tied1st.map(p=>esc(p.name)).join(' & ');
-        html+=`<div class="history-place"><span><span class="history-medal gold">${label1}</span>${names1}</span><span class="history-place-score">${tied1st.length===1?tied1st[0].gross+' / ':'' }${fmtPar(bestNtp)}</span></div>`;
-        const rest=byNet.filter(p=>p.netToPar!==bestNtp);
-        if(rest.length>0){
-          const secondNtp=rest[0].netToPar;
-          const tied2nd=rest.filter(p=>p.netToPar===secondNtp);
-          const label2=tied2nd.length>1?'T2':'2nd';
-          const names2=tied2nd.map(p=>esc(p.name)).join(' & ');
-          html+=`<div class="history-place"><span><span class="history-medal silver">${label2}</span>${names2}</span><span class="history-place-score">${tied2nd.length===1?tied2nd[0].gross+' / ':''}${fmtPar(secondNtp)}</span></div>`;
+        if(tied1st.length>1){
+          tied1st.sort((a,b)=>a.gross-b.gross);
+          for(const p of tied1st){html+=`<div class="history-place"><span><span class="history-medal gold">T1</span>${esc(p.name)}</span><span class="history-place-score">${p.gross} / ${fmtPar(bestNtp)}</span></div>`}
+        }else{
+          html+=`<div class="history-place"><span><span class="history-medal gold">1st</span>${esc(tied1st[0].name)}</span><span class="history-place-score">${tied1st[0].gross} / ${fmtPar(bestNtp)}</span></div>`;
+          const rest=byNet.filter(p=>p.netToPar!==bestNtp);
+          if(rest.length>0){
+            const secondNtp=rest[0].netToPar;
+            const tied2nd=rest.filter(p=>p.netToPar===secondNtp);
+            if(tied2nd.length>1){
+              const names2=tied2nd.map(p=>esc(p.name)).join(' & ');
+              html+=`<div class="history-place"><span><span class="history-medal silver">T2</span>${names2}</span><span class="history-place-score">${fmtPar(secondNtp)}</span></div>`;
+            }else{
+              html+=`<div class="history-place"><span><span class="history-medal silver">2nd</span>${esc(rest[0].name)}</span><span class="history-place-score">${rest[0].gross} / ${fmtPar(secondNtp)}</span></div>`;
+            }
+          }
         }
       }
       if(!byNet.length&&rp.length)html+='<div class="history-upcoming">In progress…</div>';
@@ -1190,7 +1515,7 @@ function openPlayerModal(name){
   let roundsHtml='';
   if(currentView==='tournament'){
     document.getElementById('pmRoundsTitle').innerHTML='<span>Round Breakdown (Gross)</span>';
-    for(let rn=1;rn<=totalRounds;rn++){const res=calcPlayerRound(player,rn);const cn=getCourseName(rn);roundsHtml+=`<div class="modal-round-row"><div><span class="modal-round-label">Round ${rn}</span>${cn?'<div style="font-size:0.72rem;color:var(--text-muted);margin-top:1px">'+esc(cn)+'</div>':''}</div><span class="modal-round-val">${res&&res.thru>0?res.gross:'—'}</span></div>`}
+    for(let rn=1;rn<=totalRounds;rn++){const res=calcPlayerRound(player,rn);const cn=getCourseName(rn);roundsHtml+=`<div class="modal-round-row" data-pm-round="${rn}" style="cursor:pointer"><div><span class="modal-round-label">Round ${rn}</span>${cn?'<div style="font-size:0.72rem;color:var(--text-muted);margin-top:1px">'+esc(cn)+'</div>':''}</div><span class="modal-round-val">${res&&res.thru>0?res.gross:'—'}</span></div>`}
     document.getElementById('pmSummary').textContent=`Handicap Index: ${player.hi}`;
   }else{
     const rn=parseInt(currentView);
@@ -1201,7 +1526,20 @@ function openPlayerModal(name){
     document.getElementById('pmSummary').textContent=`Course Handicap: ${getCH(player.hi,rn)}`;
   }
   document.getElementById('pmRounds').innerHTML=roundsHtml;
-  document.getElementById('playerModal').classList.add('open');
+  // Make round rows clickable (tournament view) — opens same player in that round's view
+  document.querySelectorAll('#pmRounds .modal-round-row[data-pm-round]').forEach(row=>{
+    row.addEventListener('click',()=>{
+      const rn=row.dataset.pmRound;
+      document.getElementById('playerModal').classList.remove('open');
+      currentView=rn;
+      currentSort='netToPar';
+      lastCSV='';
+      buildViewButtons();
+      render();
+      setTimeout(()=>openPlayerModal(name),200);
+    });
+  });
+  document.getElementById('playerModal').classList.add('open');document.querySelector('#playerModal .modal-sheet').scrollTop=0;
 }
 
 /* ═══ TEAM MODAL ═══ */
@@ -1297,7 +1635,7 @@ function openTeamModal(teamName){
   html+=`<div class="tm-tap-hint">Tap a player to see their full details</div>`;
 
   document.getElementById('tmContent').innerHTML=html;
-  document.getElementById('teamModal').classList.add('open');
+  document.getElementById('teamModal').classList.add('open');document.querySelector('#teamModal .modal-sheet').scrollTop=0;
 
   // Attach click handlers to member cards (open player modal)
   document.querySelectorAll('#tmContent .tm-member[data-player]').forEach(card=>{
@@ -1311,6 +1649,17 @@ function openTeamModal(teamName){
 /* ═══ MODAL CLOSE HANDLERS ═══ */
 document.getElementById('playerModal').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open')});
 document.getElementById('teamModal').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open')});
+document.getElementById('skinsModal').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open')});
+  document.getElementById('infoModal').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open')});
+
+/* ═══ COLLAPSIBLE SECTIONS ═══ */
+document.querySelectorAll('.section-head.collapsible').forEach(head=>{
+  head.addEventListener('click',()=>{
+    head.classList.toggle('collapsed');
+    const body=head.nextElementSibling;
+    if(body)body.classList.toggle('collapsed');
+  });
+});
 
 /* ═══ VIEW CONTROLS ═══ */
 document.querySelectorAll('#viewBtns .ctrl-btn').forEach(btn=>{
@@ -1348,7 +1697,7 @@ function renderYearSelector(){
       btn.classList.add('active');
       currentYear=y;
       lastCSV='';
-      players=[];courses={};roundMap={};prevRanks={};
+      players=[];roundMap={};prevRanks={};
       load();
     });
   });
@@ -1363,8 +1712,9 @@ function showRecordsPage(){
   // Clear current year cache so we get fresh live data
   delete allYearsData[currentYear];
   // Hide main content sections and records link
-  document.querySelectorAll('#yearControls, .controls, #championBanner, #highlights, #teamSection, #chartSection, #individualSection, #historySection, #coursesSection, #hcSection').forEach(el=>el.style.display='none');
+  document.querySelectorAll('#yearControls, .controls, #championBanner, #highlights, #teamSection, #chartSection, #skinsSection, #individualSection, #historySection, #coursesSection, #hcSection, #infoTabsWrap').forEach(el=>el.style.display='none');
   document.getElementById('recordsLinkWrap').style.display='none';
+  document.getElementById('scoreEntryFab').style.display='none';
   document.getElementById('recordsPage').style.display='block';
   loadAllYearsAndRender();
   window.scrollTo(0,0);
@@ -1376,10 +1726,13 @@ function hideRecordsPage(){
   // Restore main content
   if(availableYears.length>1) document.getElementById('yearControls').style.display='flex';
   document.querySelectorAll('.controls').forEach(el=>el.style.display='flex');
-  document.querySelectorAll('#teamSection, #chartSection, #individualSection, #historySection, #coursesSection, #hcSection').forEach(el=>el.style.display='block');
+  document.querySelectorAll('#individualSection, #historySection, #coursesSection, #hcSection').forEach(el=>el.style.display='block');
+  if(teamMode){document.getElementById('teamSection').style.display='block';document.getElementById('chartSection').style.display='block';if(skinsData.length)document.getElementById('skinsSection').style.display='block'}
   document.getElementById('championBanner').style.display='';
   document.getElementById('highlights').style.display='';
-  if(availableYears.length>1) document.getElementById('recordsLinkWrap').style.display='block';
+  document.getElementById('recordsLinkWrap').style.display='block';
+  document.getElementById('scoreEntryFab').style.display='flex';
+  if(infoTabs.length) document.getElementById('infoTabsWrap').style.display='flex';
   lastCSV='';
   render();
   window.scrollTo(0,0);
@@ -1423,6 +1776,7 @@ function renderRecordsPage(){
   renderChampionsWall();
   if(anyTeams)renderTeamRecords();
   renderIndivRecords();
+  renderPlayerHistory();
   renderCourseHistory();
 }
 
@@ -1547,6 +1901,7 @@ function renderIndivRecords(){
   for(const y of availableYears){
     const yd=allYearsData[y];if(!yd||!yd.players.length)continue;
     // Check if year is complete
+    const yTR=yd.totalRounds||4;
     let complete=true;
     for(const p of yd.players){for(let rn=1;rn<=yTR;rn++){const r=p.rounds[String(rn)];if(!r||!r.front||!r.back||r.front<=0||r.back<=0){complete=false;break}}if(!complete)break}
     for(const p of yd.players){
@@ -1559,7 +1914,7 @@ function renderIndivRecords(){
         const res=recCalcRound(p,rn,yd.courses,yd.roundMap);if(!res||res.thru<18)continue;
         if(res.netToPar<bestNetRound.val){bestNetRound={val:res.netToPar,details:[esc(p.name)+' · R'+rn+' · '+y]}}else if(res.netToPar===bestNetRound.val){bestNetRound.details.push(esc(p.name)+' · R'+rn+' · '+y)}
         const grossToPar=res.gross-recGetPar(rn,yd.courses,yd.roundMap);
-        if(grossToPar<bestGrossRound.val){bestGrossRound={val:grossToPar,details:[{text:esc(p.name)+' · R'+rn+' · '+y,gross:res.gross}]}}else if(grossToPar===bestGrossRound.val){bestGrossRound.details.push({text:esc(p.name)+' · R'+rn+' · '+y,gross:res.gross})}
+        if(grossToPar<bestGrossRound.val){bestGrossRound={val:grossToPar,details:[{text:esc(p.name)+' · R'+rn+' · '+y,gross:res.gross,ntp:res.netToPar}]}}else if(grossToPar===bestGrossRound.val){bestGrossRound.details.push({text:esc(p.name)+' · R'+rn+' · '+y,gross:res.gross,ntp:res.netToPar})}
       }
     }
     // Championship counts (only for complete years)
@@ -1571,7 +1926,7 @@ function renderIndivRecords(){
         let ntp=0;for(const m of members){for(let rn=1;rn<=yTR;rn++){const res=recCalcRound(m,rn,yd.courses,yd.roundMap);if(res)ntp+=res.netToPar}}
         return{name,netToPar:ntp,members};
       }).sort((a,b)=>a.netToPar-b.netToPar);
-      const tiedWinTeams=teams.filter(t=>t.netToPar===teams[0].netToPar);
+      const tiedWinTeams=teams.length?teams.filter(t=>t.netToPar===teams[0].netToPar):[];
       for(const wt of tiedWinTeams){for(const m of wt.members){
         if(!teamChampCounts[m.name])teamChampCounts[m.name]=[];
         teamChampCounts[m.name].push(y);
@@ -1591,10 +1946,10 @@ function renderIndivRecords(){
   if(bestGrossRound.details.length){
     if(bestGrossRound.details.length===1){
       const d=bestGrossRound.details[0];
-      rows.push({icon:'💪',label:'Best Gross Round',value:String(d.gross),detail:d.text+' ('+fmtPar(bestGrossRound.val)+')'});
+      rows.push({icon:'💪',label:'Best Gross Round',value:String(d.gross),detail:d.text+' ('+fmtPar(d.ntp)+' net)'});
     }else{
-      const detail=bestGrossRound.details.map(d=>d.text+' ('+d.gross+')').join('<br>');
-      rows.push({icon:'💪',label:'Best Gross Round',value:fmtPar(bestGrossRound.val),detail});
+      const detail=bestGrossRound.details.map(d=>d.text+' ('+d.gross+' / '+fmtPar(d.ntp)+' net)').join('<br>');
+      rows.push({icon:'💪',label:'Best Gross Round',value:String(bestGrossRound.details[0].gross),detail});
     }
   }
   // Most team championships
@@ -1606,6 +1961,87 @@ function renderIndivRecords(){
   card.innerHTML=rows.length?rows.map((r,i)=>`<div class="rec-row"><div class="rec-icon">${r.icon}</div><div class="rec-info"><div class="rec-label">${r.label}</div><div class="rec-detail">${r.detail}</div></div><div class="rec-value">${r.value}</div></div>`).join(''):'<div class="empty-state">No records yet</div>';
 }
 
+function renderPlayerHistory(){
+  const card=document.getElementById('playerHistoryCard');
+  const playerStats={};
+  for(const y of availableYears){
+    const yd=allYearsData[y];if(!yd||!yd.players.length)continue;
+    const yTR=yd.totalRounds||4;
+    // Check if year is complete
+    let yearComplete=true;
+    for(const p of yd.players){for(let rn=1;rn<=yTR;rn++){const r=p.rounds[String(rn)];if(!r||!r.front||!r.back||r.front<=0||r.back<=0){yearComplete=false;break}}if(!yearComplete)break}
+    // Individual rankings for this year
+    let indivRanked=[];
+    if(yearComplete){
+      indivRanked=yd.players.map(p=>{let ntp=0,net=0;for(let rn=1;rn<=yTR;rn++){const res=recCalcRound(p,rn,yd.courses,yd.roundMap);if(res){ntp+=res.netToPar;net+=res.net}}return{name:p.name,netToPar:ntp,net}}).sort((a,b)=>a.netToPar-b.netToPar||a.net-b.net);
+      // Assign ranks with ties
+      indivRanked.forEach((d,i)=>{if(i>0&&d.netToPar===indivRanked[i-1].netToPar&&d.net===indivRanked[i-1].net){d.rank=indivRanked[i-1].rank}else{d.rank=i+1}});
+    }
+    // Round winners for this year
+    const roundWinners={};
+    for(let rn=1;rn<=yTR;rn++){
+      const roundData=yd.players.map(p=>{const res=recCalcRound(p,rn,yd.courses,yd.roundMap);return res&&res.thru===18?{name:p.name,netToPar:res.netToPar}:null}).filter(Boolean).sort((a,b)=>a.netToPar-b.netToPar);
+      if(roundData.length){const best=roundData[0].netToPar;roundData.filter(d=>d.netToPar===best).forEach(d=>{roundWinners[d.name]=(roundWinners[d.name]||0)+1})}
+    }
+    // Per-player stats
+    for(const p of yd.players){
+      if(!playerStats[p.name])playerStats[p.name]={wins:[],top3:[],roundsWon:0,totalNtp:0,completedRounds:0,bestNetNtp:Infinity,bestNetGross:0,bestNetYears:[],bestGrossGtp:Infinity,bestGrossScore:0,bestGrossYears:[],bestTournNtp:Infinity,bestTournYears:[],tournaments:0};
+      const ps=playerStats[p.name];
+      // Tournament finish
+      if(yearComplete){
+        const pr=indivRanked.find(d=>d.name===p.name);
+        if(pr){
+          if(pr.rank===1)ps.wins.push(y);
+          if(pr.rank<=3)ps.top3.push(y);
+          if(pr.netToPar<ps.bestTournNtp){ps.bestTournNtp=pr.netToPar;ps.bestTournYears=[y]}else if(pr.netToPar===ps.bestTournNtp){if(!ps.bestTournYears.includes(y))ps.bestTournYears.push(y)}
+        }
+      }
+      // Rounds won
+      ps.roundsWon+=(roundWinners[p.name]||0);
+      // Per-round stats
+      let hasCompletedRoundThisYear=false;
+      for(let rn=1;rn<=yTR;rn++){
+        const res=recCalcRound(p,rn,yd.courses,yd.roundMap);if(!res||res.thru<18)continue;
+        hasCompletedRoundThisYear=true;
+        ps.completedRounds++;
+        ps.totalNtp+=res.netToPar;
+        if(res.netToPar<ps.bestNetNtp){ps.bestNetNtp=res.netToPar;ps.bestNetGross=res.gross;ps.bestNetYears=[y]}else if(res.netToPar===ps.bestNetNtp){if(!ps.bestNetYears.includes(y))ps.bestNetYears.push(y)}
+        const gtp=res.gross-recGetPar(rn,yd.courses,yd.roundMap);
+        if(gtp<ps.bestGrossGtp){ps.bestGrossGtp=gtp;ps.bestGrossScore=res.gross;ps.bestGrossNtp=res.netToPar;ps.bestGrossYears=[y]}else if(gtp===ps.bestGrossGtp){if(!ps.bestGrossYears.includes(y))ps.bestGrossYears.push(y)}
+      }
+      if(hasCompletedRoundThisYear)ps.tournaments++;
+    }
+  }
+  // Filter out players with no completed rounds, then sort
+  const sorted=Object.entries(playerStats).filter(([,ps])=>ps.completedRounds>0).sort((a,b)=>b[1].wins.length-a[1].wins.length||b[1].tournaments-a[1].tournaments||b[1].top3.length-a[1].top3.length||a[1].bestTournNtp-b[1].bestTournNtp);
+  if(!sorted.length){card.innerHTML='<div class="empty-state">No player data yet</div>';return}
+  card.innerHTML=sorted.map(([name,ps])=>{
+    const avgNtp=ps.completedRounds>0?(ps.totalNtp/ps.completedRounds):0;
+    const avgStr=avgNtp===0?'E':(avgNtp>0?'+'+avgNtp.toFixed(1):avgNtp.toFixed(1));
+    const avgClass=avgNtp<-0.05?'under':(avgNtp>0.05?'over':'');
+    const champBadge=ps.wins.length?`<span class="ph-badge ph-badge-champ">${ps.wins.length}× Champion</span>`:'';
+    const tournBadge=`<span class="ph-badge ph-badge-tourn">${ps.tournaments} Tournament${ps.tournaments!==1?'s':''}</span>`;
+    const winsYears=ps.wins.length?'<div class="ph-stat-sub">'+ps.wins.join(', ')+'</div>':'';
+    const top3Years=ps.top3.length?'<div class="ph-stat-sub">'+ps.top3.join(', ')+'</div>':'';
+    const bestNetClass=ps.bestNetNtp<0?'under':(ps.bestNetNtp>0?'over':'');
+    const bestTournClass=ps.bestTournNtp<0?'under':(ps.bestTournNtp>0?'over':'');
+    const bestTournYearsStr=ps.bestTournYears.length?'<div class="ph-stat-sub">'+ps.bestTournYears.join(', ')+'</div>':'';
+    return`<div class="ph-item">
+      <div class="ph-header"><div class="ph-name">${esc(name)}</div><div class="ph-badges">${champBadge}${tournBadge}</div></div>
+      <div class="ph-stats2" style="margin-bottom:8px">
+        <div class="ph-stat"><div class="ph-stat-label">Wins</div><div class="ph-stat-val${ps.wins.length?' gold':''}">${ps.wins.length}</div>${winsYears}</div>
+        <div class="ph-stat"><div class="ph-stat-label">Top 3</div><div class="ph-stat-val">${ps.top3.length}</div>${top3Years}</div>
+        <div class="ph-stat"><div class="ph-stat-label">Best Final Score</div><div class="ph-stat-val ${bestTournClass}">${ps.bestTournNtp===Infinity?'—':fmtPar(ps.bestTournNtp)}</div>${bestTournYearsStr}</div>
+      </div>
+      <div class="ph-stats2">
+        <div class="ph-stat"><div class="ph-stat-label">Avg Net Round</div><div class="ph-stat-val ${avgClass}">${avgStr}</div></div>
+        <div class="ph-stat"><div class="ph-stat-label">Best Net Round</div><div class="ph-stat-val ${bestNetClass}">${ps.bestNetNtp===Infinity?'—':fmtPar(ps.bestNetNtp)}</div>${ps.bestNetYears.length?'<div class="ph-stat-sub">'+ps.bestNetGross+' gross · '+ps.bestNetYears.join(', ')+'</div>':''}</div>
+        <div class="ph-stat"><div class="ph-stat-label">Best Gross</div><div class="ph-stat-val">${ps.bestGrossGtp===Infinity?'—':ps.bestGrossScore}</div>${ps.bestGrossYears.length?'<div class="ph-stat-sub">'+fmtPar(ps.bestGrossNtp)+' net · '+ps.bestGrossYears.join(', ')+'</div>':''}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
 function renderCourseHistory(){
   const card=document.getElementById('courseHistoryCard');
   const courseData={};
@@ -1615,37 +2051,80 @@ function renderCourseHistory(){
     for(let rn=1;rn<=yTR;rn++){
       const cName=yd.roundMap[String(rn)];if(!cName)continue;
       const c=yd.courses[cName];if(!c)continue;
-      if(!courseData[cName])courseData[cName]={rounds:0,totalNtp:0,totalPlayers:0,bestNet:Infinity,bestBys:[],par:c.par,rating:c.rating,slope:c.slope};
+      if(!courseData[cName])courseData[cName]={rounds:0,totalNtp:0,totalPlayers:0,bestNet:Infinity,bestNetBys:[],bestGrossGtp:Infinity,bestGrossScore:0,bestGrossBys:[],par:c.par,rating:c.rating,slope:c.slope};
       let roundHasScores=false;
       for(const p of yd.players){
         const res=recCalcRound(p,rn,yd.courses,yd.roundMap);if(!res||res.thru<18)continue;
         roundHasScores=true;
         courseData[cName].totalNtp+=res.netToPar;
         courseData[cName].totalPlayers++;
-        if(res.netToPar<courseData[cName].bestNet){courseData[cName].bestNet=res.netToPar;courseData[cName].bestBys=[esc(p.name)+' · R'+rn+' · '+y]}else if(res.netToPar===courseData[cName].bestNet){courseData[cName].bestBys.push(esc(p.name)+' · R'+rn+' · '+y)}
+        if(res.netToPar<courseData[cName].bestNet){courseData[cName].bestNet=res.netToPar;courseData[cName].bestNetBys=[esc(p.name)+' · '+y]}else if(res.netToPar===courseData[cName].bestNet){const entry=esc(p.name)+' · '+y;if(!courseData[cName].bestNetBys.includes(entry))courseData[cName].bestNetBys.push(entry)}
+        const gtp=res.gross-c.par;
+        if(gtp<courseData[cName].bestGrossGtp){courseData[cName].bestGrossGtp=gtp;courseData[cName].bestGrossScore=res.gross;courseData[cName].bestGrossBys=[{text:esc(p.name)+' · '+y,ntp:res.netToPar}]}else if(gtp===courseData[cName].bestGrossGtp){const entry=esc(p.name)+' · '+y;if(!courseData[cName].bestGrossBys.some(b=>b.text===entry))courseData[cName].bestGrossBys.push({text:entry,ntp:res.netToPar})}
       }
       if(roundHasScores)courseData[cName].rounds++;
     }
   }
-  const sorted=Object.entries(courseData).sort((a,b)=>b[1].rounds-a[1].rounds);
+  const sorted=Object.entries(courseData).filter(([,d])=>d.rounds>0).sort((a,b)=>b[1].rounds-a[1].rounds);
   if(!sorted.length){card.innerHTML='<div class="empty-state">No course data yet</div>';return}
   card.innerHTML=sorted.map(([name,d],i)=>{
     const avgNtp=d.totalPlayers>0?(d.totalNtp/d.totalPlayers):0;
     const avgStr=avgNtp===0?'E':(avgNtp>0?'+'+avgNtp.toFixed(1):avgNtp.toFixed(1));
-    const avgClass=avgNtp<0?'under':(avgNtp>0?'over':'even');
-    const bestClass=d.bestNet<0?'under':(d.bestNet>0?'over':'even');
     return`<div class="course-hist-item">
-      <div class="course-hist-name"><span class="course-hist-name-text">${esc(name)}</span><span class="course-hist-name-line"></span><span class="course-hist-name-info">Par ${d.par} / ${d.rating} / ${d.slope}</span></div>
+      <div class="course-hist-name"><span class="course-hist-name-text">${esc(name)}</span><span class="course-hist-name-line"></span><span class="course-hist-name-info">Par ${d.par} / ${parseFloat(d.rating).toFixed(1)} / ${d.slope}</span></div>
       <div class="course-hist-stats">
         <div class="course-hist-stat"><div class="course-hist-stat-label">Rounds Played</div><div class="course-hist-stat-val">${d.rounds}</div></div>
         <div class="course-hist-stat"><div class="course-hist-stat-label">Avg Net to Par</div><div class="course-hist-stat-val">${avgStr}</div></div>
-        <div class="course-hist-stat"><div class="course-hist-stat-label">Best Net Round</div><div class="course-hist-stat-val">${fmtPar(d.bestNet)}</div>${d.bestBys.length?`<div class="course-hist-stat-sub">${d.bestBys.join('<br>')}</div>`:''}</div>
+        <div class="course-hist-stat"><div class="course-hist-stat-label">Best Net Round</div><div class="course-hist-stat-val">${fmtPar(d.bestNet)}</div>${d.bestNetBys.length?`<div class="course-hist-stat-sub">${d.bestNetBys.join('<br>')}</div>`:''}</div>
+        <div class="course-hist-stat"><div class="course-hist-stat-label">Best Gross</div><div class="course-hist-stat-val">${d.bestGrossScore||'—'}</div>${d.bestGrossBys.length?`<div class="course-hist-stat-sub">${d.bestGrossBys.map(b=>fmtPar(b.ntp)+' · '+b.text).join('<br>')}</div>`:''}</div>
       </div>
     </div>`;
   }).join('');
 }
 
+/* ═══ INFO TABS ═══ */
+let infoTabs = [];
+
+function renderInfoTabButtons(){
+  const wrap=document.getElementById('infoTabsWrap');
+  if(!infoTabs.length){wrap.style.display='none';return}
+  wrap.style.display='flex';
+  wrap.innerHTML=infoTabs.map(t=>`<span class="info-tab-btn" data-tab="${esc(t)}">${esc(t)}</span>`).join('');
+  wrap.querySelectorAll('.info-tab-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>openInfoModal(btn.dataset.tab));
+  });
+}
+
+async function openInfoModal(tabName){
+  const rows=await fetchTab(tabName);
+  if(rows.length<=1){return}
+  document.getElementById('infoModalTitle').textContent=tabName;
+  let html='';
+  for(let i=1;i<rows.length;i++){
+    const r=rows[i];
+    const title=(r[0]||'').trim();
+    const body=(r[1]||'').trim();
+    if(!title&&!body)continue;
+    html+=`<div class="info-item">${title?`<div class="info-item-title">${esc(title)}</div>`:''}${body?`<div class="info-item-body">${esc(body).replace(/\n/g,'<br>')}</div>`:''}</div>`;
+  }
+  document.getElementById('infoModalBody').innerHTML=html||'<div class="empty-state">No content</div>';
+  const infoModalEl=document.getElementById('infoModal');
+  const infoSheetEl=infoModalEl.querySelector('.modal-sheet');
+  infoModalEl.classList.add('open');
+  infoModalEl.scrollTop=0;
+  infoSheetEl.scrollTop=0;
+}
+
 async function init(){
+  // If no Sheet ID configured, show setup screen
+  if(!SHEET_ID){
+    document.getElementById('setupScreen').classList.add('show');
+    document.querySelector('.header').style.display='none';
+    document.querySelectorAll('.controls, #teamSection, #chartSection, #skinsSection, #individualSection, #historySection, #coursesSection, #hcSection').forEach(el=>el.style.display='none');
+    document.getElementById('siteFooter').textContent='Golf Leaderboard · Setup Required';
+    return;
+  }
+
   // Load Config tab for years and tournament name
   const configRows=await fetchTab('Config');
   const found=[];
@@ -1658,21 +2137,149 @@ async function init(){
   document.getElementById('siteFooter').innerHTML=esc(tournamentName)+' &middot; Live Leaderboard';
   document.getElementById('recordsSubtitle').textContent='Across all '+tournamentName+' tournaments';
 
+  // Info tabs from column C
+  infoTabs=[];
+  for(let i=1;i<configRows.length;i++){const v=(configRows[i][2]||'').trim();if(v)infoTabs.push(v)}
+  renderInfoTabButtons();
+
   // Load global Courses tab
   const coursesRaw=await fetchTab('Courses');
-  if(coursesRaw.length>1){courses={};for(let i=1;i<coursesRaw.length;i++){const r=coursesRaw[i];if(r[0])courses[r[0].trim()]={par:num(r[1]),rating:num(r[2]),slope:num(r[3])}}}
+  if(coursesRaw.length>1){courses={};for(let i=1;i<coursesRaw.length;i++){const r=coursesRaw[i];if(r[0])courses[r[0].trim()]={par:num(r[1]),rating:num(r[2]),slope:num(r[3]),tees:(r[4]||'').trim()}}}
 
   currentYear=availableYears[availableYears.length-1];
   renderYearSelector();
-  if(availableYears.length>1) document.getElementById('recordsLinkWrap').style.display='block';
+  document.getElementById('recordsLinkWrap').style.display='block';
   document.getElementById('recordsLink').addEventListener('click',showRecordsPage);
   document.getElementById('recordsBack').addEventListener('click',hideRecordsPage);
-  document.getElementById('championBanner').addEventListener('click',function(){const t=this.dataset.champTeam;if(t)openTeamModal(t)});
+  document.getElementById('championBanner').addEventListener('click',function(){const t=this.dataset.champTeam;if(t){openTeamModal(t);return}const p=this.dataset.champPlayer;if(p)openPlayerModal(p)});
+  loadPINsFromConfig(configRows);
   await load();
   if(!players.length){for(let i=0;i<3;i++){await new Promise(r=>setTimeout(r,2000));await load();if(players.length)break}}
   setInterval(load,POLL_SECONDS*1000);
+  showScoreFAB();
+  setupAdminHeaderBtn();
+  if(gAuthToken){openAdminPanel();showAdminToast('Signed in with Google')}
 }
 init();
+
+/* ═══ PIN SYSTEM ═══ */
+let pinDigits=[];let pinMode='';let scorerPIN='1234';let adminPIN='0000';
+function loadPINsFromConfig(cr){if(cr.length>1){const r=cr[1];if(r[3]&&r[3].trim())scorerPIN=r[3].trim();if(r[4]&&r[4].trim())adminPIN=r[4].trim()}}
+function openPinModal(m){pinMode=m;pinDigits=[];updatePinDots();document.getElementById('pinError').textContent='';document.getElementById('pinTitle').textContent=m==='scorer'?'Score Entry':'Admin Access';document.getElementById('pinSub').textContent=m==='scorer'?'Enter scorer PIN':'Enter admin PIN';document.getElementById('pinModal').classList.add('open');document.querySelector('#pinModal .pin-sheet').scrollTop=0;document.addEventListener('keydown',pinKeyHandler)}
+function closePinModal(){document.getElementById('pinModal').classList.remove('open');pinDigits=[];updatePinDots();document.removeEventListener('keydown',pinKeyHandler)}
+function pinKeyHandler(e){if(!document.getElementById('pinModal').classList.contains('open'))return;if(e.key>='0'&&e.key<='9'){e.preventDefault();if(pinDigits.length>=4)return;pinDigits.push(e.key);updatePinDots();if(pinDigits.length===4){const entered=pinDigits.join('');const correct=pinMode==='scorer'?scorerPIN:adminPIN;setTimeout(()=>{if(entered===correct)pinSuccess();else pinError()},120)}}else if(e.key==='Backspace'){e.preventDefault();pinDigits=pinDigits.slice(0,-1);updatePinDots()}else if(e.key==='Escape'){e.preventDefault();closePinModal()}}
+function updatePinDots(){document.querySelectorAll('.pin-dot-el').forEach((d,i)=>{d.classList.remove('filled','error');if(i<pinDigits.length)d.classList.add('filled')})}
+function pinError(){const row=document.getElementById('pinDots');document.querySelectorAll('.pin-dot-el').forEach(d=>{d.classList.remove('filled');d.classList.add('error')});row.classList.add('shake');document.getElementById('pinError').textContent='Incorrect PIN';setTimeout(()=>{row.classList.remove('shake');document.querySelectorAll('.pin-dot-el').forEach(d=>d.classList.remove('error'));pinDigits=[];updatePinDots();document.getElementById('pinError').textContent=''},700)}
+function pinSuccess(){closePinModal();if(pinMode==='scorer')openScorerModal();else if(pinMode==='admin')openAdminPanel()}
+document.querySelectorAll('.np-btn[data-n]').forEach(btn=>{btn.addEventListener('click',()=>{if(pinDigits.length>=4)return;pinDigits.push(btn.dataset.n);updatePinDots();if(pinDigits.length===4){const entered=pinDigits.join('');const correct=pinMode==='scorer'?scorerPIN:adminPIN;setTimeout(()=>{if(entered===correct)pinSuccess();else pinError()},120)}})});
+document.getElementById('pinDel').addEventListener('click',()=>{pinDigits=pinDigits.slice(0,-1);updatePinDots()});
+document.getElementById('pinModal').addEventListener('click',function(e){if(e.target===this)closePinModal()});
+document.getElementById('scoreEntryFab').addEventListener('click',()=>openPinModal('scorer'));
+function setupAdminHeaderBtn(){const b=document.getElementById('adminHeaderBtn');if(b)b.addEventListener('click',()=>openPinModal('admin'))}
+function showScoreFAB(){document.getElementById('scoreEntryFab').style.display='flex'}
+
+/* ═══ SCORE ENTRY MODAL ═══ */
+let scorerActiveRound=1;
+function openScorerModal(){scorerMode='scores';scorerActiveRound=currentView!=='tournament'?parseInt(currentView):1;renderScorerModal();document.getElementById('scorerModal').classList.add('open');document.getElementById('scorerModeScores').className='scorer-rtab active';document.getElementById('scorerModeSkins').className='scorer-rtab inactive';document.querySelector('.scorer-progress-row').style.display=''}
+document.getElementById('scorerClose').addEventListener('click',()=>{document.getElementById('scorerModal').classList.remove('open')});
+document.getElementById('scorerModal').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open')});
+function renderScorerModal(){const tabsEl=document.getElementById('scorerRoundTabs');tabsEl.innerHTML=Array.from({length:totalRounds},(_,i)=>i+1).map(rn=>`<button class="scorer-rtab ${rn===scorerActiveRound?'active':'inactive'}" data-rn="${rn}">R${rn}</button>`).join('');tabsEl.querySelectorAll('.scorer-rtab').forEach(btn=>{btn.addEventListener('click',()=>{scorerActiveRound=parseInt(btn.dataset.rn);renderScorerModal()})});document.getElementById('scorerCourseName').textContent=getCourseName(scorerActiveRound)||`Round ${scorerActiveRound}`;const completed=players.filter(p=>{const r=p.rounds[String(scorerActiveRound)];return r&&r.front>0&&r.back>0}).length;const pct=players.length?(completed/players.length)*100:0;document.getElementById('scorerProgFill').style.width=pct+'%';document.getElementById('scorerProgLabel').textContent=`${completed} / ${players.length} done`;const body=document.getElementById('scorerBody');let html='';if(completed===players.length&&players.length>0)html+=`<div class="scorer-complete-banner"><div class="scorer-complete-title">Round ${scorerActiveRound} Complete</div><div class="scorer-complete-sub">All scores entered</div></div>`;const tMap={};const noTeam=[];for(const p of players){if(p.team){if(!tMap[p.team])tMap[p.team]=[];tMap[p.team].push(p)}else noTeam.push(p)}for(const t of Object.keys(tMap)){tMap[t].sort((a,b)=>a.hi-b.hi)}noTeam.sort((a,b)=>a.hi-b.hi);const card=(p)=>{const r=p.rounds[String(scorerActiveRound)]||{};const fv=r.front>0?String(r.front):'';const bv=r.back>0?String(r.back):'';const done=fv&&bv;const ch=getCH(p.hi,scorerActiveRound);const n=esc(p.name);return`<div class="scorer-player-card ${done?'complete':''}" data-player="${n}"><div class="scorer-card-top"><div><div class="scorer-player-name">${done?'<span style="color:var(--green-300);margin-right:5px">✓</span>':''}${n}</div>${p.team?`<div class="scorer-player-team">${esc(p.team)}</div>`:''}</div><div class="scorer-ch-badge">CH ${ch}</div></div><div class="scorer-inputs-row"><div class="scorer-input-wrap"><div class="scorer-input-label">Front 9</div><input class="scorer-input ${fv?'saved':''}" type="text" inputmode="numeric" pattern="[0-9]*" enterkeyhint="next" placeholder="—" value="${fv}" maxlength="2" data-player="${n}" data-half="front" autocomplete="off" /><div style="font-size:0.6rem;height:14px;color:var(--green-300);margin-top:1px">${fv?'✓ saved':''}</div></div><div class="scorer-input-wrap"><div class="scorer-input-label">Back 9</div><input class="scorer-input ${bv?'saved':''}" type="text" inputmode="numeric" pattern="[0-9]*" enterkeyhint="next" placeholder="—" value="${bv}" maxlength="2" data-player="${n}" data-half="back" autocomplete="off" /><div style="font-size:0.6rem;height:14px;color:var(--green-300);margin-top:1px">${bv?'✓ saved':''}</div></div></div></div>`};if(Object.keys(tMap).length){for(const[t,ps]of Object.entries(tMap)){html+=`<div class="scorer-team-divider"><span class="scorer-team-label">${esc(t)}</span><span class="scorer-team-line"></span></div>`;html+=ps.map(card).join('')}}if(noTeam.length)html+=noTeam.map(card).join('');body.innerHTML=html;body.querySelectorAll('.scorer-input').forEach(input=>{input.addEventListener('change',handleScorerInput);input.addEventListener('input',function(){if(this.value.length>=2)advanceScorerFocus(this)})})}
+async function handleScorerInput(e){const input=e.target;const pName=input.dataset.player;const half=input.dataset.half;const val=input.value.replace(/\D/g,'').slice(0,2);input.value=val;const player=players.find(p=>p.name===pName);if(!player)return;if(!player.rounds[String(scorerActiveRound)])player.rounds[String(scorerActiveRound)]={front:0,back:0};player.rounds[String(scorerActiveRound)][half]=val?parseInt(val):0;const ok=await writeScorerToSheet(player,scorerActiveRound,half);const fieldBadge=input.nextElementSibling;if(ok){if(val){input.classList.add('saved');if(fieldBadge){fieldBadge.textContent='✓ saved';fieldBadge.style.color=''}}else{input.classList.remove('saved');if(fieldBadge)fieldBadge.textContent=''}}else{input.classList.remove('saved');if(fieldBadge){fieldBadge.textContent=val?'✗ not saved':'';fieldBadge.style.color=val?'var(--red)':''};player.rounds[String(scorerActiveRound)][half]=0;input.value=''}lastCSV='';setTimeout(render,100);updateScorerProgress();const card=input.closest('.scorer-player-card');if(card){const r=player.rounds[String(scorerActiveRound)];const complete=r&&r.front>0&&r.back>0;if(complete){card.classList.add('complete');card.querySelector('.scorer-player-name').innerHTML='<span style="color:var(--green-300);margin-right:5px">✓</span>'+esc(player.name)}else{card.classList.remove('complete');card.querySelector('.scorer-player-name').textContent=player.name}}}
+function updateScorerProgress(){const completed=players.filter(p=>{const r=p.rounds[String(scorerActiveRound)];return r&&r.front>0&&r.back>0}).length;const pct=players.length?(completed/players.length)*100:0;document.getElementById('scorerProgFill').style.width=pct+'%';document.getElementById('scorerProgLabel').textContent=`${completed} / ${players.length} done`;if(completed===players.length&&players.length>0)setTimeout(renderScorerModal,300)}
+function advanceScorerFocus(currentInput){const allInputs=[...document.querySelectorAll('#scorerBody .scorer-input')];const idx=allInputs.indexOf(currentInput);if(idx<0)return;for(let i=idx+1;i<allInputs.length;i++){if(!allInputs[i].value){allInputs[i].focus();return}}}
+
+/* ═══ SHEETS WRITE ═══ */
+let gAuthToken=null;
+const APPS_SCRIPT_URL='https://script.google.com/macros/s/AKfycbwOf6pEKbk-DS1VoSaXoTe5VY_QQbEggiJfbkVG5pgkbJnQ3sP-RTQAdSvFfVE1pwzJ/exec';
+async function writeScorerToSheet(player,rn,half){const pName=player.name;const pi=players.findIndex(p=>p.name===pName);if(APPS_SCRIPT_URL){if(pi<0)return false;const r=player.rounds[String(rn)];try{const res=await fetch(APPS_SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'writeScore',pin:scorerPIN,year:currentYear,playerRow:pi+2,round:rn,front:half==='front'?(r.front>0?r.front:0):undefined,back:half==='back'?(r.back>0?r.back:0):undefined})});const d=await res.json();if(!d.ok)throw new Error(d.error||'Write failed');return true}catch(err){showAdminToast('Save failed: '+err.message,true);return false}}else if(gAuthToken){if(pi<0)return false;const ri=pi+2;const tab=`Scores ${currentYear}`;const r=player.rounds[String(rn)];const col=half==='front'?String.fromCharCode(68+(rn-1)*2):String.fromCharCode(69+(rn-1)*2);const val=half==='front'?(r.front>0?r.front:0):(r.back>0?r.back:0);try{const res=await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(tab+'!'+col+ri)}?valueInputOption=RAW`,{method:'PUT',headers:{'Authorization':`Bearer ${gAuthToken}`,'Content-Type':'application/json'},body:JSON.stringify({range:`${tab}!${col}${ri}`,values:[[val]]})});if(!res.ok){const e=await res.json();throw new Error(e.error?.message||'Write failed')}return true}catch(err){showAdminToast('Save failed: '+err.message,true);return false}}else{showAdminToast('Not authenticated',true);return false}}
+async function writeAdminToSheet(range,values){if(!gAuthToken){showAdminToast('Not authenticated',true);return false}try{const res=await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(range)}?valueInputOption=RAW`,{method:'PUT',headers:{'Authorization':`Bearer ${gAuthToken}`,'Content-Type':'application/json'},body:JSON.stringify({range,values})});if(!res.ok){const e=await res.json();throw new Error(e.error?.message||'Write failed')}return true}catch(err){showAdminToast('Save failed: '+err.message,true);return false}}
+async function appendToSheet(range,values){if(!gAuthToken){showAdminToast('Not authenticated',true);return false}try{const res=await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(range)}:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`,{method:'POST',headers:{'Authorization':`Bearer ${gAuthToken}`,'Content-Type':'application/json'},body:JSON.stringify({values})});if(!res.ok)throw new Error('Append failed');return true}catch(err){showAdminToast('Save failed: '+err.message,true);return false}}
+async function batchWriteCells(cellArray){if(!gAuthToken){showAdminToast('Not authenticated',true);return false}try{const res=await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values:batchUpdate`,{method:'POST',headers:{'Authorization':`Bearer ${gAuthToken}`,'Content-Type':'application/json'},body:JSON.stringify({valueInputOption:'RAW',data:cellArray})});if(!res.ok){const e=await res.json();throw new Error(e.error?.message||'Write failed')}return true}catch(err){showAdminToast('Save failed: '+err.message,true);return false}}
+
+/* ═══ ADMIN PANEL ═══ */
+let adminActiveTab='config';let adminCoursesData=[];let adminPlayersData=[];let adminScoresData={};let adminActiveScoreRound=1;let adminPlayerSearch='';let adminYear='';let adminTotalRounds=4;
+function showAdminToast(msg,isErr=false){const t=document.getElementById('adminToast');t.textContent=isErr?msg:'✓ '+msg;t.className='admin-toast show'+(isErr?' err':'');setTimeout(()=>{t.className='admin-toast'},2400)}
+function openAdminPanel(){adminYear=currentYear;adminActiveTab='config';syncAdminFromLive();document.getElementById('adminBrandName').textContent=tournamentName+' Admin';document.getElementById('adminOverlay').classList.add('open');document.body.style.overflow='hidden';document.querySelectorAll('.admin-tab').forEach(t=>{t.classList.remove('active');if(t.dataset.tab==='config')t.classList.add('active')});renderAdminTab(adminActiveTab);document.querySelectorAll('.admin-tab').forEach(tab=>{tab.onclick=()=>{document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active'));tab.classList.add('active');adminActiveTab=tab.dataset.tab;renderAdminTab(adminActiveTab)}})}
+function closeAdminPanel(){document.getElementById('adminOverlay').classList.remove('open');document.body.style.overflow='';lastCSV=''}
+document.getElementById('adminClose').addEventListener('click',closeAdminPanel);
+function syncAdminFromLive(){adminCoursesData=Object.entries(courses).map(([name,c],i)=>({id:i+1,name,par:String(c.par),rating:String(c.rating),slope:String(c.slope),tees:c.tees||''}));if(adminYear===currentYear){adminTotalRounds=totalRounds;window._adminRoundCount=adminTotalRounds;window._adminRoundMap=null;window._adminRoundEdits={};adminPlayersData=players.map((p,i)=>({id:i+1,name:p.name,hi:String(p.hi),team:p.team}));adminScoresData={};players.forEach(p=>{adminScoresData[p.name]={};for(let rn=1;rn<=totalRounds;rn++){const r=p.rounds[String(rn)]||{};adminScoresData[p.name][rn]={front:r.front>0?String(r.front):'',back:r.back>0?String(r.back):''}}})}}
+async function loadAdminYear(yr){adminYear=yr;adminActiveScoreRound=1;window._adminRoundEdits={};const tabs={scores:`Scores ${yr}`,rounds:`Rounds ${yr}`};const[scoresRaw,roundsRaw]=await Promise.all([fetchTab(tabs.scores),fetchTab(tabs.rounds)]);const yRoundMap={};if(roundsRaw.length>1){for(let i=1;i<roundsRaw.length;i++){const r=roundsRaw[i];if(r[0]&&r[1])yRoundMap[r[0].replace(/[^0-9]/g,'')]=r[1].trim()}}adminTotalRounds=Math.max(1,Object.keys(yRoundMap).length);window._adminRoundCount=adminTotalRounds;window._adminRoundMap=yRoundMap;adminPlayersData=[];adminScoresData={};if(scoresRaw.length>1){for(let i=1;i<scoresRaw.length;i++){const r=scoresRaw[i];if(!r[0]||!r[0].trim())continue;const id=i;const name=r[0].trim();const hi=r[1]||'0';const team=(r[2]||'').trim();adminPlayersData.push({id,name,hi:String(parseFloat(hi)||0),team});adminScoresData[name]={};for(let rn=1;rn<=adminTotalRounds;rn++){const ci=3+(rn-1)*2;const f=parseFloat(r[ci])||0;const b=parseFloat(r[ci+1])||0;adminScoresData[name][rn]={front:f>0?String(f):'',back:b>0?String(b):''}}}}}
+function adminYearSelector(){return`<div style="display:flex;gap:4px;margin-bottom:16px;flex-wrap:wrap">${availableYears.map(y=>`<button class="admin-score-rtab ${y===adminYear?'active':'inactive'}" onclick="switchAdminYear('${y}')">${y}</button>`).join('')}</div>`}
+async function switchAdminYear(yr){if(yr===adminYear)return;showAdminToast('Loading '+yr+'…');window._adminRoundMap=null;window._adminRoundEdits={};window._adminRoundCount=0;adminActiveScoreRound=1;if(yr===currentYear){adminYear=yr;syncAdminFromLive()}else{await loadAdminYear(yr)}renderAdminTab(adminActiveTab);showAdminToast(yr+' loaded')}
+async function renderAdminTab(tab){const c=document.getElementById('adminContent');if(tab==='config')renderAdminConfig(c);else if(tab==='courses')renderAdminCourses(c);else if(tab==='rounds'){c.innerHTML=adminYearSelector();const inner=document.createElement('div');c.appendChild(inner);renderAdminRounds(inner)}else if(tab==='players'){c.innerHTML=adminYearSelector();const inner=document.createElement('div');c.appendChild(inner);renderAdminPlayers(inner)}else if(tab==='scores'){c.innerHTML=adminYearSelector();const inner=document.createElement('div');c.appendChild(inner);renderAdminScores(inner)}else if(tab==='infotabs')await renderAdminInfoTabs(c);else if(tab==='matchups')await renderAdminMatchups(c)}
+function renderAdminConfig(el){const isAuth=!!gAuthToken;el.innerHTML=`<div class="admin-section-title">Tournament Setup</div><div class="admin-section-sub">Configure name, PINs, and connection.</div><div style="background:var(--surface-1);border:1px solid var(--border);border-radius:10px;padding:18px;margin-bottom:20px"><div style="font-size:0.72rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px">Google Account</div>${isAuth?`<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><span style="color:var(--green-300);font-size:0.85rem">✓ Connected</span><button class="admin-btn admin-btn-secondary admin-btn-sm" onclick="gAuthToken=null;renderAdminTab('config')">Sign Out</button></div>`:`<div style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:12px">Sign in with Google to enable writing to your sheet.</div><button class="admin-btn admin-btn-primary" onclick="startGoogleAuth()">Sign in with Google</button>`}</div><div class="admin-field-group"><div class="admin-field-label">Tournament Name</div><input class="admin-input" id="cfgName" value="${esc(tournamentName)}" /></div><div style="background:var(--surface-1);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:20px"><div style="font-size:0.72rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px">Tournament Years</div><div class="admin-year-pills">${availableYears.map(y=>`<span class="admin-year-pill ${y===currentYear?'active':'inactive'}">${y} <span onclick="removeAdminYear('${y}')" style="margin-left:4px;cursor:pointer;opacity:0.6">×</span></span>`).join('')}<span class="admin-year-pill inactive" style="cursor:pointer;opacity:0.7" onclick="addAdminYear()">+ Add Year</span></div></div><div style="background:var(--surface-1);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:20px"><div style="font-size:0.72rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px">Access PINs</div><div class="admin-grid-2"><div class="admin-field-group" style="margin-bottom:0"><div class="admin-field-label">Scorer PIN</div><div style="display:flex;gap:8px"><input class="admin-input" id="cfgScorerPIN" type="password" value="${scorerPIN}" maxlength="4" style="letter-spacing:0.2em;font-weight:700;flex:1;min-width:0" /><button class="admin-btn admin-btn-secondary admin-btn-sm" style="flex-shrink:0" onclick="togglePinVis('cfgScorerPIN',this)">Show</button></div></div><div class="admin-field-group" style="margin-bottom:0"><div class="admin-field-label">Admin PIN</div><div style="display:flex;gap:8px"><input class="admin-input" id="cfgAdminPIN" type="password" value="${adminPIN}" maxlength="4" style="letter-spacing:0.2em;font-weight:700;flex:1;min-width:0" /><button class="admin-btn admin-btn-secondary admin-btn-sm" style="flex-shrink:0" onclick="togglePinVis('cfgAdminPIN',this)">Show</button></div></div></div></div><div class="admin-field-group"><div class="admin-field-label">Google Sheet ID</div><div style="display:flex;gap:8px;flex-wrap:wrap"><input class="admin-input" value="${SHEET_ID}" readonly style="color:var(--text-muted);font-size:0.72rem;font-family:monospace;flex:1;min-width:0" /><a href="https://docs.google.com/spreadsheets/d/${SHEET_ID}" target="_blank" class="admin-btn admin-btn-secondary admin-btn-sm" style="text-decoration:none;flex-shrink:0">Open Sheet</a></div><div class="admin-status-row"><div class="admin-status-dot"></div>Polling every ${POLL_SECONDS}s</div></div><div class="admin-actions-row"><button class="admin-btn admin-btn-secondary" onclick="saveAdminConfig()">Save Config</button><button class="admin-btn admin-btn-primary" id="globalSaveBtn" onclick="saveAllAdmin()">Save All & Close</button></div>`}
+function addAdminYear(){const y=prompt('Enter new year (e.g. 2027):');if(!y||isNaN(parseInt(y)))return;const yr=y.trim();if(availableYears.includes(yr)){showAdminToast('Year exists',true);return}availableYears.push(yr);adminYear=yr;adminTotalRounds=0;window._adminRoundCount=0;window._adminRoundMap=null;window._adminRoundEdits={};adminPlayersData=[];adminScoresData={};showAdminToast(yr+' added — hit Save to create sheets');renderYearSelector();renderAdminTab('config')}
+async function createYearTabs(yr){try{const sheetsRes=await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}`,{headers:{'Authorization':`Bearer ${gAuthToken}`}});const sheetsData=await sheetsRes.json();const existingTabs=(sheetsData.sheets||[]).map(s=>s.properties.title);const tabsToCreate=[];if(!existingTabs.includes(`Scores ${yr}`))tabsToCreate.push(`Scores ${yr}`);if(!existingTabs.includes(`Rounds ${yr}`))tabsToCreate.push(`Rounds ${yr}`);if(!tabsToCreate.length)return;const requests=tabsToCreate.map(t=>({addSheet:{properties:{title:t}}}));await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}:batchUpdate`,{method:'POST',headers:{'Authorization':`Bearer ${gAuthToken}`,'Content-Type':'application/json'},body:JSON.stringify({requests})});if(tabsToCreate.includes(`Scores ${yr}`))await writeAdminToSheet(`Scores ${yr}!A1:C1`,[['Player','HI','Team']]);if(tabsToCreate.includes(`Rounds ${yr}`))await writeAdminToSheet(`Rounds ${yr}!A1:B1`,[['Round','Course']])}catch(err){showAdminToast('Tabs created but headers may need setup',true)}}
+function removeAdminYear(yr){if(availableYears.length<=1){showAdminToast('Need at least one year',true);return}if(!confirm('Remove '+yr+'? This only removes it from the year list — sheet tabs are not deleted.'))return;const idx=availableYears.indexOf(yr);if(idx<0)return;availableYears.splice(idx,1);if(yr===currentYear){currentYear=availableYears[availableYears.length-1];lastCSV='';players=[];roundMap={};prevRanks={}}showAdminToast(yr+' removed — hit Save to confirm');renderYearSelector();renderAdminTab('config')}
+function togglePinVis(id,btn){const inp=document.getElementById(id);if(inp.type==='password'){inp.type='text';btn.textContent='Hide'}else{inp.type='password';btn.textContent='Show'}}
+async function saveAdminConfig(){const n=document.getElementById('cfgName').value.trim();const sp=document.getElementById('cfgScorerPIN').value.trim();const ap=document.getElementById('cfgAdminPIN').value.trim();if(n){tournamentName=n;document.getElementById('siteName').textContent=n;document.title=n;document.getElementById('adminBrandName').textContent=n+' Admin'}if(sp)scorerPIN=sp;if(ap)adminPIN=ap;let ok=await batchWriteCells([{range:'Config!B2',values:[[tournamentName]]},{range:'Config!D2',values:[[scorerPIN]]},{range:'Config!E2',values:[[adminPIN]]}]);const yearVals=availableYears.map(y=>[y]);if(yearVals.length)ok=await writeAdminToSheet('Config!A2:A'+(yearVals.length+1),yearVals)&&ok;const ycStart=yearVals.length+2;await writeAdminToSheet('Config!A'+ycStart+':A'+(ycStart+19),Array.from({length:20},()=>['']));if(gAuthToken){try{const sheetsRes=await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}`,{headers:{'Authorization':`Bearer ${gAuthToken}`}});const sheetsData=await sheetsRes.json();const existing=(sheetsData.sheets||[]).map(s=>s.properties.title);const newTabs=[];for(const yr of availableYears){if(!existing.includes(`Scores ${yr}`))newTabs.push(`Scores ${yr}`);if(!existing.includes(`Rounds ${yr}`))newTabs.push(`Rounds ${yr}`)}if(newTabs.length){await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}:batchUpdate`,{method:'POST',headers:{'Authorization':`Bearer ${gAuthToken}`,'Content-Type':'application/json'},body:JSON.stringify({requests:newTabs.map(t=>({addSheet:{properties:{title:t}}}))})});for(const t of newTabs){if(t.startsWith('Scores'))await writeAdminToSheet(`${t}!A1:C1`,[['Player','HI','Team']]);else await writeAdminToSheet(`${t}!A1:B1`,[['Round','Course']])}}}catch(e){}}if(ok)showAdminToast('Config saved')}
+async function saveAllAdmin(){if(!gAuthToken){showAdminToast('Sign in with Google first',true);return}const btn=document.getElementById('globalSaveBtn');if(btn){btn.disabled=true;btn.textContent='Saving…'}let ok=true;const cfgNameEl=document.getElementById('cfgName');const cfgSPEl=document.getElementById('cfgScorerPIN');const cfgAPEl=document.getElementById('cfgAdminPIN');const n=cfgNameEl?cfgNameEl.value.trim():tournamentName;const sp=cfgSPEl?cfgSPEl.value.trim():scorerPIN;const ap=cfgAPEl?cfgAPEl.value.trim():adminPIN;if(n){tournamentName=n;document.getElementById('siteName').textContent=n;document.title=n;document.getElementById('adminBrandName').textContent=n+' Admin'}if(sp)scorerPIN=sp;if(ap)adminPIN=ap;ok=await batchWriteCells([{range:'Config!B2',values:[[tournamentName]]},{range:'Config!D2',values:[[scorerPIN]]},{range:'Config!E2',values:[[adminPIN]]}])&&ok;const yearVals=availableYears.map(y=>[y]);if(yearVals.length)ok=await writeAdminToSheet('Config!A2:A'+(yearVals.length+1),yearVals)&&ok;const ycStart=yearVals.length+2;await writeAdminToSheet('Config!A'+ycStart+':A'+(ycStart+19),Array.from({length:20},()=>['']));if(gAuthToken){try{const sheetsRes=await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}`,{headers:{'Authorization':`Bearer ${gAuthToken}`}});const sheetsData=await sheetsRes.json();const existing=(sheetsData.sheets||[]).map(s=>s.properties.title);const newTabs=[];for(const yr of availableYears){if(!existing.includes(`Scores ${yr}`))newTabs.push(`Scores ${yr}`);if(!existing.includes(`Rounds ${yr}`))newTabs.push(`Rounds ${yr}`)}if(newTabs.length){await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}:batchUpdate`,{method:'POST',headers:{'Authorization':`Bearer ${gAuthToken}`,'Content-Type':'application/json'},body:JSON.stringify({requests:newTabs.map(t=>({addSheet:{properties:{title:t}}}))})});for(const t of newTabs){if(t.startsWith('Scores'))await writeAdminToSheet(`${t}!A1:C1`,[['Player','HI','Team']]);else await writeAdminToSheet(`${t}!A1:B1`,[['Round','Course']])}}}catch(e){}}if(adminCoursesData.length){const ch=['Course','Par','Rating','Slope','Tees'];const cd=adminCoursesData.filter(c=>c.name).map(c=>[c.name,c.par,c.rating,c.slope,c.tees||'']);ok=await writeAdminToSheet('Courses!A1:E1',[ch])&&ok;if(cd.length)ok=await writeAdminToSheet('Courses!A2:E'+(cd.length+1),cd)&&ok;const ccStart=cd.length+2;await writeAdminToSheet('Courses!A'+ccStart+':E'+(ccStart+19),Array.from({length:20},()=>['','','','','']));courses={};adminCoursesData.filter(c=>c.name).forEach(c=>{courses[c.name]={par:parseFloat(c.par)||72,rating:parseFloat(c.rating)||72,slope:parseFloat(c.slope)||113,tees:c.tees||''}})}const edits=window._adminRoundEdits||{};if(Object.keys(edits).length){const aRoundMap=window._adminRoundMap||(adminYear===currentYear?roundMap:{});const rc=window._adminRoundCount||adminTotalRounds;const merged={};for(let rn=1;rn<=rc;rn++){merged[rn]=edits[rn]!==undefined?edits[rn]:(aRoundMap[String(rn)]||'')}ok=await writeAdminToSheet(`Rounds ${adminYear}!A1:B1`,[['Round','Course']])&&ok;const rd=Object.entries(merged).filter(([,v])=>v).map(([k,v])=>[`Round ${k}`,v]);if(rd.length)ok=await writeAdminToSheet(`Rounds ${adminYear}!A2:B${rd.length+1}`,rd)&&ok;const rcStart=rd.length+2;await writeAdminToSheet(`Rounds ${adminYear}!A${rcStart}:B${rcStart+9}`,Array.from({length:10},()=>['','']));if(adminYear===currentYear){roundMap={};Object.entries(merged).forEach(([k,v])=>{if(v)roundMap[k]=v});totalRounds=rc}window._adminRoundEdits={}}if(adminPlayersData.some(p=>p.name)){const tab=`Scores ${adminYear}`;const maxRounds=Math.max(adminTotalRounds,4);const headers=['Player','HI','Team'];for(let rn=1;rn<=maxRounds;rn++){headers.push(`R${rn} Front`,`R${rn} Back`)}const lc=String.fromCharCode(67+maxRounds*2);ok=await writeAdminToSheet(`${tab}!A1:${lc}1`,[headers])&&ok;const rows=[];for(const p of adminPlayersData.filter(p=>p.name)){const sc=adminScoresData[p.name]||{};const row=[p.name,p.hi,p.team];for(let rn=1;rn<=maxRounds;rn++){const s=sc[rn]||{};row.push(s.front||0,s.back||0)}rows.push(row)}if(rows.length)ok=await writeAdminToSheet(`${tab}!A2:${lc}${rows.length+1}`,rows)&&ok;const pcStart=rows.length+2;await writeAdminToSheet(`${tab}!A${pcStart}:${lc}${pcStart+19}`,Array.from({length:20},()=>Array(headers.length).fill('')))}if(btn){btn.disabled=false;btn.textContent='Save All & Close'}if(ok){showAdminToast('All saved');if(adminYear===currentYear){lastCSV='';load()}setTimeout(closeAdminPanel,600)}else showAdminToast('Some saves failed',true)}
+function renderAdminCourses(el){el.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px"><div><div class="admin-section-title">Courses</div><div class="admin-section-sub">Add and manage courses.</div></div><button class="admin-btn admin-btn-primary admin-btn-sm" onclick="addAdminCourse()">+ Add</button></div><div class="admin-table-wrap"><div class="admin-table-head" style="grid-template-columns:1.6fr 1fr 70px 80px 80px 36px"><span>Name</span><span>Tees</span><span style="text-align:center">Par</span><span style="text-align:center">Rating</span><span style="text-align:center">Slope</span><span></span></div><div id="adminCoursesRows"></div></div><div class="admin-actions-row"><button class="admin-btn admin-btn-primary" onclick="saveAllCourses()">Save Courses</button><button class="admin-btn admin-btn-primary" onclick="saveAllAdmin()">Save All & Close</button></div>`;renderAdminCourseRows()}
+function renderAdminCourseRows(){const c=document.getElementById('adminCoursesRows');if(!c)return;const sorted=[...adminCoursesData].sort((a,b)=>a.name.localeCompare(b.name));c.innerHTML=sorted.map(x=>`<div class="admin-table-row" style="grid-template-columns:1.6fr 1fr 70px 80px 80px 36px"><input class="admin-inline-input" value="${esc(x.name)}" placeholder="Course…" onchange="updateAdminCourse(${x.id},'name',this.value)" /><input class="admin-inline-input" value="${esc(x.tees||'')}" placeholder="Tees…" onchange="updateAdminCourse(${x.id},'tees',this.value)" /><input class="admin-inline-input" value="${esc(x.par)}" placeholder="72" style="text-align:center" onchange="updateAdminCourse(${x.id},'par',this.value)" /><input class="admin-inline-input" value="${esc(x.rating)}" placeholder="72.0" style="text-align:center" onchange="updateAdminCourse(${x.id},'rating',this.value)" /><input class="admin-inline-input" value="${esc(x.slope)}" placeholder="113" style="text-align:center" onchange="updateAdminCourse(${x.id},'slope',this.value)" /><button class="admin-btn-icon" onclick="deleteAdminCourse(${x.id})">X</button></div>`).join('')||'<div style="padding:20px;text-align:center;color:var(--text-muted)">No courses yet</div>'}
+function updateAdminCourse(id,f,v){const c=adminCoursesData.find(x=>x.id===id);if(c)c[f]=v}
+function addAdminCourse(){const id=adminCoursesData.length?Math.max(...adminCoursesData.map(c=>c.id))+1:1;adminCoursesData.push({id,name:'',par:'72',rating:'',slope:'',tees:''});renderAdminCourseRows()}
+function deleteAdminCourse(id){if(!confirm('Delete?'))return;adminCoursesData=adminCoursesData.filter(c=>c.id!==id);renderAdminCourseRows()}
+async function saveAllCourses(){let ok=await writeAdminToSheet('Courses!A1:E1',[['Course','Par','Rating','Slope','Tees']]);const cd=adminCoursesData.filter(c=>c.name).map(c=>[c.name,c.par,c.rating,c.slope,c.tees||'']);if(cd.length)ok=await writeAdminToSheet('Courses!A2:E'+(cd.length+1),cd)&&ok;const clearStart=cd.length+2;const clearRows=Array.from({length:20},()=>['','','','','']);await writeAdminToSheet('Courses!A'+clearStart+':E'+(clearStart+19),clearRows);if(ok){courses={};adminCoursesData.filter(c=>c.name).forEach(c=>{courses[c.name]={par:parseFloat(c.par)||72,rating:parseFloat(c.rating)||72,slope:parseFloat(c.slope)||113,tees:c.tees||''}});showAdminToast('Courses saved');lastCSV=''}}
+function renderAdminRounds(el){const cn=adminCoursesData.filter(c=>c.name).map(c=>c.name).sort((a,b)=>a.localeCompare(b));if(!window._adminRoundCount)window._adminRoundCount=adminTotalRounds;const aRoundMap=window._adminRoundMap||(adminYear===currentYear?roundMap:{});el.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px"><div><div class="admin-section-title">Rounds — ${adminYear}</div><div class="admin-section-sub">Map rounds to courses. Add or remove rounds as needed.</div></div><div style="display:flex;gap:6px"><button class="admin-btn admin-btn-secondary admin-btn-sm" onclick="removeAdminRound()">− Remove</button><button class="admin-btn admin-btn-primary admin-btn-sm" onclick="addAdminRound()">+ Add</button></div></div><div class="admin-table-wrap"><div class="admin-table-head" style="grid-template-columns:110px 1fr"><span>Round</span><span>Course</span></div>${Array.from({length:window._adminRoundCount},(_,i)=>i+1).map(rn=>{const cur=(window._adminRoundEdits&&window._adminRoundEdits[rn]!==undefined)?window._adminRoundEdits[rn]:(aRoundMap[String(rn)]||'');return`<div class="admin-table-row" style="grid-template-columns:110px 1fr"><span style="background:var(--green-500);color:var(--cream);border-radius:6px;padding:3px 10px;font-size:0.75rem;font-weight:700">R${rn}</span><select class="admin-input" style="padding:7px 12px" onchange="updateAdminRound(${rn},this.value)"><option value="">— Select —</option>${cn.map(c=>{const t=adminCoursesData.find(x=>x.name===c);const label=t&&t.tees?c+' — '+t.tees:c;return`<option value="${c}" ${c===cur?'selected':''}>${label}</option>`}).join('')}</select></div>`}).join('')}</div><div class="admin-actions-row"><button class="admin-btn admin-btn-primary" onclick="saveAdminRounds()">Save Rounds</button><button class="admin-btn admin-btn-primary" onclick="saveAllAdmin()">Save All & Close</button></div>`}
+function addAdminRound(){if(!window._adminRoundCount)window._adminRoundCount=totalRounds;window._adminRoundCount++;renderAdminTab('rounds')}
+function removeAdminRound(){if(!window._adminRoundCount)window._adminRoundCount=totalRounds;if(window._adminRoundCount<=1){showAdminToast('Need at least 1 round',true);return}const rn=window._adminRoundCount;if(window._adminRoundEdits)delete window._adminRoundEdits[rn];window._adminRoundCount--;renderAdminTab('rounds')}
+function updateAdminRound(rn,v){if(!window._adminRoundEdits)window._adminRoundEdits={};window._adminRoundEdits[rn]=v}
+async function saveAdminRounds(){const rc=window._adminRoundCount||adminTotalRounds;const edits=window._adminRoundEdits||{};const aRoundMap=window._adminRoundMap||(adminYear===currentYear?roundMap:{});const merged={};for(let rn=1;rn<=rc;rn++){merged[rn]=edits[rn]!==undefined?edits[rn]:(aRoundMap[String(rn)]||'')}const tabName=`Rounds ${adminYear}`;let ok=await writeAdminToSheet(`${tabName}!A1:B1`,[['Round','Course']]);const rd=Object.entries(merged).filter(([,v])=>v).map(([k,v])=>[`Round ${k}`,v]);if(rd.length)ok=await writeAdminToSheet(`${tabName}!A2:B${rd.length+1}`,rd)&&ok;const clearStart=rd.length+2;const clearRows=Array.from({length:10},()=>['','']);await writeAdminToSheet(`${tabName}!A${clearStart}:B${clearStart+9}`,clearRows);if(ok){if(adminYear===currentYear){roundMap={};Object.entries(merged).forEach(([k,v])=>{if(v)roundMap[k]=v});totalRounds=rc;buildViewButtons();buildHcHeader()}window._adminRoundMap={};Object.entries(merged).forEach(([k,v])=>{if(v)window._adminRoundMap[k]=v});adminTotalRounds=rc;window._adminRoundEdits={};showAdminToast('Rounds saved');lastCSV=''}}
+function renderAdminPlayers(el){const teams=[...new Set(adminPlayersData.map(p=>p.team).filter(Boolean))];const sorted=[...adminPlayersData].sort((a,b)=>(parseFloat(a.hi)||0)-(parseFloat(b.hi)||0));const filtered=adminPlayerSearch?sorted.filter(p=>p.name.toLowerCase().includes(adminPlayerSearch.toLowerCase())||p.team.toLowerCase().includes(adminPlayerSearch.toLowerCase())):sorted;const otherYears=availableYears.filter(y=>y!==adminYear);el.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;flex-wrap:wrap;gap:10px"><div><div class="admin-section-title">Players — ${adminYear}</div><div class="admin-section-sub">${adminPlayersData.length} players · ${teams.length} teams</div></div><div style="display:flex;gap:6px;flex-wrap:wrap">${otherYears.length?`<button class="admin-btn admin-btn-secondary admin-btn-sm" onclick="showImportYearPicker()">Import Players</button>`:''}<button class="admin-btn admin-btn-primary admin-btn-sm" onclick="addAdminPlayer()">+ Add</button></div></div><div id="importYearPicker" style="display:none;margin-bottom:14px;padding:12px;background:var(--surface-2);border:1px solid var(--border);border-radius:8px"><div style="font-size:0.72rem;font-weight:600;color:var(--text-muted);margin-bottom:8px">Import players from:</div><div style="display:flex;gap:6px;flex-wrap:wrap">${otherYears.map(y=>`<button class="admin-btn admin-btn-secondary admin-btn-sm" onclick="importPlayersFromYear('${y}')">${y}</button>`).join('')}<button class="admin-btn admin-btn-secondary admin-btn-sm" onclick="document.getElementById('importYearPicker').style.display='none'" style="color:var(--text-muted)">Cancel</button></div></div><input class="admin-search-input" placeholder="Search…" value="${esc(adminPlayerSearch)}" oninput="adminPlayerSearch=this.value;renderAdminTab('players')" /><div class="admin-table-wrap"><div class="admin-table-head" style="grid-template-columns:1.4fr 70px 1fr 36px"><span>Name</span><span style="text-align:center">HI</span><span>Team</span><span></span></div><div id="adminPlayerRows"></div></div><div class="admin-actions-row"><button class="admin-btn admin-btn-primary" onclick="saveAllPlayers()">Save Players</button><button class="admin-btn admin-btn-primary" onclick="saveAllAdmin()">Save All & Close</button></div>`;document.getElementById('adminPlayerRows').innerHTML=filtered.map(p=>`<div class="admin-table-row" style="grid-template-columns:1.4fr 70px 1fr 36px"><input class="admin-inline-input" value="${esc(p.name)}" placeholder="Name…" onchange="updateAdminPlayer(${p.id},'name',this.value)" /><input class="admin-inline-input" value="${esc(p.hi)}" placeholder="0.0" style="text-align:center" onchange="updateAdminPlayer(${p.id},'hi',this.value)" /><input class="admin-inline-input" value="${esc(p.team)}" placeholder="Team…" onchange="updateAdminPlayer(${p.id},'team',this.value)" /><button class="admin-btn-icon" onclick="deleteAdminPlayer(${p.id})">X</button></div>`).join('')||'<div style="padding:20px;text-align:center;color:var(--text-muted)">No players</div>'}
+function updateAdminPlayer(id,f,v){const p=adminPlayersData.find(x=>x.id===id);if(p)p[f]=v}
+function addAdminPlayer(){const id=adminPlayersData.length?Math.max(...adminPlayersData.map(p=>p.id))+1:1;adminPlayersData.push({id,name:'',hi:'',team:''});renderAdminTab('players')}
+function showImportYearPicker(){const el=document.getElementById('importYearPicker');if(el)el.style.display='block'}
+async function importPlayersFromYear(yr){const scoresRaw=await fetchTab(`Scores ${yr}`);if(scoresRaw.length<=1){showAdminToast('No players found in '+yr,true);return}const imported=[];for(let i=1;i<scoresRaw.length;i++){const r=scoresRaw[i];if(!r[0]||!r[0].trim())continue;const name=r[0].trim();if(adminPlayersData.some(p=>p.name===name))continue;const id=adminPlayersData.length?Math.max(...adminPlayersData.map(p=>p.id))+1:1;const entry={id,name,hi:String(parseFloat(r[1])||0),team:(r[2]||'').trim()};adminPlayersData.push(entry);imported.push(name)}if(imported.length){showAdminToast(imported.length+' players imported from '+yr);renderAdminTab('players')}else{showAdminToast('All players already exist',true)}}
+function deleteAdminPlayer(id){if(!confirm('Remove?'))return;adminPlayersData=adminPlayersData.filter(p=>p.id!==id);renderAdminTab('players')}
+async function saveAllPlayers(){const tab=`Scores ${adminYear}`;const maxRounds=Math.max(adminTotalRounds,4);const headers=['Player','HI','Team'];for(let rn=1;rn<=maxRounds;rn++){headers.push(`R${rn} Front`,`R${rn} Back`)}const lc=String.fromCharCode(67+maxRounds*2);await writeAdminToSheet(`${tab}!A1:${lc}1`,[headers]);const rows=[];for(const p of adminPlayersData.filter(p=>p.name)){const sc=adminScoresData[p.name]||{};const row=[p.name,p.hi,p.team];for(let rn=1;rn<=maxRounds;rn++){const s=sc[rn]||{};row.push(s.front||0,s.back||0)}rows.push(row)}if(rows.length){let ok=await writeAdminToSheet(`${tab}!A2:${lc}${rows.length+1}`,rows);if(ok){const clearStart=rows.length+2;const clearRows=Array.from({length:20},()=>Array(headers.length).fill(''));await writeAdminToSheet(`${tab}!A${clearStart}:${lc}${clearStart+19}`,clearRows);showAdminToast('Players saved');if(adminYear===currentYear){lastCSV='';load()}}}else{showAdminToast('No players to save',true)}}
+function renderAdminScores(el){const teams=[...new Set(adminPlayersData.map(p=>p.team).filter(Boolean))];const done=adminPlayersData.filter(p=>{const s=adminScoresData[p.name]?.[adminActiveScoreRound];return s&&s.front&&s.back}).length;const tot=adminPlayersData.length;el.innerHTML=`<div class="admin-section-title">Scores — ${adminYear}</div><div class="admin-section-sub">Enter and review gross scores.</div><div class="admin-score-round-tabs">${Array.from({length:adminTotalRounds},(_,i)=>i+1).map(rn=>`<button class="admin-score-rtab ${rn===adminActiveScoreRound?'active':'inactive'}" onclick="adminActiveScoreRound=${rn};renderAdminTab('scores')">R${rn}</button>`).join('')}</div><div style="display:flex;align-items:center;gap:10px;margin-bottom:16px"><div class="admin-progress-bar"><div class="admin-progress-fill" style="width:${tot?done/tot*100:0}%"></div></div><span style="font-size:0.72rem;color:var(--text-muted)">${done}/${tot}</span></div><div class="admin-table-wrap"><div class="admin-table-head" style="grid-template-columns:1fr 90px 90px 70px"><span>Player</span><span style="text-align:center">Front</span><span style="text-align:center">Back</span><span style="text-align:center">Gross</span></div><div id="adminScoreRows"></div></div><div class="admin-actions-row"><button class="admin-btn admin-btn-secondary admin-btn-sm" onclick="repairZeros()">Repair Zeros</button><button class="admin-btn admin-btn-primary" onclick="saveAdminScores()">Save Scores</button><button class="admin-btn admin-btn-primary" onclick="saveAllAdmin()">Save All & Close</button></div>`;const c=document.getElementById('adminScoreRows');const rr=p=>{const s=adminScoresData[p.name]?.[adminActiveScoreRound]||{front:'',back:''};const gross=(s.front&&s.back)?parseInt(s.front)+parseInt(s.back):null;const complete=s.front&&s.back;return`<div class="admin-table-row" style="grid-template-columns:1fr 90px 90px 70px"><div style="display:flex;align-items:center;gap:6px">${complete?'<span style="color:var(--green-300);font-size:0.75rem">✓</span>':'<span style="color:var(--text-muted);font-size:0.75rem">○</span>'}<span style="font-size:0.85rem;font-weight:600;color:${complete?'var(--cream)':'var(--text-secondary)'}">${esc(p.name)}</span></div><div style="text-align:center"><input class="admin-score-input ${s.front?'has-val':''}" type="text" inputmode="numeric" value="${s.front}" placeholder="—" maxlength="2" onchange="updateAdminScore('${esc(p.name)}',${adminActiveScoreRound},'front',this.value)" /></div><div style="text-align:center"><input class="admin-score-input ${s.back?'has-val':''}" type="text" inputmode="numeric" value="${s.back}" placeholder="—" maxlength="2" onchange="updateAdminScore('${esc(p.name)}',${adminActiveScoreRound},'back',this.value)" /></div><div style="text-align:center;font-weight:700;color:${gross===null?'var(--text-muted)':'var(--text-primary)'}">${gross!==null?gross:'—'}</div></div>`};let h='';if(teams.length){for(const t of teams){h+=`<div style="padding:7px 14px;background:rgba(0,103,71,0.12);font-size:0.62rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);border-bottom:1px solid var(--border)">${esc(t)}</div>`;h+=adminPlayersData.filter(p=>p.team===t).map(rr).join('')}}else h=adminPlayersData.map(rr).join('');c.innerHTML=h||'<div style="padding:20px;text-align:center;color:var(--text-muted)">No players</div>'}
+function updateAdminScore(name,rn,half,v){if(!adminScoresData[name])adminScoresData[name]={};if(!adminScoresData[name][rn])adminScoresData[name][rn]={front:'',back:''};adminScoresData[name][rn][half]=v.replace(/\D/g,'').slice(0,2)}
+async function saveAdminScores(){await saveAllPlayers();showAdminToast('Scores saved')}
+async function repairZeros(){if(!gAuthToken){showAdminToast('Sign in first',true);return}showAdminToast('Repairing…');const tab=`Scores ${adminYear}`;const scoresRaw=await fetchTab(tab);if(scoresRaw.length<=1){showAdminToast('No data found',true);return}const maxCol=scoresRaw[0].length;let fixed=0;const rows=[];for(let i=1;i<scoresRaw.length;i++){const r=scoresRaw[i];if(!r[0]||!r[0].trim()){rows.push(r);continue}const row=[...r];while(row.length<maxCol)row.push('0');for(let c=3;c<maxCol;c++){if(!row[c]||row[c].trim()===''||row[c].trim()==='-'){row[c]='0';fixed++}}rows.push(row)}if(fixed===0){showAdminToast('All cells already have values');return}const lc=String.fromCharCode(64+maxCol);const ok=await writeAdminToSheet(`${tab}!A2:${lc}${rows.length+1}`,rows);if(ok){showAdminToast(fixed+' empty cells filled with 0');if(adminYear===currentYear){lastCSV='';load()}await loadAdminYear(adminYear);renderAdminTab('scores')}else{showAdminToast('Repair failed',true)}}
+
+/* ═══ SKINS SYSTEM ═══ */
+let skinsData=[];let skinsMatchups=[];let scorerMode='scores';
+let adminMatchupYear='';let adminMatchupRound=1;let adminMatchupData=[];
+
+async function loadSkins(){const raw=await fetchTab('Skins '+currentYear);skinsData=[];if(raw.length>1){for(let i=1;i<raw.length;i++){const r=raw[i];if(!r[0])continue;skinsData.push({round:parseInt(r[0])||0,match:parseInt(r[1])||0,p1:(r[2]||'').trim(),p2:(r[3]||'').trim(),p3:(r[4]||'').trim(),p4:(r[5]||'').trim(),t1f:parseInt(r[6])||0,t1b:parseInt(r[7])||0,t2f:parseInt(r[8])||0,t2b:parseInt(r[9])||0})}}}
+
+function getTeamSkinsTotals(){const teams=[...new Set(players.map(p=>p.team).filter(Boolean))];if(teams.length<2)return null;const totals={};teams.forEach(t=>totals[t]=0);for(const s of skinsData){const p1team=players.find(p=>p.name===s.p1)?.team;const p2team=players.find(p=>p.name===s.p3)?.team;if(p1team)totals[p1team]=(totals[p1team]||0)+s.t1f+s.t1b;if(p2team)totals[p2team]=(totals[p2team]||0)+s.t2f+s.t2b}return totals}
+
+function renderSkinsSection(){const el=document.getElementById('skinsSection');const sum=document.getElementById('skinsSummary');if(!teamMode||!skinsData.length){el.style.display='none';return}const totals=getTeamSkinsTotals();if(!totals){el.style.display='none';return}const teams=Object.entries(totals).sort((a,b)=>b[1]-a[1]);const total=teams.reduce((s,t)=>s+t[1],0);const diff=teams[0][1]-teams[1][1];el.style.display='block';let h='<div class="skins-team-row">';h+=`<div class="skins-team"><div class="skins-team-name">${esc(teams[0][0])}</div><div class="skins-team-count" style="color:var(--gold)">${teams[0][1]}</div><div class="skins-team-label">skins</div></div>`;h+=`<div class="skins-vs">vs</div>`;h+=`<div class="skins-team"><div class="skins-team-name">${esc(teams[1][0])}</div><div class="skins-team-count" style="color:var(--cream)">${teams[1][1]}</div><div class="skins-team-label">skins</div></div>`;h+='</div>';h+=`<div class="skins-bar"><div class="skins-bar-fill" style="width:${total>0?(teams[0][1]/total*100):50}%"></div></div>`;if(diff>0)h+=`<div class="skins-lead-text" style="color:var(--green-300)">${esc(teams[0][0])} leads by ${diff} skin${diff!==1?'s':''}</div>`;else h+=`<div class="skins-lead-text" style="color:var(--text-muted)">Tied</div>`;sum.innerHTML=h}
+
+function openSkinsModal(){if(!skinsData.length)return;const modal=document.getElementById('skinsModal');const body=document.getElementById('skinsModalBody');const teams=[...new Set(players.map(p=>p.team).filter(Boolean))];if(teams.length<2){body.innerHTML='<div style="padding:20px;text-align:center;color:var(--text-muted)">No team data</div>';modal.classList.add('open');return}const totals=getTeamSkinsTotals();const tArr=Object.entries(totals).sort((a,b)=>b[1]-a[1]);const total=tArr.reduce((s,t)=>s+t[1],0);const diff=tArr[0][1]-tArr[1][1];let h='<div class="skins-team-row" style="margin-bottom:16px">';h+=`<div class="skins-team"><div class="skins-team-name">${esc(tArr[0][0])}</div><div class="skins-team-count" style="color:var(--gold)">${tArr[0][1]}</div><div class="skins-team-label">skins</div></div>`;h+=`<div class="skins-vs">vs</div>`;h+=`<div class="skins-team"><div class="skins-team-name">${esc(tArr[1][0])}</div><div class="skins-team-count" style="color:var(--cream)">${tArr[1][1]}</div><div class="skins-team-label">skins</div></div>`;h+='</div>';h+=`<div class="skins-bar"><div class="skins-bar-fill" style="width:${total>0?(tArr[0][1]/total*100):50}%"></div></div>`;if(diff>0)h+=`<div class="skins-lead-text" style="color:var(--green-300);margin-bottom:20px">${esc(tArr[0][0])} leads by ${diff} skin${diff!==1?'s':''}</div>`;else h+=`<div class="skins-lead-text" style="color:var(--text-muted);margin-bottom:20px">Tied</div>`;const rounds=[...new Set(skinsData.map(s=>s.round))].sort((a,b)=>a-b);for(const rn of rounds){const rMatches=skinsData.filter(s=>s.round===rn);const cn=getCourseName(rn);let rT1=0,rT2=0;rMatches.forEach(m=>{rT1+=m.t1f+m.t1b;rT2+=m.t2f+m.t2b});const t1=teams[0],t2=teams[1];h+=`<div class="skins-round-card"><div class="skins-round-head"><div style="display:flex;align-items:center;gap:8px"><span style="background:var(--green-500);color:var(--cream);border-radius:6px;padding:3px 10px;font-size:0.72rem;font-weight:700">R${rn}</span><span style="font-size:0.8rem;color:var(--text-secondary)">${cn?esc(cn):''}</span></div><div style="display:flex;gap:14px;font-size:0.82rem;font-weight:700"><span style="color:${rT1>rT2?'var(--green-300)':rT1<rT2?'var(--red)':'var(--cream)'}">${rT1}</span><span style="color:${rT2>rT1?'var(--green-300)':rT2<rT1?'var(--red)':'var(--cream)'}">${rT2}</span></div></div><div class="skins-round-body">`;for(const m of rMatches){const t1p=[m.p1,m.p2].filter(Boolean);const t2p=[m.p3,m.p4].filter(Boolean);const mt1=m.t1f+m.t1b;const mt2=m.t2f+m.t2b;h+=`<div class="skins-match-title">Match ${m.match}</div>`;h+=`<div class="skins-match-players"><div>${t1p.map(n=>`<div style="font-weight:500;color:var(--cream)">${esc(n)}</div>`).join('')}</div><div style="font-size:0.65rem;color:var(--text-muted);align-self:center;font-weight:600">vs</div><div style="text-align:right">${t2p.map(n=>`<div style="font-weight:500;color:var(--cream)">${esc(n)}</div>`).join('')}</div></div>`;h+=`<div class="skins-grid"><div class="skins-grid-head">${esc(t1).replace('Team ','')}</div><div></div><div class="skins-grid-head" style="text-align:right">${esc(t2).replace('Team ','')}</div>`;h+=`<div style="font-weight:700;color:${m.t1f>m.t2f?'var(--green-300)':m.t1f<m.t2f?'var(--red)':'var(--cream)'}">${m.t1f}</div><div class="skins-grid-label">Front 9</div><div style="font-weight:700;text-align:right;color:${m.t2f>m.t1f?'var(--green-300)':m.t2f<m.t1f?'var(--red)':'var(--cream)'}">${m.t2f}</div>`;h+=`<div style="font-weight:700;color:${m.t1b>m.t2b?'var(--green-300)':m.t1b<m.t2b?'var(--red)':'var(--cream)'}">${m.t1b}</div><div class="skins-grid-label">Back 9</div><div style="font-weight:700;text-align:right;color:${m.t2b>m.t1b?'var(--green-300)':m.t2b<m.t1b?'var(--red)':'var(--cream)'}">${m.t2b}</div>`;h+=`<div class="skins-grid-total" style="font-weight:700;color:${mt1>mt2?'var(--gold)':'var(--cream)'}">${mt1}</div><div class="skins-grid-total skins-grid-label" style="font-weight:600">Total</div><div class="skins-grid-total" style="font-weight:700;text-align:right;color:${mt2>mt1?'var(--gold)':'var(--cream)'}">${mt2}</div>`;h+=`</div>`}h+=`</div></div>`}body.innerHTML=h;modal.classList.add('open');modal.querySelector('.modal-sheet').scrollTop=0}
+
+/* ═══ SCORER SKINS MODE ═══ */
+function switchScorerMode(mode){scorerMode=mode;document.getElementById('scorerModeScores').className='scorer-rtab '+(mode==='scores'?'active':'inactive');document.getElementById('scorerModeSkins').className='scorer-rtab '+(mode==='skins'?'active':'inactive');if(mode==='scores'){document.getElementById('scorerRoundTabs').style.display='';document.querySelector('.scorer-progress-row').style.display='';renderScorerModal()}else{document.getElementById('scorerRoundTabs').style.display='';document.querySelector('.scorer-progress-row').style.display='none';renderScorerSkinsMode()}}
+
+async function renderScorerSkinsMode(){const tabsEl=document.getElementById('scorerRoundTabs');tabsEl.innerHTML=Array.from({length:totalRounds},(_,i)=>i+1).map(rn=>`<button class="scorer-rtab ${rn===scorerActiveRound?'active':'inactive'}" data-rn="${rn}">R${rn}</button>`).join('');tabsEl.querySelectorAll('.scorer-rtab').forEach(btn=>{btn.addEventListener('click',()=>{scorerActiveRound=parseInt(btn.dataset.rn);renderScorerSkinsMode()})});document.getElementById('scorerCourseName').textContent='Skins — '+(getCourseName(scorerActiveRound)||'Round '+scorerActiveRound);const body=document.getElementById('scorerBody');const raw=await fetchTab('Skins '+currentYear);const roundMatches=[];if(raw.length>1){for(let i=1;i<raw.length;i++){const r=raw[i];if(parseInt(r[0])===scorerActiveRound)roundMatches.push({row:i+1,match:parseInt(r[1])||0,p1:(r[2]||'').trim(),p2:(r[3]||'').trim(),p3:(r[4]||'').trim(),p4:(r[5]||'').trim(),t1f:parseInt(r[6])||0,t1b:parseInt(r[7])||0,t2f:parseInt(r[8])||0,t2b:parseInt(r[9])||0})}}if(!roundMatches.length){body.innerHTML='<div style="padding:40px 20px;text-align:center;color:var(--text-muted)"><div style="font-size:1.1rem;margin-bottom:8px">No matchups set for Round '+scorerActiveRound+'</div><div style="font-size:0.82rem">Set up matchups in the admin Matchups tab first.</div></div>';return}const teams=[...new Set(players.map(p=>p.team).filter(Boolean))];const t1=teams[0]||'Team 1',t2=teams[1]||'Team 2';let h='';for(const m of roundMatches){const t1p=[m.p1,m.p2].filter(Boolean);const t2p=[m.p3,m.p4].filter(Boolean);h+=`<div class="scorer-player-card" style="margin-bottom:16px"><div style="font-size:0.62rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-bottom:8px">Match ${m.match}</div>`;h+=`<div style="display:flex;justify-content:space-between;margin-bottom:12px;font-size:0.82rem"><div>${t1p.map(n=>`<div style="font-weight:600;color:var(--cream)">${esc(n)}</div>`).join('')}<div style="font-size:0.6rem;color:var(--text-muted);margin-top:2px">${esc(t1)}</div></div><div style="color:var(--text-muted);align-self:center;font-size:0.65rem;font-weight:600">vs</div><div style="text-align:right">${t2p.map(n=>`<div style="font-weight:600;color:var(--cream)">${esc(n)}</div>`).join('')}<div style="font-size:0.6rem;color:var(--text-muted);margin-top:2px">${esc(t2)}</div></div></div>`;h+=`<div style="display:grid;grid-template-columns:1fr auto 1fr;gap:6px 12px;align-items:center">`;h+=`<div style="font-size:0.65rem;font-weight:600;color:var(--text-muted);letter-spacing:0.06em">${esc(t1).replace('Team ','')}</div><div></div><div style="font-size:0.65rem;font-weight:600;color:var(--text-muted);letter-spacing:0.06em;text-align:right">${esc(t2).replace('Team ','')}</div>`;h+=`<input class="scorer-input ${m.t1f>0?'saved':''}" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" value="${m.t1f||''}" placeholder="—" style="text-align:center;font-size:1.2rem;padding:10px" data-skins-row="${m.row}" data-skins-col="G" onchange="saveSkinScore(this)" />`;h+=`<div style="text-align:center;font-size:0.68rem;color:var(--text-muted)">Front 9</div>`;h+=`<input class="scorer-input ${m.t2f>0?'saved':''}" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" value="${m.t2f||''}" placeholder="—" style="text-align:center;font-size:1.2rem;padding:10px" data-skins-row="${m.row}" data-skins-col="I" onchange="saveSkinScore(this)" />`;h+=`<input class="scorer-input ${m.t1b>0?'saved':''}" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" value="${m.t1b||''}" placeholder="—" style="text-align:center;font-size:1.2rem;padding:10px" data-skins-row="${m.row}" data-skins-col="H" onchange="saveSkinScore(this)" />`;h+=`<div style="text-align:center;font-size:0.68rem;color:var(--text-muted)">Back 9</div>`;h+=`<input class="scorer-input ${m.t2b>0?'saved':''}" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" value="${m.t2b||''}" placeholder="—" style="text-align:center;font-size:1.2rem;padding:10px" data-skins-row="${m.row}" data-skins-col="J" onchange="saveSkinScore(this)" />`;h+=`</div></div>`}body.innerHTML=h}
+
+async function saveSkinScore(input){const row=input.dataset.skinsRow;const col=input.dataset.skinsCol;const val=parseInt(input.value)||0;const tab='Skins '+currentYear;if(APPS_SCRIPT_URL){try{const res=await fetch(APPS_SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'writeSkinScore',pin:scorerPIN,year:currentYear,tab:tab,row:parseInt(row),col:col,val:val})});const d=await res.json();if(d.ok){input.classList.add('saved');showAdminToast('Skin saved')}else throw new Error(d.error||'Failed')}catch(err){input.classList.remove('saved');showAdminToast('Save failed: '+err.message,true)}}else if(gAuthToken){try{const range=`${tab}!${col}${row}`;const res=await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(range)}?valueInputOption=RAW`,{method:'PUT',headers:{'Authorization':`Bearer ${gAuthToken}`,'Content-Type':'application/json'},body:JSON.stringify({range,values:[[val]]})});if(res.ok){input.classList.add('saved');showAdminToast('Skin saved')}else throw new Error('Write failed')}catch(err){input.classList.remove('saved');showAdminToast('Save failed: '+err.message,true)}}else{showAdminToast('Not authenticated',true)}}
+
+/* ═══ ADMIN MATCHUPS TAB ═══ */
+async function renderAdminMatchups(el){if(!adminMatchupYear)adminMatchupYear=adminYear||currentYear;const numMatches=Math.max(1,Math.floor(adminPlayersData.length/4));el.innerHTML=adminYearSelector();const inner=document.createElement('div');el.appendChild(inner);const raw=await fetchTab('Skins '+adminMatchupYear);adminMatchupData=[];if(raw.length>1){for(let i=1;i<raw.length;i++){const r=raw[i];if(parseInt(r[0])===adminMatchupRound){adminMatchupData.push({match:parseInt(r[1])||0,p1:(r[2]||'').trim(),p2:(r[3]||'').trim(),p3:(r[4]||'').trim(),p4:(r[5]||'').trim(),t1f:parseInt(r[6])||0,t1b:parseInt(r[7])||0,t2f:parseInt(r[8])||0,t2b:parseInt(r[9])||0})}}}while(adminMatchupData.length<numMatches){adminMatchupData.push({match:adminMatchupData.length+1,p1:'',p2:'',p3:'',p4:'',t1f:0,t1b:0,t2f:0,t2b:0})}const pNames=adminPlayersData.map(p=>p.name).filter(Boolean).sort();const teams=[...new Set(adminPlayersData.map(p=>p.team).filter(Boolean))];const t1=teams[0]||'Team 1',t2=teams[1]||'Team 2';const rc=window._adminRoundCount||adminTotalRounds||4;let h=`<div class="admin-section-title">Matchups — ${adminMatchupYear}</div><div class="admin-section-sub">Set 2v2 pairings and skins for each round.</div>`;h+=`<div style="display:flex;gap:4px;margin-bottom:16px;flex-wrap:wrap">${Array.from({length:rc},(_,i)=>i+1).map(rn=>`<button class="admin-score-rtab ${rn===adminMatchupRound?'active':'inactive'}" onclick="adminMatchupRound=${rn};renderAdminTab('matchups')">R${rn}</button>`).join('')}</div>`;for(let mi=0;mi<numMatches;mi++){const m=adminMatchupData[mi]||{p1:'',p2:'',p3:'',p4:''};const sel=(slot,val)=>`<select class="admin-input" style="padding:6px 10px;font-size:0.82rem" onchange="adminMatchupData[${mi}].${slot}=this.value"><option value="">— Select —</option>${pNames.map(n=>`<option ${n===val?'selected':''}>${esc(n)}</option>`).join('')}</select>`;h+=`<div style="background:var(--surface-1);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px">`;h+=`<div style="font-size:0.65rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-bottom:10px">Match ${mi+1}</div>`;h+=`<div style="display:grid;grid-template-columns:1fr auto 1fr;gap:6px 12px;align-items:start">`;h+=`<div><div style="font-size:0.6rem;font-weight:600;color:var(--text-muted);margin-bottom:4px">${esc(t1)}</div>${sel('p1',m.p1)}${sel('p2',m.p2)}</div>`;h+=`<div style="align-self:center;font-size:0.65rem;color:var(--text-muted);font-weight:600;padding-top:18px">vs</div>`;h+=`<div><div style="font-size:0.6rem;font-weight:600;color:var(--text-muted);margin-bottom:4px">${esc(t2)}</div>${sel('p3',m.p3)}${sel('p4',m.p4)}</div>`;h+=`</div></div>`}h+=`<div class="admin-actions-row"><button class="admin-btn admin-btn-primary" onclick="saveMatchups()">Save Matchups</button><button class="admin-btn admin-btn-primary" onclick="saveAllAdmin()">Save All & Close</button></div>`;inner.innerHTML=h}
+
+async function saveMatchups(){if(!gAuthToken){showAdminToast('Sign in first',true);return}const tab='Skins '+adminMatchupYear;try{const sheetsRes=await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}`,{headers:{'Authorization':`Bearer ${gAuthToken}`}});const sheetsData=await sheetsRes.json();const existing=(sheetsData.sheets||[]).map(s=>s.properties.title);if(!existing.includes(tab)){await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}:batchUpdate`,{method:'POST',headers:{'Authorization':`Bearer ${gAuthToken}`,'Content-Type':'application/json'},body:JSON.stringify({requests:[{addSheet:{properties:{title:tab}}}]})});await writeAdminToSheet(`${tab}!A1:J1`,[['Round','Match','P1','P2','P3','P4','T1 Front','T1 Back','T2 Front','T2 Back']])}}catch(e){}const existing2=await fetchTab(tab);const otherRows=[];if(existing2.length>1){for(let i=1;i<existing2.length;i++){if(parseInt(existing2[i][0])!==adminMatchupRound)otherRows.push(existing2[i])}}const newRows=adminMatchupData.filter(m=>m.p1||m.p3).map(m=>[String(adminMatchupRound),String(m.match),m.p1,m.p2,m.p3,m.p4,String(m.t1f||0),String(m.t1b||0),String(m.t2f||0),String(m.t2b||0)]);const allRows=[...otherRows,...newRows];let ok=await writeAdminToSheet(`${tab}!A1:J1`,[['Round','Match','P1','P2','P3','P4','T1 Front','T1 Back','T2 Front','T2 Back']]);if(allRows.length)ok=await writeAdminToSheet(`${tab}!A2:J${allRows.length+1}`,allRows)&&ok;const clearStart=allRows.length+2;await writeAdminToSheet(`${tab}!A${clearStart}:J${clearStart+19}`,Array.from({length:20},()=>Array(10).fill('')));if(ok){showAdminToast('Matchups saved');lastCSV=''}else showAdminToast('Save failed',true)}
+
+/* ═══ INFO TABS ADMIN ═══ */
+let adminInfoActiveTab='';let adminInfoRows=[];
+async function loadAdminInfoTab(tabName){if(!tabName){adminInfoRows=[];return}const raw=await fetchTab(tabName);adminInfoRows=[];if(raw.length>1){for(let i=1;i<raw.length;i++){const r=raw[i];const title=(r[0]||'').trim();const body=(r[1]||'').trim();if(title||body)adminInfoRows.push({title,body})}}}
+async function renderAdminInfoTabs(el){if(!adminInfoActiveTab&&infoTabs.length)adminInfoActiveTab=infoTabs[0];if(adminInfoActiveTab&&!adminInfoRows.length)await loadAdminInfoTab(adminInfoActiveTab);el.innerHTML=`<div class="admin-section-title">Info Tabs</div><div class="admin-section-sub">Manage content tabs shown at the bottom of the leaderboard.</div><div style="display:flex;gap:4px;margin-bottom:16px;flex-wrap:wrap;align-items:center">${infoTabs.map(t=>`<button class="admin-score-rtab ${t===adminInfoActiveTab?'active':'inactive'}" onclick="switchInfoTab('${esc(t)}')">${esc(t)}</button>`).join('')}<button class="admin-score-rtab inactive" style="border:1px solid var(--border)" onclick="addInfoTab()">+ Add Tab</button>${infoTabs.length?`<button style="padding:6px 12px;border-radius:6px;border:1px solid rgba(221,68,68,0.2);font-family:'Outfit',sans-serif;font-size:0.72rem;font-weight:600;cursor:pointer;background:rgba(221,68,68,0.08);color:var(--red)" onclick="deleteInfoTab()">Delete Tab</button>`:''}</div>${adminInfoActiveTab?renderInfoTabContent():'<div style="padding:20px;text-align:center;color:var(--text-muted)">No info tabs yet — tap "+ Add Tab" to create one</div>'}`; if(adminInfoActiveTab)renderInfoRows()}
+function renderInfoTabContent(){return`<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px"><div><div style="font-family:'Cormorant Garamond',serif;font-weight:700;font-size:1.2rem;color:var(--gold)">${esc(adminInfoActiveTab)}</div><div style="font-size:0.72rem;color:var(--text-muted)">${adminInfoRows.length} items</div></div><div style="display:flex;gap:6px"><button class="admin-btn admin-btn-primary admin-btn-sm" onclick="addInfoRow()">+ Add Row</button></div></div><div class="admin-table-wrap"><div class="admin-table-head" style="grid-template-columns:1.2fr 2fr 36px"><span>Title</span><span>Description</span><span></span></div><div id="adminInfoRows"></div></div><div class="admin-actions-row"><button class="admin-btn admin-btn-primary" onclick="saveInfoTab()">Save Tab</button><button class="admin-btn admin-btn-primary" onclick="saveAllAdmin()">Save All & Close</button></div>`}
+function renderInfoRows(){const c=document.getElementById('adminInfoRows');if(!c)return;c.innerHTML=adminInfoRows.map((r,i)=>`<div class="admin-table-row" style="grid-template-columns:1.2fr 2fr 36px;align-items:flex-start"><input class="admin-inline-input" value="${esc(r.title)}" placeholder="Title…" onchange="adminInfoRows[${i}].title=this.value" /><textarea class="admin-inline-input" style="resize:vertical;min-height:36px;line-height:1.5;white-space:pre-wrap;word-wrap:break-word" placeholder="Description…" onchange="adminInfoRows[${i}].body=this.value">${esc(r.body)}</textarea><button class="admin-btn-icon" onclick="deleteInfoRow(${i})">X</button></div>`).join('')||'<div style="padding:20px;text-align:center;color:var(--text-muted)">No content yet — tap "+ Add Row" to start</div>'}
+async function switchInfoTab(name){adminInfoActiveTab=name;showAdminToast('Loading '+name+'…');await loadAdminInfoTab(name);renderAdminTab('infotabs');showAdminToast(name+' loaded')}
+async function addInfoTab(){if(!gAuthToken){showAdminToast('Sign in first',true);return}const name=prompt('Tab name (e.g. Prize Money, Rules):');if(!name||!name.trim())return;const tabName=name.trim();if(infoTabs.includes(tabName)){showAdminToast('Tab already exists',true);return}try{const sheetsRes=await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}`,{headers:{'Authorization':`Bearer ${gAuthToken}`}});const sheetsData=await sheetsRes.json();const existing=(sheetsData.sheets||[]).map(s=>s.properties.title);if(!existing.includes(tabName)){await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}:batchUpdate`,{method:'POST',headers:{'Authorization':`Bearer ${gAuthToken}`,'Content-Type':'application/json'},body:JSON.stringify({requests:[{addSheet:{properties:{title:tabName}}}]})});await writeAdminToSheet(`${tabName}!A1:B1`,[['Title','Body']])}infoTabs.push(tabName);const fullC=[];for(let i=0;i<20;i++)fullC.push(i<infoTabs.length?[infoTabs[i]]:['']);await writeAdminToSheet('Config!C2:C21',fullC);adminInfoActiveTab=tabName;adminInfoRows=[];renderInfoTabButtons();renderAdminTab('infotabs');showAdminToast(tabName+' created')}catch(err){showAdminToast('Failed: '+err.message,true)}}
+async function deleteInfoTab(){if(!adminInfoActiveTab){showAdminToast('No tab selected',true);return}if(!gAuthToken){showAdminToast('Sign in first',true);return}if(!confirm('Remove "'+adminInfoActiveTab+'" from the leaderboard? The sheet tab will not be deleted.'))return;infoTabs=infoTabs.filter(t=>t!==adminInfoActiveTab);const fullC=[];for(let i=0;i<20;i++)fullC.push(i<infoTabs.length?[infoTabs[i]]:['']);await writeAdminToSheet('Config!C2:C21',fullC);adminInfoActiveTab=infoTabs[0]||'';if(adminInfoActiveTab)await loadAdminInfoTab(adminInfoActiveTab);else adminInfoRows=[];renderInfoTabButtons();renderAdminTab('infotabs');showAdminToast('Tab removed')}
+function addInfoRow(){adminInfoRows.push({title:'',body:''});renderInfoRows()}
+function deleteInfoRow(idx){adminInfoRows.splice(idx,1);renderInfoRows()}
+async function saveInfoTab(){if(!adminInfoActiveTab){showAdminToast('No tab selected',true);return}if(!gAuthToken){showAdminToast('Sign in first',true);return}try{const sheetsRes=await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}`,{headers:{'Authorization':`Bearer ${gAuthToken}`}});const sheetsData=await sheetsRes.json();const existing=(sheetsData.sheets||[]).map(s=>s.properties.title);if(!existing.includes(adminInfoActiveTab)){await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}:batchUpdate`,{method:'POST',headers:{'Authorization':`Bearer ${gAuthToken}`,'Content-Type':'application/json'},body:JSON.stringify({requests:[{addSheet:{properties:{title:adminInfoActiveTab}}}]})})}let ok=await writeAdminToSheet(`${adminInfoActiveTab}!A1:B1`,[['Title','Body']]);const data=adminInfoRows.filter(r=>r.title||r.body).map(r=>[r.title,r.body]);if(data.length)ok=await writeAdminToSheet(`${adminInfoActiveTab}!A2:B${data.length+1}`,data)&&ok;const clearStart=data.length+2;await writeAdminToSheet(`${adminInfoActiveTab}!A${clearStart}:B${clearStart+19}`,Array.from({length:20},()=>['','']));const fullC=[];for(let i=0;i<20;i++)fullC.push(i<infoTabs.length?[infoTabs[i]]:['']);await writeAdminToSheet('Config!C2:C21',fullC);renderInfoTabButtons();if(ok)showAdminToast(adminInfoActiveTab+' saved');else showAdminToast('Save failed',true)}catch(err){showAdminToast('Failed: '+err.message,true)}}
+
+/* ═══ GOOGLE OAUTH ═══ */
+let googleClientId='181776945321-257almdmhts5sbgnj3a3q6p8bcn2dvat.apps.googleusercontent.com';
+const GOOGLE_SCOPE='https://www.googleapis.com/auth/spreadsheets';
+function startGoogleAuth(){const params=new URLSearchParams({client_id:googleClientId,redirect_uri:window.location.origin+window.location.pathname,response_type:'token',scope:GOOGLE_SCOPE,include_granted_scopes:'true',state:'admin_auth'});window.location.href='https://accounts.google.com/o/oauth2/v2/auth?'+params.toString()}
+function handleOAuthCallback(){const hash=window.location.hash;if(!hash||!hash.includes('access_token'))return;const params=new URLSearchParams(hash.slice(1));const token=params.get('access_token');const state=params.get('state');if(token&&state==='admin_auth'){gAuthToken=token;history.replaceState(null,'',window.location.pathname+window.location.search)}}
+handleOAuthCallback();
   </script>
 </body>
 </html>
